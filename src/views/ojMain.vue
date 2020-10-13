@@ -1,126 +1,77 @@
 <template>
     <div class="main">
-        <el-container>
 
-            <el-header>
-                <div class="nav clear">
-                    <p class="title">仲恺农业工程学院OJ </p>
-                    <el-button
-                            type="text"
-                            class="btn"
-                            href="javascript:;"
-                            :underline="false"
-                            target="_blank"
-                            @click="dialogFormVisible = true">
-                        注册
-                    </el-button>
-                    <span>|</span>
-                    <el-button
-                            type="text"
-                            class="btn"
-                            href="javascript:;"
-                            :underline="false"
-                            target="_blank"
-                            @click="dialogFormVisible = true">
-                        登录
-                    </el-button>
-                    <el-dialog title="欢迎使用仲恺OJ" :visible.sync="dialogFormVisible" center>
-                        <el-form :model="user_message">
-                            <el-form-item label="学号" :label-width="userLabelWidth">
-                                <el-input v-model="user_message.id" auto-complete="off"></el-input>
-                            </el-form-item>
-                            <el-form-item label="密码" :label-width="userLabelWidth">
-                                <el-input v-model="user_message.password" auto-complete="off"></el-input>
-                            </el-form-item>
+        <div class="question-main">
+              <div class="line"></div>
+              <div class="question-bar">
+                  <div class="search">
+                      <el-input v-model="input" placeholder="搜索题目名称或编号"></el-input>
+                  </div>
 
-                            <div slot="footer" class="dialog-footer">
-                                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-                            </div>
-                        </el-form>
-                        <div slot="footer" class="dialog-footer ">
-                            <el-button type="primary" @click="dialogFormVisible = false">确定</el-button>
-                            <el-button  @click="dialogFormVisible = false">取消</el-button>
-                        </div>
-                    </el-dialog>
-                </div>
-            </el-header>
+                  <el-dropdown>
+                   <span class="el-dropdown-link">
+                      难度<i class="el-icon-arrow-down el-icon--right"></i>
+                   </span>
+                      <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item>简单</el-dropdown-item>
+                          <el-dropdown-item>中等</el-dropdown-item>
+                          <el-dropdown-item>困难</el-dropdown-item>
+                      </el-dropdown-menu>
+                  </el-dropdown>
 
-            <el-main>
-                <div class="question-main">
-                    <div class="line"></div>
-                    <div class="question-bar">
-                        <div class="search">
-                            <el-input v-model="input" placeholder="搜索题目名称或编号"></el-input>
-                        </div>
+                  <el-dropdown>
+                   <span class="el-dropdown-link">
+                      状态<i class="el-icon-arrow-down el-icon--right"></i>
+                   </span>
+                      <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item>解决</el-dropdown-item>
+                          <el-dropdown-item>未完成</el-dropdown-item>
+                          <el-dropdown-item>尝试过</el-dropdown-item>
+                      </el-dropdown-menu>
+                  </el-dropdown>
+              </div>
 
-                        <el-dropdown>
-                         <span class="el-dropdown-link">
-                            难度<i class="el-icon-arrow-down el-icon--right"></i>
-                         </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>简单</el-dropdown-item>
-                                <el-dropdown-item>中等</el-dropdown-item>
-                                <el-dropdown-item>困难</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+              <div class="question-line"></div>
+              <el-table
+                      :data="tableData"
+                      style="width: 100%"
+                      :row-class-name="tableRowClassName">
 
-                        <el-dropdown>
-                         <span class="el-dropdown-link">
-                            状态<i class="el-icon-arrow-down el-icon--right"></i>
-                         </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>解决</el-dropdown-item>
-                                <el-dropdown-item>未完成</el-dropdown-item>
-                                <el-dropdown-item>尝试过</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </div>
+                  <el-table-column
+                          prop="id"
+                          label="题号"
+                          width="180">
+                  </el-table-column>
+                  <el-table-column
+                          prop="name"
+                          label="题目"
+                          width="180">
+                      <template slot-scope="scope">
+                          <a href="http://localhost:8080/question" target="_blank">
+                              {{scope.row.name}}
+                          </a>
+                      </template>
+                  </el-table-column>
+                  <el-table-column
+                          prop="difficulty"
+                          label="难度">
+                  </el-table-column>
+              </el-table>
 
-                    <div class="question-line"></div>
-                    <el-table
-                            :data="tableData"
-                            style="width: 100%"
-                            :row-class-name="tableRowClassName">
+          </div>
 
-                        <el-table-column
-                                prop="id"
-                                label="题号"
-                                width="180">
-                        </el-table-column>
-                        <el-table-column
-                                prop="name"
-                                label="题目"
-                                width="180">
-                            <template slot-scope="scope">
-                                <a href="http://localhost:8080/question" target="_blank">
-                                    {{scope.row.name}}
-                                </a>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                prop="difficulty"
-                                label="难度">
-                        </el-table-column>
-                    </el-table>
+        <div class="page">
+          <div class="page-line"></div>
+          <el-pagination
+              @current-change="handleCurrentChange"
+              page-size="10"
+              background
+              layout="prev, pager, next"
+              :total="50">
+          </el-pagination>
+        </div>
 
-                </div>
-            </el-main>
 
-            <el-footer>
-                <div class="page">
-                    <div class="page-line"></div>
-                    <el-pagination
-                            @current-change="handleCurrentChange"
-                            page-size="10"
-                            background
-                            layout="prev, pager, next"
-                            :total="50">
-                    </el-pagination>
-                </div>
-            </el-footer>
-
-        </el-container>
     </div>
 </template>
 
@@ -206,7 +157,7 @@
         min-width: 800px;
         margin: 0 auto;
         width: 80%;
-        border: black solid 1px;
+        /*border: black solid 1px;*/
     }
 
     .el-header {

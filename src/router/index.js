@@ -8,7 +8,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: "/main",
+    path: "/",
     name:"主页面",
     component: ojMain
   },
