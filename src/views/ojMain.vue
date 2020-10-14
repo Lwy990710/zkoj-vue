@@ -160,12 +160,6 @@
         /*border: black solid 1px;*/
     }
 
-    .el-header {
-        padding: 0;
-        height: auto !important;
-
-    }
-
     .nav {
         line-height: 76px;
         width: 100%;
@@ -184,21 +178,6 @@
     span {
         float: right;
         display: inline-block;
-    }
-
-    .btn {
-        margin-top: 16px;
-        display: inline-block;
-        font-size: 16px;
-        float: right;
-        width: 120px;
-        color: black !important;
-        box-sizing: border-box;
-    }
-
-
-    .btn:hover {
-        color: grey !important;
     }
 
     .line {
@@ -246,10 +225,6 @@
 
     .el-table .success-row {
         background: #f0f9eb;
-    }
-
-    .el-footer {
-        background: #F5F5F5;
     }
 
     .page-line {

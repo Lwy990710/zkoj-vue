@@ -81,8 +81,9 @@ export default {
     color: white !important;
     box-sizing: border-box;
     height: 60px;
+
   }
   .user-btn:hover {
-    color: grey !important;
+    color: #CCCCCC !important;
   }
 </style>
