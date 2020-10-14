@@ -43,12 +43,12 @@
                           width="180">
                   </el-table-column>
                   <el-table-column
-                          prop="name"
+                          prop="title"
                           label="题目"
                           width="180">
                       <template slot-scope="scope">
                           <a href="http://localhost:8080/question" target="_blank">
-                              {{scope.row.name}}
+                              {{scope.row.title}}
                           </a>
                       </template>
                   </el-table-column>
@@ -93,7 +93,20 @@
             }
         },
         created() {
-            this.handleCurrentChange(1);
+            //发起get请求
+            axios.get("http://yapi.yukineko.top/mock/16/zkoj/question?page=1")
+              .then(res => {
+                console.log("in")
+                //请求成功时进入then(HTTP状态码为200)
+                if(res.data.status === 0) {
+                  this.tableData = res.data.data;
+                  console.log("in")
+                  console.log(this.tableData)
+                }
+              })
+              .catch(err => {
+                //请求失败时进入catch
+              });
         },
         methods: {
 
@@ -106,25 +119,19 @@
             },
 
             handleCurrentChange(val) {
-                const item = [
-                    {
-                        id: '1',
-                        name: 'A+B',
-                        difficulty: 'easy'
-                    },
-                    {
-                        id: '2',
-                        name: 'A+B2',
-                        difficulty: 'normal'
-                    },
-                    {
-                        id: '3',
-                        name: 'A+B3',
-                        difficulty: 'difficult'
+              axios.get("http://yapi.yukineko.top/mock/16/zkoj/question?page=" + val)
+                  .then(res => {
+                    console.log("in")
+                    //请求成功时进入then(HTTP状态码为200)
+                    if(res.data.status === 0) {
+                      this.tableData = res.data.data;
+                      console.log("in")
+                      console.log(this.tableData)
                     }
-                ];
-
-                this.tableData = Array(10).fill(item[val - 1]);
+                  })
+                  .catch(err => {
+                    //请求失败时进入catch
+                  });
             },
 
             tableRowClassName({row, rowIndex}) {
