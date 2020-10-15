@@ -2,73 +2,97 @@
     <div class="main">
 
         <div class="question-main">
-              <div class="line"></div>
-              <div class="question-bar">
-                  <div class="search">
-                      <el-input v-model="input" placeholder="搜索题目名称或编号"></el-input>
-                  </div>
+            <div class="line"></div>
+            <div class="question-bar">
+                <div class="search">
+                    <el-input v-model="input" placeholder="搜索题目名称或编号"></el-input>
+                </div>
 
-                  <el-dropdown>
+                <el-dropdown>
                    <span class="el-dropdown-link">
                       难度<i class="el-icon-arrow-down el-icon--right"></i>
                    </span>
-                      <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item>简单</el-dropdown-item>
-                          <el-dropdown-item>中等</el-dropdown-item>
-                          <el-dropdown-item>困难</el-dropdown-item>
-                      </el-dropdown-menu>
-                  </el-dropdown>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>简单</el-dropdown-item>
+                        <el-dropdown-item>中等</el-dropdown-item>
+                        <el-dropdown-item>困难</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
 
-                  <el-dropdown>
+                <el-dropdown>
                    <span class="el-dropdown-link">
                       状态<i class="el-icon-arrow-down el-icon--right"></i>
                    </span>
-                      <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item>解决</el-dropdown-item>
-                          <el-dropdown-item>未完成</el-dropdown-item>
-                          <el-dropdown-item>尝试过</el-dropdown-item>
-                      </el-dropdown-menu>
-                  </el-dropdown>
-              </div>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>解决</el-dropdown-item>
+                        <el-dropdown-item>未完成</el-dropdown-item>
+                        <el-dropdown-item>尝试过</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
 
-              <div class="question-line"></div>
-              <el-table
-                      :data="tableData"
-                      style="width: 100%"
-                      :row-class-name="tableRowClassName">
+            <div class="question-line"></div>
+            <el-table
+                    :data="tableData"
+                    style="width: 100%">
 
-                  <el-table-column
-                          prop="id"
-                          label="题号"
-                          width="180">
-                  </el-table-column>
-                  <el-table-column
-                          prop="title"
-                          label="题目"
-                          width="180">
-                      <template slot-scope="scope">
-                          <a href="http://localhost:8080/question" target="_blank">
-                              {{scope.row.title}}
-                          </a>
-                      </template>
-                  </el-table-column>
-                  <el-table-column
-                          prop="difficulty"
-                          label="难度">
-                  </el-table-column>
-              </el-table>
+                <el-table-column
+                        prop="status"
+                        label="状态"
+                        width="80">
+                </el-table-column>
 
-          </div>
+
+                <el-table-column
+                        prop="id"
+                        label="题号"
+                        width="80">
+                </el-table-column>
+                <!--                      <el-popover-->
+                <!--                              placement="top-start"-->
+                <!--                              title="标题"-->
+                <!--                              width="200"-->
+                <!--                              trigger="hover"-->
+                <!--                              content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">-->
+                <!--                          <el-button slot="reference">hover 激活</el-button>-->
+                <!--                      </el-popover>-->
+
+
+                <el-table-column
+                        prop="title"
+                        label="题目"
+                        width="500">
+                    <template slot-scope="scope">
+                        <a href="http://localhost:8080/question" target="_blank">
+                            {{scope.row.title}}
+                        </a>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        prop="difficulty"
+                        label="难度"
+                        width="120">
+                </el-table-column>
+
+                <el-table-column
+                        prop="pass_rate"
+                        label="通过率"
+                >
+
+                </el-table-column>
+            </el-table>
+
+        </div>
 
         <div class="page">
-          <div class="page-line"></div>
-          <el-pagination
-              @current-change="handleCurrentChange"
-              page-size="10"
-              background
-              layout="prev, pager, next"
-              :total="50">
-          </el-pagination>
+            <div class="page-line"></div>
+            <el-pagination
+                    @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next"
+                    :total="50">
+            </el-pagination>
         </div>
 
 
@@ -83,7 +107,17 @@
         data() {
             return {
                 input: '',
-                tableData: [],
+                tableData: [{
+                    id: -1,
+                    title: "",
+                    count: -1,
+                    accuracy: 0,
+                    difficulty: -1,
+                    status: -1,
+                    pass_rate: -1.0
+
+                }
+                ],
                 dialogFormVisible: false,
                 user_message: {
                     id: '',
@@ -95,52 +129,80 @@
         created() {
             //发起get请求
             axios.get("http://yapi.yukineko.top/mock/16/zkoj/question?page=1")
-              .then(res => {
-                console.log("in")
-                //请求成功时进入then(HTTP状态码为200)
-                if(res.data.status === 0) {
-                  this.tableData = res.data.data;
-                  console.log("in")
-                  console.log(this.tableData)
-                }
-              })
-              .catch(err => {
-                //请求失败时进入catch
-              });
+                .then(res => {
+                    console.log("in")
+                    //请求成功时进入then(HTTP状态码为200)
+                    if (res.data.status === 0) {
+                        this.tableData = res.data.data;
+                        for (let i = 0; i < this.tableData.length; i++) {
+                            this.tableData[i].pass_rate = this.tableData[i].accuracy / this.tableData[i].count;
+                            this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
+                            this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
+
+                            if (this.tableData[i].difficulty == 1) {
+                                this.tableData[i].difficulty = "简单"
+                            } else if (this.tableData[i].difficulty == 2) {
+                                this.tableData[i].difficulty = "中等"
+                            } else if (this.tableData[i].difficulty == 3) {
+                                this.tableData[i].difficulty = "困难"
+                            }
+
+                            if(this.tableData[i].status == 1){
+                                this.tableData[i].status = "解决"
+                            } else if(this.tableData[i].status == 2){
+                                this.tableData[i].status = "未完成"
+                            } else if(this.tableData[i].status > 2){
+                                this.tableData[i].status = "尝试过"
+                            }
+
+                        }
+                        if (res.data)
+                            console.log("in")
+                        console.log(this.tableData)
+                    }
+                })
+                .catch(err => {
+                    //请求失败时进入catch
+                });
         },
         methods: {
 
-            res() {
-
-            },
-
-            login() {
-
-            },
-
             handleCurrentChange(val) {
-              axios.get("http://yapi.yukineko.top/mock/16/zkoj/question?page=" + val)
-                  .then(res => {
-                    console.log("in")
-                    //请求成功时进入then(HTTP状态码为200)
-                    if(res.data.status === 0) {
-                      this.tableData = res.data.data;
-                      console.log("in")
-                      console.log(this.tableData)
-                    }
-                  })
-                  .catch(err => {
-                    //请求失败时进入catch
-                  });
-            },
+                axios.get("http://yapi.yukineko.top/mock/16/zkoj/question?page=" + val)
+                    .then(res => {
+                        console.log("in")
+                        //请求成功时进入then(HTTP状态码为200)
+                        if (res.data.status === 0) {
+                            this.tableData = res.data.data;
+                            for (let i = 0; i < this.tableData.length; i++) {
 
-            tableRowClassName({row, rowIndex}) {
-                if (rowIndex === 1) {
-                    return 'warning-row';
-                } else if (rowIndex === 3) {
-                    return 'success-row';
-                }
-                return '';
+                                this.tableData[i].pass_rate = this.tableData[i].accuracy / this.tableData[i].count;
+                                this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
+                                this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
+
+                                if (this.tableData[i].difficulty == 1) {
+                                    this.tableData[i].difficulty = "简单"
+                                } else if (this.tableData[i].difficulty == 2) {
+                                    this.tableData[i].difficulty = "中等"
+                                } else if (this.tableData[i].difficulty == 3) {
+                                    this.tableData[i].difficulty = "困难"
+                                }
+
+                                if(this.tableData[i].status == 1){
+                                    this.tableData[i].status = "解决"
+                                } else if(this.tableData[i].status == 2){
+                                    this.tableData[i].status = "未完成"
+                                } else if(this.tableData[i].status > 2){
+                                    this.tableData[i].status = "尝试过"
+                                }
+                            }
+                            console.log("in")
+                            console.log(this.tableData)
+                        }
+                    })
+                    .catch(err => {
+                        //请求失败时进入catch
+                    });
             },
 
         },
