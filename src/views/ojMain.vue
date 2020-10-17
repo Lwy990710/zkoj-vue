@@ -36,6 +36,7 @@
                     :data="tableData"
                     style="width: 100%">
 
+
                 <el-table-column
                         prop="status"
                         label="状态"
@@ -78,8 +79,13 @@
                 <el-table-column
                         prop="pass_rate"
                         label="通过率"
-                >
-
+                        width="70">
+                    <template slot-scope="scope">
+                        <el-tooltip placement="top">
+                            <div slot="content">{{scope.row.accuracy}}/{{scope.row.count}}</div>
+                            <div>{{scope.row.pass_rate}}</div>
+                        </el-tooltip>
+                    </template>
                 </el-table-column>
             </el-table>
 
@@ -106,6 +112,7 @@
 
         data() {
             return {
+                seen:false,
                 input: '',
                 tableData: [{
                     id: -1,
@@ -164,6 +171,7 @@
                 .catch(err => {
                     //请求失败时进入catch
                 });
+            
         },
         methods: {
 
@@ -204,7 +212,6 @@
                         //请求失败时进入catch
                     });
             },
-
         },
 
     }
@@ -227,21 +234,6 @@
         margin: 0 auto;
         width: 80%;
         /*border: black solid 1px;*/
-    }
-
-    .nav {
-        line-height: 76px;
-        width: 100%;
-        background-color: #E8E7E3;
-        font-size: 16px;
-    }
-
-    .title {
-        float: left;
-        color: #7e8c8d;
-        margin-left: 20px;
-        margin-right: 0px;
-        font-size: 40px;
     }
 
     span {
