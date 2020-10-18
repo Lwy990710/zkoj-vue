@@ -8,14 +8,10 @@
         <el-input v-model="user_message.password" auto-complete="off"></el-input>
       </el-form-item>
 
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-      </div>
     </el-form>
     <div slot="footer" class="dialog-footer ">
-      <el-button type="primary" @click="dialogFormVisible = false">确定</el-button>
-      <el-button  @click="dialogFormVisible = false">取消</el-button>
+      <el-button type="primary" @click="dialogFormVisible = false">登录</el-button>
+      <el-button  @click="dialogFormVisible = false">注册</el-button>
     </div>
   </div>
 </template>
@@ -33,5 +29,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .dialog-footer{
+    text-align: center !important;
+  }
 </style>
