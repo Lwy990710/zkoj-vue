@@ -41,9 +41,8 @@
             label="状态"
             width="80">
           <template slot-scope="scope">
-            <div v-if="scope.row.status===0" class="el-icon-check"></div>
-            <div v-if="scope.row.status > 2" class="el-icon-minus"></div>
-
+            <div v-if="scope.row.status===0" class="el-icon-check" style="color: #67C23A;font-size: 22px"></div>
+            <div v-if="scope.row.status > 2" class="el-icon-minus" style="color: #E6A23C;font-size: 22px"></div>
           </template>
 
         </el-table-column>
@@ -54,15 +53,6 @@
             label="题号"
             width="80">
         </el-table-column>
-        <!--                      <el-popover-->
-        <!--                              placement="top-start"-->
-        <!--                              title="标题"-->
-        <!--                              width="200"-->
-        <!--                              trigger="hover"-->
-        <!--                              content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">-->
-        <!--                          <el-button slot="reference">hover 激活</el-button>-->
-        <!--                      </el-popover>-->
-
 
         <el-table-column
             prop="title"
@@ -84,7 +74,7 @@
         <el-table-column
             prop="difficulty"
             label="难度"
-            width="120">
+            width="120" >
 
           <template slot-scope="scope">
             <div v-if="scope.row.difficulty === 1" style="color: green">简单</div>
@@ -97,15 +87,17 @@
 
         <el-table-column
             prop="pass_rate"
-            label="通过率"
-            width="70">
+            label="通过率" width="70">
           <template slot-scope="scope">
-            <el-tooltip placement="top">
+            <el-tooltip placement="top" >
               <div slot="content">{{scope.row.accuracy}}/{{scope.row.count}}</div>
               <div>{{scope.row.pass_rate}}</div>
             </el-tooltip>
           </template>
         </el-table-column>
+
+          <el-table-column>
+          </el-table-column>
       </el-table>
 
         <div class="page">
@@ -162,23 +154,6 @@
                             this.tableData[i].pass_rate = this.tableData[i].accuracy / this.tableData[i].count;
                             this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
                             this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
-
-                            /*if (this.tableData[i].difficulty == 1) {
-                                this.tableData[i].difficulty = "简单"
-                            } else if (this.tableData[i].difficulty == 2) {
-                                this.tableData[i].difficulty = "中等"
-                            } else if (this.tableData[i].difficulty == 3) {
-                                this.tableData[i].difficulty = "困难"
-                            }*/
-
-                            /*if(this.tableData[i].status == 1){
-                                this.tableData[i].status = "解决"
-                            } else if(this.tableData[i].status == 2){
-                                this.tableData[i].status = "未完成"
-                            } else if(this.tableData[i].status > 2){
-                                this.tableData[i].status = "尝试过"
-                            }*/
-
                         }
                         if (res.data)
                             console.log("in")
@@ -205,21 +180,21 @@
                                 this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
                                 this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
 
-                                if (this.tableData[i].difficulty == 1) {
-                                    this.tableData[i].difficulty = "简单"
-                                } else if (this.tableData[i].difficulty == 2) {
-                                    this.tableData[i].difficulty = "中等"
-                                } else if (this.tableData[i].difficulty == 3) {
-                                    this.tableData[i].difficulty = "困难"
-                                }
-
-                                if(this.tableData[i].status == 1){
-                                    this.tableData[i].status = "解决"
-                                } else if(this.tableData[i].status == 2){
-                                    this.tableData[i].status = "未完成"
-                                } else if(this.tableData[i].status > 2){
-                                    this.tableData[i].status = "尝试过"
-                                }
+                                // if (this.tableData[i].difficulty == 1) {
+                                //     this.tableData[i].difficulty = "简单"
+                                // } else if (this.tableData[i].difficulty == 2) {
+                                //     this.tableData[i].difficulty = "中等"
+                                // } else if (this.tableData[i].difficulty == 3) {
+                                //     this.tableData[i].difficulty = "困难"
+                                // }
+                                //
+                                // if(this.tableData[i].status == 1){
+                                //     this.tableData[i].status = "解决"
+                                // } else if(this.tableData[i].status == 2){
+                                //     this.tableData[i].status = "未完成"
+                                // } else if(this.tableData[i].status > 2){
+                                //     this.tableData[i].status = "尝试过"
+                                // }
                             }
                             console.log("in")
                             console.log(this.tableData)

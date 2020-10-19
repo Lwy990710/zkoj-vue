@@ -10,8 +10,8 @@
 
     </el-form>
     <div slot="footer" class="dialog-footer ">
-      <el-button type="primary" @click="dialogFormVisible = false">登录</el-button>
-      <el-button  @click="dialogFormVisible = false">注册</el-button>
+      <el-button type="primary" @click="dialogFormVisible = false">确定</el-button>
+      <el-button  @click="dialogFormVisible = false">取消</el-button>
     </div>
   </div>
 </template>
