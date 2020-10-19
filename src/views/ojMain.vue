@@ -1,95 +1,112 @@
 <template>
     <div class="main">
 
-        <div class="question-main">
-            <div class="line"></div>
-            <div class="question-bar">
-                <div class="search">
-                    <el-input v-model="input" placeholder="搜索题目名称或编号"></el-input>
-                </div>
+      <div class="line"></div>
+      <div class="question-bar">
+        <div class="search">
+          <el-input v-model="input" placeholder="搜索题目名称或编号"></el-input>
+        </div>
 
-                <el-dropdown>
+        <el-dropdown>
                    <span class="el-dropdown-link">
                       难度<i class="el-icon-arrow-down el-icon--right"></i>
                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>简单</el-dropdown-item>
-                        <el-dropdown-item>中等</el-dropdown-item>
-                        <el-dropdown-item>困难</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>简单</el-dropdown-item>
+            <el-dropdown-item>中等</el-dropdown-item>
+            <el-dropdown-item>困难</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
 
-                <el-dropdown>
+        <el-dropdown>
                    <span class="el-dropdown-link">
                       状态<i class="el-icon-arrow-down el-icon--right"></i>
                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>解决</el-dropdown-item>
-                        <el-dropdown-item>未完成</el-dropdown-item>
-                        <el-dropdown-item>尝试过</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-            </div>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>解决</el-dropdown-item>
+            <el-dropdown-item>未完成</el-dropdown-item>
+            <el-dropdown-item>尝试过</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
 
-            <div class="question-line"></div>
-            <el-table
-                    :data="tableData"
-                    style="width: 100%">
-
-
-                <el-table-column
-                        prop="status"
-                        label="状态"
-                        width="80">
-                </el-table-column>
+      <div class="question-line"></div>
+      <el-table
+          :data="tableData"
+          style="width: 100%;">
 
 
-                <el-table-column
-                        prop="id"
-                        label="题号"
-                        width="80">
-                </el-table-column>
-                <!--                      <el-popover-->
-                <!--                              placement="top-start"-->
-                <!--                              title="标题"-->
-                <!--                              width="200"-->
-                <!--                              trigger="hover"-->
-                <!--                              content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">-->
-                <!--                          <el-button slot="reference">hover 激活</el-button>-->
-                <!--                      </el-popover>-->
+        <el-table-column
+            prop="status"
+            label="状态"
+            width="80">
+          <template slot-scope="scope">
+            <div v-if="scope.row.status===0" class="el-icon-check"></div>
+            <div v-if="scope.row.status > 2" class="el-icon-minus"></div>
+
+          </template>
+
+        </el-table-column>
 
 
-                <el-table-column
-                        prop="title"
-                        label="题目"
-                        width="500">
-                    <template slot-scope="scope">
-                        <a href="http://localhost:8080/question" target="_blank">
-                            {{scope.row.title}}
-                        </a>
-                    </template>
-                </el-table-column>
+        <el-table-column
+            prop="id"
+            label="题号"
+            width="80">
+        </el-table-column>
+        <!--                      <el-popover-->
+        <!--                              placement="top-start"-->
+        <!--                              title="标题"-->
+        <!--                              width="200"-->
+        <!--                              trigger="hover"-->
+        <!--                              content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">-->
+        <!--                          <el-button slot="reference">hover 激活</el-button>-->
+        <!--                      </el-popover>-->
 
-                <el-table-column
-                        prop="difficulty"
-                        label="难度"
-                        width="120">
-                </el-table-column>
 
-                <el-table-column
-                        prop="pass_rate"
-                        label="通过率"
-                        width="70">
-                    <template slot-scope="scope">
-                        <el-tooltip placement="top">
-                            <div slot="content">{{scope.row.accuracy}}/{{scope.row.count}}</div>
-                            <div>{{scope.row.pass_rate}}</div>
-                        </el-tooltip>
-                    </template>
-                </el-table-column>
-            </el-table>
+        <el-table-column
+            prop="title"
+            label="题目"
+            width="500">
+          <template slot-scope="scope">
+            <a href="http://localhost:8080/question" target="_blank">
+              {{scope.row.title}}
+            </a>
+          </template>
+        </el-table-column>
 
-        </div>
+        <el-table-column
+            prop="problem_class.name"
+            label="分组"
+            width="120">
+        </el-table-column>
+
+        <el-table-column
+            prop="difficulty"
+            label="难度"
+            width="120">
+
+          <template slot-scope="scope">
+            <div v-if="scope.row.difficulty === 1" style="color: green">简单</div>
+            <div v-if="scope.row.difficulty === 2" style="color: orange">普通</div>
+            <div v-if="scope.row.difficulty === 3" style="color: red">困难</div>
+
+          </template>
+
+        </el-table-column>
+
+        <el-table-column
+            prop="pass_rate"
+            label="通过率"
+            width="70">
+          <template slot-scope="scope">
+            <el-tooltip placement="top">
+              <div slot="content">{{scope.row.accuracy}}/{{scope.row.count}}</div>
+              <div>{{scope.row.pass_rate}}</div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
 
         <div class="page">
             <div class="page-line"></div>
@@ -146,21 +163,21 @@
                             this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
                             this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
 
-                            if (this.tableData[i].difficulty == 1) {
+                            /*if (this.tableData[i].difficulty == 1) {
                                 this.tableData[i].difficulty = "简单"
                             } else if (this.tableData[i].difficulty == 2) {
                                 this.tableData[i].difficulty = "中等"
                             } else if (this.tableData[i].difficulty == 3) {
                                 this.tableData[i].difficulty = "困难"
-                            }
+                            }*/
 
-                            if(this.tableData[i].status == 1){
+                            /*if(this.tableData[i].status == 1){
                                 this.tableData[i].status = "解决"
                             } else if(this.tableData[i].status == 2){
                                 this.tableData[i].status = "未完成"
                             } else if(this.tableData[i].status > 2){
                                 this.tableData[i].status = "尝试过"
-                            }
+                            }*/
 
                         }
                         if (res.data)
@@ -230,9 +247,10 @@
 
     .main {
         font-size: 20px;
-        min-width: 800px;
+        min-width: 500px;
+        max-width: 1200px;
         margin: 0 auto;
-        width: 80%;
+        /*width: 80%;*/
         /*border: black solid 1px;*/
     }
 
