@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import '../views/reset.css'
-import ojMain from '../views/ojMain';
-import questionMain from "../views/questionMain";
+import ProblemList from '../views/ProblemList';
+import ProblemDetail from "../views/ProblemDetail";
 
 Vue.use(VueRouter)
 
@@ -10,12 +10,12 @@ const routes = [
   {
     path: "/",
     name:"主页面",
-    component: ojMain
+    component: ProblemList
   },
   {
     path: "/question",
     name: "答题页面",
-    component: questionMain
+    component: ProblemDetail
   }
 ]
 
