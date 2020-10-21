@@ -68,6 +68,7 @@ export default {
 <style scoped>
   .body {
     display: flex;
+    min-width: 800px;
     justify-content: space-between;
   }
   .logo {

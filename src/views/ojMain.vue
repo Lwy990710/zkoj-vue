@@ -176,7 +176,7 @@
                             this.tableData = res.data.data;
                             for (let i = 0; i < this.tableData.length; i++) {
 
-                                this.tableData[i].pass_rate = this.tableData[i].accuracy / this.tableData[i].count;
+                                this.tableData[i].pass_rate = this.tableData[i].accepted / this.tableData[i].count;
                                 this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
                                 this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
 
@@ -222,7 +222,7 @@
 
     .main {
         font-size: 20px;
-        min-width: 500px;
+        min-width: 800px;
         max-width: 1200px;
         margin: 0 auto;
         /*width: 80%;*/
