@@ -41,7 +41,7 @@
             label="状态"
             width="80">
           <template slot-scope="scope">
-            <div v-if="scope.row.status===1" class="el-icon-check" style="color: #67C23A;font-size: 22px"></div>
+            <div v-if="scope.row.status===0" class="el-icon-check" style="color: #67C23A;font-size: 22px"></div>
             <div v-if="scope.row.status > 2" class="el-icon-minus" style="color: #E6A23C;font-size: 22px"></div>
           </template>
 
@@ -148,7 +148,7 @@
                 .then(res => {
                     console.log("in")
                     //请求成功时进入then(HTTP状态码为200)
-                    if (res.data.status === 0) {
+                    if (res.data.status === 1) {
                         this.tableData = res.data.data;
                         for (let i = 0; i < this.tableData.length; i++) {
                             this.tableData[i].pass_rate = this.tableData[i].accepted / this.tableData[i].count;
@@ -172,29 +172,14 @@
                     .then(res => {
                         console.log("in")
                         //请求成功时进入then(HTTP状态码为200)
-                        if (res.data.status === 0) {
+                        if (res.data.status === 1) {
                             this.tableData = res.data.data;
                             for (let i = 0; i < this.tableData.length; i++) {
 
                                 this.tableData[i].pass_rate = this.tableData[i].accepted / this.tableData[i].count;
                                 this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
                                 this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
-
-                                // if (this.tableData[i].difficulty == 1) {
-                                //     this.tableData[i].difficulty = "简单"
-                                // } else if (this.tableData[i].difficulty == 2) {
-                                //     this.tableData[i].difficulty = "中等"
-                                // } else if (this.tableData[i].difficulty == 3) {
-                                //     this.tableData[i].difficulty = "困难"
-                                // }
-                                //
-                                // if(this.tableData[i].status == 1){
-                                //     this.tableData[i].status = "解决"
-                                // } else if(this.tableData[i].status == 2){
-                                //     this.tableData[i].status = "未完成"
-                                // } else if(this.tableData[i].status > 2){
-                                //     this.tableData[i].status = "尝试过"
-                                // }
+                              
                             }
                             console.log("in")
                             console.log(this.tableData)
