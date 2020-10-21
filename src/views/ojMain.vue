@@ -41,7 +41,7 @@
             label="状态"
             width="80">
           <template slot-scope="scope">
-            <div v-if="scope.row.status===0" class="el-icon-check" style="color: #67C23A;font-size: 22px"></div>
+            <div v-if="scope.row.status===1" class="el-icon-check" style="color: #67C23A;font-size: 22px"></div>
             <div v-if="scope.row.status > 2" class="el-icon-minus" style="color: #E6A23C;font-size: 22px"></div>
           </template>
 
@@ -90,7 +90,7 @@
             label="通过率" width="70">
           <template slot-scope="scope">
             <el-tooltip placement="top" >
-              <div slot="content">{{scope.row.accuracy}}/{{scope.row.count}}</div>
+              <div slot="content">{{scope.row.accepted}}/{{scope.row.count}}</div>
               <div>{{scope.row.pass_rate}}</div>
             </el-tooltip>
           </template>
@@ -127,7 +127,7 @@
                     id: -1,
                     title: "",
                     count: -1,
-                    accuracy: 0,
+                    accepted: 0,
                     difficulty: -1,
                     status: -1,
                     pass_rate: -1.0
@@ -151,7 +151,7 @@
                     if (res.data.status === 0) {
                         this.tableData = res.data.data;
                         for (let i = 0; i < this.tableData.length; i++) {
-                            this.tableData[i].pass_rate = this.tableData[i].accuracy / this.tableData[i].count;
+                            this.tableData[i].pass_rate = this.tableData[i].accepted / this.tableData[i].count;
                             this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
                             this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
                         }
