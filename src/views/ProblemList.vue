@@ -109,8 +109,6 @@
                     :total="50">
             </el-pagination>
         </div>
-
-
     </div>
 </template>
 
@@ -118,10 +116,9 @@
 
     export default {
         name: "main",
-
         data() {
+
             return {
-                seen:false,
                 input: '',
                 tableData: [{
                     id: -1,
@@ -135,16 +132,16 @@
                 }
                 ],
                 dialogFormVisible: false,
-                user_message: {
-                    id: '',
-                    password: '',
-                },
-                userLabelWidth: '120px'
+                // user_message: {
+                //     id: '',
+                //     password: '',
+                // },
+                // userLabelWidth: '120px'
             }
         },
         created() {
             //发起get请求
-            axios.get("http://yapi.yukineko.top/mock/16/zkoj/question?page=1")
+            axios.get("http://yapi.yukineko.top/mock/16/zkoj/problem?page=1")
                 .then(res => {
                     console.log("in")
                     //请求成功时进入then(HTTP状态码为200)
@@ -168,7 +165,7 @@
         methods: {
 
             handleCurrentChange(val) {
-                axios.get("http://yapi.yukineko.top/mock/16/zkoj/question?page=" + val)
+                axios.get("http://yapi.yukineko.top/mock/16/zkoj/problem?page=" + val)
                     .then(res => {
                         console.log("in")
                         //请求成功时进入then(HTTP状态码为200)

@@ -42,7 +42,7 @@
       </el-button-group>
     </div>
 
-    <el-dialog title="欢迎使用仲恺OJ" :visible.sync="dialogFormVisible" center>
+    <el-dialog width="25%" title="欢迎使用仲恺OJ" :visible.sync="dialogFormVisible" center>
       <LoginDialog/>
     </el-dialog>
   </div>
@@ -58,8 +58,7 @@ export default {
   },
   data() {
     return {
-      dialogFormVisible: false,
-
+      dialogFormVisible: false
     }
   }
 }

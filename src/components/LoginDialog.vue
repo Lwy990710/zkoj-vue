@@ -19,16 +19,21 @@
 <script>
 export default {
   name: "LoginDialog",
+
   data() {
     return {
-      user_message: {},
-      userLabelWidth: '120px'
+      user_message: {
+        id : '',
+        password : ''
+      },
+      userLabelWidth: '45px'
     }
   }
 }
 </script>
 
 <style scoped>
+
   .dialog-footer{
     text-align: center !important;
   }
