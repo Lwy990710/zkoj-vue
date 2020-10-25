@@ -141,7 +141,7 @@
         },
         created() {
             //发起get请求
-            axios.get("http://yapi.yukineko.top/mock/16/zkoj/problem?page=1")
+            axios.get(this.base_url + "/problem?page=1")
                 .then(res => {
                     console.log("in")
                     //请求成功时进入then(HTTP状态码为200)
@@ -159,13 +159,14 @@
                 })
                 .catch(err => {
                     //请求失败时进入catch
+                  alert(err);
                 });
             
         },
         methods: {
 
             handleCurrentChange(val) {
-                axios.get("http://yapi.yukineko.top/mock/16/zkoj/problem?page=" + val)
+                axios.get(this.base_url + "/problem?page=" + val)
                     .then(res => {
                         console.log("in")
                         //请求成功时进入then(HTTP状态码为200)

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import '../views/reset.css'
+//import '../views/reset.css'
 import ProblemList from '../views/ProblemList';
 import ProblemDetail from "../views/ProblemDetail";
 import AnswerPage from "../views/AnswerPage";
