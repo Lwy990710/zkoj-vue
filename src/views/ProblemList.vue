@@ -7,14 +7,14 @@
           <el-input v-model="input" placeholder="搜索题目名称或编号"></el-input>
         </div>
 
-        <el-dropdown>
+        <el-dropdown  @command="choose">
                    <span class="el-dropdown-link">
                       难度<i class="el-icon-arrow-down el-icon--right"></i>
                    </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>简单</el-dropdown-item>
-            <el-dropdown-item>中等</el-dropdown-item>
-            <el-dropdown-item>困难</el-dropdown-item>
+            <el-dropdown-item command="1">简单</el-dropdown-item>
+            <el-dropdown-item command="2">中等</el-dropdown-item>
+            <el-dropdown-item command="3">困难</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
 
@@ -160,10 +160,21 @@
                 .catch(err => {
                     //请求失败时进入catch
                 });
-            
+
         },
         methods: {
 
+            // choose(command){
+            //   axios.get("http://yapi.yukineko.top/mock/16/zkoj/problem?difficulty=" + command)
+            //   .then(res => {
+            //     console.log("in")
+            //     if (res.data.status === 1){
+            //       this.tableData = res.data.data;
+            //       console.log("in")
+            //       console.log(this.tableData)
+            //     }
+            //   })
+            // },
             handleCurrentChange(val) {
                 axios.get("http://yapi.yukineko.top/mock/16/zkoj/problem?page=" + val)
                     .then(res => {
