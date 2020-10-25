@@ -42,8 +42,8 @@
       </el-button-group>
     </div>
 
-    <el-dialog width="25%" title="欢迎使用仲恺OJ" :visible.sync="dialogFormVisible" center>
-      <LoginDialog/>
+    <el-dialog  width="350px" title="欢迎使用仲恺OJ" :visible.sync="dialogFormVisible" center>
+      <LoginDialog @close="dialogFormVisible = false"/>
     </el-dialog>
   </div>
 </template>
@@ -87,4 +87,5 @@ export default {
   .user-btn:hover {
     color: #CCCCCC !important;
   }
+
 </style>
