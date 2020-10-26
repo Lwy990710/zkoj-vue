@@ -113,11 +113,9 @@
 </template>
 
 <script>
-
     export default {
         name: "main",
         data() {
-
             return {
                 input: '',
                 tableData: [{
@@ -127,16 +125,10 @@
                     accepted: 0,
                     difficulty: -1,
                     status: -1,
-                    pass_rate: -1.0
-
+                    pass_rate: -1.0,
                 }
                 ],
-                dialogFormVisible: false,
-                // user_message: {
-                //     id: '',
-                //     password: '',
-                // },
-                // userLabelWidth: '120px'
+                flag: false
             }
         },
         created() {
@@ -148,9 +140,13 @@
                     if (res.data.status === 1) {
                         this.tableData = res.data.data;
                         for (let i = 0; i < this.tableData.length; i++) {
+                          if(this.tableData[i].count === 0){
+                            this.tableData[i].pass_rate = "-";
+                          } else{
                             this.tableData[i].pass_rate = this.tableData[i].accepted / this.tableData[i].count;
                             this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
                             this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
+                          }
                         }
                         if (res.data)
                             console.log("in")
@@ -164,18 +160,32 @@
 
         },
         methods: {
-
-            // choose(command){
-            //   axios.get("http://yapi.yukineko.top/mock/16/zkoj/problem?difficulty=" + command)
-            //   .then(res => {
-            //     console.log("in")
-            //     if (res.data.status === 1){
-            //       this.tableData = res.data.data;
-            //       console.log("in")
-            //       console.log(this.tableData)
-            //     }
-            //   })
-            // },
+            choose(command){
+                axios.get(this.base_url + "/problem?difficulty=" + command)
+                        .then(res => {
+                          console.log("in")
+                          //请求成功时进入then(HTTP状态码为200)
+                          if (res.data.status === 1) {
+                            this.tableData = res.data.data;
+                            for (let i = 0; i < this.tableData.length; i++) {
+                              if(this.tableData[i].count === 0){
+                                this.tableData[i].pass_rate = "-";
+                              } else{
+                                this.tableData[i].pass_rate = this.tableData[i].accepted / this.tableData[i].count;
+                                this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
+                                this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
+                              }
+                            }
+                            if (res.data)
+                              console.log("in")
+                            console.log(this.tableData)
+                          }
+                        })
+                        .catch(err => {
+                          //请求失败时进入catch
+                          alert(err);
+                        });
+            },
             handleCurrentChange(val) {
                 axios.get(this.base_url + "/problem?page=" + val)
                     .then(res => {
@@ -184,10 +194,13 @@
                         if (res.data.status === 1) {
                             this.tableData = res.data.data;
                             for (let i = 0; i < this.tableData.length; i++) {
-
+                              if(this.tableData[i].count === 0){
+                                this.tableData[i].pass_rate = "-";
+                              } else{
                                 this.tableData[i].pass_rate = this.tableData[i].accepted / this.tableData[i].count;
                                 this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
                                 this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
+                              }
                               
                             }
                             console.log("in")
