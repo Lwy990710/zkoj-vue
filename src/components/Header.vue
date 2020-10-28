@@ -26,7 +26,7 @@
           href="javascript:;"
           :underline="false"
           target="_blank"
-          @click="dialogFormVisible = true">
+          @click="loginDialogFormVisible = true">
           登录
         </el-button>
 
@@ -36,29 +36,36 @@
           href="javascript:;"
           :underline="false"
           target="_blank"
-          @click="dialogFormVisible = true">
+          @click="registerDialogFormVisible = true">
           注册
         </el-button>
       </el-button-group>
     </div>
 
-    <el-dialog  width="350px" title="欢迎使用仲恺OJ" :visible.sync="dialogFormVisible" center>
-      <LoginDialog @close="dialogFormVisible = false"/>
+    <el-dialog  width="350px" title="欢迎使用仲恺OJ" :visible.sync="loginDialogFormVisible">
+      <LoginDialog/>
+    </el-dialog>
+
+    <el-dialog  width="350px" title="欢迎使用仲恺OJ" :visible.sync="registerDialogFormVisible">
+      <RegisterDialog/>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import LoginDialog from "@/components/LoginDialog";
+import RegisterDialog from "@/components/RegisterDialog";
 
 export default {
   name: "Header",
   components: {
-    LoginDialog
+    LoginDialog,
+    RegisterDialog
   },
   data() {
     return {
-      dialogFormVisible: false
+      loginDialogFormVisible: false,
+      registerDialogFormVisible: false
     }
   }
 }
