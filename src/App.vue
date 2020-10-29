@@ -32,7 +32,9 @@ export default {
 </script>
 
 <style>
-
+  body{
+    margin: 0px;
+  }
   .header-view {
     background-color: #269D80;
   }
