@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :model="user_message" :rules="rules" ref="user_message" label-width="60px">
+    <el-form :model="user_message" :rules="rules" ref="user_message" label-width="60px" key="login">
       <el-form-item label="账号" prop="username">
         <el-input v-model="user_message.username"></el-input>
       </el-form-item>
