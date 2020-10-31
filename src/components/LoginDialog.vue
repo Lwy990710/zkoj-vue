@@ -10,12 +10,14 @@
 
     </el-form>
     <div slot="footer" class="dialog-footer ">
-      <el-button type="primary" @click="close">登录</el-button>
+      <el-button type="primary" @click="login">登录</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import md5 from 'js-md5';
+
 export default {
   name: "LoginDialog",
 
@@ -25,26 +27,49 @@ export default {
         username : '',
         password : ''
       },
-      // rules: {
-      //   username: [
-      //     { required: true,  message: '账号不能为空', trigger: 'blur' },
-      //     {min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur'},
-      //     { type : "string", pattern:/^[A-Za-z0-9]+$/ ,message: '用户名只能由数字和字符组成',trigger: 'blur'},
-      //
-      //   ],
-      //   password: [
-      //     { required: true, message: '密码不能为空', trigger: 'blur' },
-      //     { min: 6, max: 18, message: '密码长度要在 6 到 18 个字符', trigger: 'blur' },
-      //     { type : "string", pattern:/^[A-Za-z0-9!"#$%&'()*+,\-./@\[\\\]^_`{|}~]+$/ ,message: '密码格式不正确',trigger: 'blur'},
-      //   ],
-      // }
+      rules: {
+        username: [
+          { required: true,  message: '账号不能为空', trigger: 'blur' },
+          {min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur'},
+          { type : "string", pattern:/^[A-Za-z0-9]+$/ ,message: '用户名只能由数字和字符组成',trigger: 'blur'},
+
+        ],
+        password: [
+          { required: true, message: '密码不能为空', trigger: 'blur' },
+          { min: 6, max: 18, message: '密码长度要在 6 到 18 个字符', trigger: 'blur' },
+          { type : "string", pattern:/^[A-Za-z0-9!"#$%&'()*+,\-./@\[\\\]^_`{|}~]+$/ ,message: '密码格式不正确',trigger: 'blur'},
+        ],
+      }
     }
   },
 
   methods :{
-    close() {
-      this.$emit('close',1)
+    login() {
+      console.log('login');
+      let username = this.user_message.username;
+      let password = this.user_message.password;
+      password = md5( 'zkoj' + md5(username + password));
+      let request_body = {
+        username: username,
+        password: password
+      };
+      axios.post(this.base_url + "/login", request_body)
+        .then(res => {
+          if (res.data.status === 1) {
+            //登陆成功
+            this.$store.commit('setToken', res.headers.authorization);
+            this.$emit('login', 1);
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch(err => {
+
+        });
     }
+   /* close() {
+      this.$emit('close',1)
+    }*/
   }
 }
 </script>

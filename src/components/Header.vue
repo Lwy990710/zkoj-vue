@@ -18,7 +18,7 @@
       </el-menu>
     </div>
     <!-- 右侧登陆注册按钮 -->
-    <div>
+    <div v-if="!$store.state.is_login">
       <el-button-group>
         <el-button
           type="text"
@@ -41,13 +41,26 @@
         </el-button>
       </el-button-group>
     </div>
+    <!-- 登录后显示 -->
+    <div v-if="$store.state.is_login">
+        <el-button
+            type="text"
+            class="user-btn"
+            href="javascript:;"
+            :underline="false"
+            target="_blank"
+            @click="logout">
+          退出登录
+        </el-button>
+      <!-- 个人信息 -->
+    </div>
 
     <el-dialog  width="350px" title="欢迎使用仲恺OJ" :visible.sync="loginDialogFormVisible">
-      <LoginDialog/>
+      <LoginDialog @click="loginDialogFormVisible = false"/>
     </el-dialog>
 
     <el-dialog  width="350px" title="欢迎使用仲恺OJ" :visible.sync="registerDialogFormVisible">
-      <RegisterDialog/>
+      <RegisterDialog @click="registerDialogFormVisible = false"/>
     </el-dialog>
   </div>
 </template>
@@ -66,6 +79,11 @@ export default {
     return {
       loginDialogFormVisible: false,
       registerDialogFormVisible: false
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.commit('logout');
     }
   }
 }
