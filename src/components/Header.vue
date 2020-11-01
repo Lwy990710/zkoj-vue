@@ -56,11 +56,11 @@
     </div>
 
     <el-dialog  width="350px" title="欢迎使用仲恺OJ" :visible.sync="loginDialogFormVisible">
-      <LoginDialog @click="loginDialogFormVisible = false"/>
+      <LoginDialog @close="closeLoginDialog"/>
     </el-dialog>
 
     <el-dialog  width="350px" title="欢迎使用仲恺OJ" :visible.sync="registerDialogFormVisible">
-      <RegisterDialog @click="registerDialogFormVisible = false"/>
+      <RegisterDialog/>
     </el-dialog>
   </div>
 </template>
@@ -84,6 +84,9 @@ export default {
   methods: {
     logout() {
       this.$store.commit('logout');
+    },
+    closeLoginDialog() {
+      this.loginDialogFormVisible = false;
     }
   }
 }

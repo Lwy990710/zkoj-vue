@@ -15,7 +15,7 @@ const routes = [
     component: ProblemList
   },
   {
-    path: "/question",
+    path: "/problem/:id",
     name: "答题页面",
     component: ProblemDetail
   },

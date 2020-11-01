@@ -94,9 +94,9 @@
                     label="题目"
                     width="500">
                 <template slot-scope="scope">
-                    <a href="http://localhost:8080/question" target="_blank">
-                        {{scope.row.title}}
-                    </a>
+                  <router-link :to='"/problem/" + scope.row.id' target="_blank">
+                    {{scope.row.title}}
+                  </router-link>
                 </template>
             </el-table-column>
 

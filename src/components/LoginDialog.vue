@@ -57,8 +57,8 @@ export default {
         .then(res => {
           if (res.data.status === 1) {
             //登陆成功
-            this.$store.commit('setToken', res.headers.authorization);
-            this.$emit('login', 1);
+            this.$store.commit('login', res.headers.authorization);
+            this.$emit('close');
           } else {
             alert(res.data.message);
           }

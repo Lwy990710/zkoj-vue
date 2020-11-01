@@ -15,26 +15,66 @@
         <div>
             -----------------------------代码编译器测试-------------------------------
         </div>
-        <div class="test"></div>
+        <div class="test">
+          <textarea ref="mycode" class="codesql" v-model="code" style="height:200px;width:600px;"></textarea>
+        </div>
     </div>
 </template>
 
 
 <script>
+  import "codemirror/theme/ambiance.css";
+  import "codemirror/lib/codemirror.css";
+  import "codemirror/addon/hint/show-hint.css";
+  let CodeMirror = require("codemirror/lib/codemirror");
+  require("codemirror/addon/edit/matchbrackets");
+  require("codemirror/addon/selection/active-line");
+  require ("codemirror/mode/clike/clike");
+  require("codemirror/mode/sql/sql");
+  require("codemirror/addon/hint/sql-hint");
 
-
-    export default {
-        name: "AnswerPage",
-        methods: {
-            back() {
-                this.$router.push('/question')
-            },
-            beforeRouteEnter(to,from,next){
-                window.document.body.style.backgroundColor = '#EFEFEF';
-                next();
-            },
+  export default {
+    name: "AnswerPage",
+    data () {
+      return {
+        code: '//按Ctrl键进行代码提示'
+      }
+    },
+    mounted () {
+      debugger
+      let mime = 'text/x-java'
+      //let theme = 'ambiance'//设置主题，不设置的会使用默认主题
+      let editor = CodeMirror.fromTextArea(this.$refs.mycode, {
+        mode: mime,//选择对应代码编辑器的语言，我这边选的是数据库，根据个人情况自行设置即可
+        indentWithTabs: true,
+        smartIndent: true,
+        lineNumbers: true,
+        matchBrackets: true,
+        //theme: theme,
+        // autofocus: true,
+        extraKeys: {'Ctrl': 'autocomplete'},//自定义快捷键
+        hintOptions: {//自定义提示选项
+          tables: {
+            users: ['name', 'score', 'birthDate'],
+            countries: ['name', 'population', 'size']
+          }
         }
-    }
+      })
+      //代码自动提示功能，记住使用cursorActivity事件不要使用change事件，这是一个坑，那样页面直接会卡死
+      editor.on('cursorActivity', function () {
+        editor.showHint()
+      })
+    },
+      methods: {
+          back() {
+              this.$router.go(-1);
+          },
+          beforeRouteEnter(to,from,next){
+              window.document.body.style.backgroundColor = '#EFEFEF';
+              next();
+          },
+      }
+  }
 
 </script>
 
