@@ -8,6 +8,7 @@ import PersonalCenter from "../views/PersonalCenter";
 import UserHomePage from "../views/UserHomePage";
 import Statistics from "../views/Statistics";
 import MyRelease from "../views/MyRelease";
+import UserOptions from "../views/UserOptions";
 import test from "../views/test";
 
 Vue.use(VueRouter)
@@ -51,7 +52,11 @@ const routes = [
             }
         ]
     },
-
+    {
+      path: "/option",
+      name: "设置页面",
+      component: UserOptions
+    },
     {
         path: "/test",
         name: "代码编译器测试",

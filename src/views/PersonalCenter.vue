@@ -2,12 +2,12 @@
     <div class="main">
         <el-container>
             <div class="user_msg clear">
-                <div class="avatar clear">
-                    <el-avatar :size="60" s src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-                               style="margin: 0 10px;float: left"></el-avatar>
-                    <span style="display: inline-block;float: left;margin-top: 18px;font-size: 20px">用户名</span>
+<!--                <div class="avatar clear">-->
+<!--                    <el-avatar :size="60" s src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"-->
+<!--                               style="margin: 0 10px;float: left"></el-avatar>-->
+<!--                    <span style="display: inline-block;float: left;margin-top: 18px;font-size: 20px">用户名</span>-->
 
-                </div>
+<!--                </div>-->
 
                 <div class="page_choose">
                     <el-menu
@@ -42,7 +42,7 @@
         },
         data(){
             return{
-                value: new Date(),
+
             }
         }
     }
@@ -70,8 +70,8 @@
         border-right:1px solid #EBEEF5 ;
         box-shadow: 6px 2px 12px 0 rgba(0, 0, 0, 0.1);
         height: 600px;
-        min-width: 239px;
-        width: 239px;
+        min-width: 199px;
+        width: 199px;
     }
 
     .el-menu {

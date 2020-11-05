@@ -57,6 +57,12 @@
                             个人中心
                         </router-link>
                     </el-dropdown-item>
+                    <el-dropdown-item class="user_dropdown_item">
+                        <router-link :to='"/option"' target="_blank"
+                                     style="width: 96px;display: inline-block;text-align: center;color: #606266">
+                            设置
+                        </router-link>
+                    </el-dropdown-item>
                     <el-dropdown-item class="user_dropdown_item" style="display: inline-block">
                         <el-button type="text" @click="logout" style="color: #606266">退出登录</el-button>
                     </el-dropdown-item>
