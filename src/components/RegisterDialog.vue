@@ -14,12 +14,14 @@
 
         </el-form>
         <div slot="footer" class="register-footer" key="res_btn">
-            <el-button type="primary">注册</el-button>
+            <el-button type="primary" @click="register">注册</el-button>
         </div>
     </div>
 </template>
 
 <script>
+    import md5 from "js-md5";
+
     export default {
         name: "RegisterDialog",
         data() {
@@ -47,6 +49,30 @@
                     ]
                 },
             }
+        },
+        methods:{
+          register(){
+              console.log('register');
+              let username = this.user_message.username;
+              let password = this.user_message.password;
+              let name = this.user_message.name;
+              password = md5( 'zkoj' + md5(username + password));
+              let request_body = {
+                  username: username,
+                  password: password,
+                  name: name
+              };
+              axios.post(this.base_url+"/register",request_body)
+              .then(res => {
+                  if (res.data.status === 1) {
+                      //登陆成功
+                      this.$store.commit('login', res.headers.authorization);
+                      this.$emit('close');
+                  } else {
+                      alert(res.data.message);
+                  }
+              })
+          }
         }
     }
 

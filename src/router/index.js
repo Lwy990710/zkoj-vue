@@ -4,37 +4,65 @@ import VueRouter from 'vue-router'
 import ProblemList from '../views/ProblemList'
 import ProblemDetail from "../views/ProblemDetail"
 import AnswerPage from "../views/AnswerPage"
+import PersonalCenter from "../views/PersonalCenter";
+import UserHomePage from "../views/UserHomePage";
+import Statistics from "../views/Statistics";
+import MyRelease from "../views/MyRelease";
 import test from "../views/test";
 
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: "/",
-    name: "主页面",
-    component: ProblemList
-  },
-  {
-    path: "/problem/:id",
-    name: "答题页面",
-    component: ProblemDetail
-  },
-  {
-    path: "/answer",
-    name: "答题页面",
-    component: AnswerPage
-  },
-  {
-    path: "/test",
-    name: "代码编译器测试",
-    component: test
-  }
+    {
+        path: "/",
+        name: "主页面",
+        component: ProblemList
+    },
+    {
+        path: "/problem/:id",
+        name: "答题页面",
+        component: ProblemDetail
+    },
+    {
+        path: "/answer",
+        name: "答题页面",
+        component: AnswerPage
+    },
+    {
+        path: "/center",
+        name: "个人中心",
+        component: PersonalCenter,
+        children: [{
+            path: "/userhome",
+            name: "主页",
+            component: UserHomePage
+            },
+            {
+                path: "/statistics",
+                name: "统计",
+                component: Statistics
+            },
+
+
+            {
+                path: "/release",
+                name: "我的发布",
+                component: MyRelease
+            }
+        ]
+    },
+
+    {
+        path: "/test",
+        name: "代码编译器测试",
+        component: test
+    }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
 
 export default router

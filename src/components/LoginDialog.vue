@@ -67,9 +67,6 @@ export default {
 
         });
     }
-   /* close() {
-      this.$emit('close',1)
-    }*/
   }
 }
 </script>

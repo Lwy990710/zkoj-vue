@@ -403,6 +403,13 @@
 
 <style scoped>
 
+    a {
+        text-decoration: none;
+    }
+
+    .router-link-active {
+        text-decoration: none;
+    }
 
     .clear::before,
     .clear::after {

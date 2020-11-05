@@ -12,11 +12,23 @@
                 </div>
             </div>
         </div>
-        <div>
-            -----------------------------代码编译器测试-------------------------------
+
+        <div class="language_choose">
+            <el-select v-model="value" placeholder="请选择语言" @change="change">
+                <el-option v-for="language in options"
+                           :key="language.value"
+                           :label="language.label"
+                           :value="language.value">
+                </el-option>
+            </el-select>
         </div>
+
         <div class="test">
-          <textarea ref="mycode" class="codesql" v-model="code" style="height:200px;width:600px;"></textarea>
+            <textarea ref="mycode"  style="height:200px;width:600px;"></textarea>
+        </div>
+
+        <div class="commit">
+            <el-button type="primary">提交答案</el-button>
         </div>
     </div>
 </template>
@@ -27,55 +39,103 @@
   import "codemirror/lib/codemirror.css";
   import "codemirror/addon/hint/show-hint.css";
   let CodeMirror = require("codemirror/lib/codemirror");
-  require("codemirror/addon/edit/matchbrackets");
-  require("codemirror/addon/selection/active-line");
-  require ("codemirror/mode/clike/clike");
-  require("codemirror/mode/sql/sql");
-  require("codemirror/addon/hint/sql-hint");
+  // require("codemirror/addon/edit/matchbrackets");
+  // require("codemirror/addon/selection/active-line");
+  // require ("codemirror/mode/clike/clike");
+  // require("codemirror/mode/sql/sql");
+  // require("codemirror/addon/hint/sql-hint");
+  import 'codemirror/mode/javascript/javascript'
+  import 'codemirror/mode/clike/clike'
+  import 'codemirror/mode/go/go'
+  import 'codemirror/mode/htmlmixed/htmlmixed'
+  import 'codemirror/mode/http/http'
+  import 'codemirror/mode/php/php'
+  import 'codemirror/mode/python/python'
+  import 'codemirror/mode/http/http'
+  import 'codemirror/mode/sql/sql'
+  import 'codemirror/mode/vue/vue'
+  import 'codemirror/mode/xml/xml'
 
-  export default {
-    name: "AnswerPage",
-    data () {
-      return {
-        code: '//按Ctrl键进行代码提示'
-      }
-    },
-    mounted () {
-      debugger
-      let mime = 'text/x-java'
-      //let theme = 'ambiance'//设置主题，不设置的会使用默认主题
-      let editor = CodeMirror.fromTextArea(this.$refs.mycode, {
-        mode: mime,//选择对应代码编辑器的语言，我这边选的是数据库，根据个人情况自行设置即可
-        indentWithTabs: true,
-        smartIndent: true,
-        lineNumbers: true,
-        matchBrackets: true,
-        //theme: theme,
-        // autofocus: true,
-        extraKeys: {'Ctrl': 'autocomplete'},//自定义快捷键
-        hintOptions: {//自定义提示选项
-          tables: {
-            users: ['name', 'score', 'birthDate'],
-            countries: ['name', 'population', 'size']
-          }
+    export default {
+        name: "AnswerPage",
+        data(){
+            return{
+                options:[{
+                    value: 'Java',
+                    label: 'Java',
+                },{
+                    value: 'Python',
+                    label: 'Python',
+                },{
+                    value: 'c++',
+                    label: 'c++'
+                }],
+                value: ''
+            }
+        },
+        mounted () {
+            debugger
+            let editor = CodeMirror.fromTextArea(this.$refs.mycode, {
+                mode: 'text/x-java',
+                indentWithTabs: true,
+                smartIndent: true,
+                lineNumbers: true,
+                matchBrackets: true,
+
+                // extraKeys: {'Ctrl': 'autocomplete'},自定义快捷键
+                // hintOptions: {自定义提示选项
+                //     tables: {
+                //         users: ['name', 'score', 'birthDate'],
+                //         countries: ['name', 'population', 'size']
+                //     }
+                // }
+            })
+            //代码自动提示功能，记住使用cursorActivity事件不要使用change事件，这是一个坑，那样页面直接会卡死
+            editor.on('cursorActivity', function () {
+                editor.showHint()
+            })
+        },
+        beforeRouteEnter(to,from,next){
+            window.document.body.style.backgroundColor = '#EFEFEF';
+            next();
+        },
+        methods: {
+            back() {
+                this.$router.go(-1);
+            },
+            change(){
+                debugger
+                let mime = 'text/x-java'
+                if(this.value === 'Java'){
+                    mime = 'text/x-java'
+                } else if(this.value === 'Python'){
+                    mime = 'text/x-python'
+                } else if(this.value === 'c++'){
+                    mime = 'text/x-c++src'
+                }
+                // alert(mime);
+                let editor = CodeMirror.fromTextArea(this.$refs.mycode, {
+                    mode: mime,
+                    indentWithTabs: true,
+                    smartIndent: true,
+                    lineNumbers: true,
+                    matchBrackets: true,
+
+                    extraKeys: {'Ctrl': 'autocomplete'},
+                    hintOptions: {
+                        tables: {
+                            users: ['name', 'score', 'birthDate'],
+                            countries: ['name', 'population', 'size']
+                        }
+                    }
+                })
+                // 代码自动提示功能，记住使用cursorActivity事件不要使用change事件，这是一个坑，那样页面直接会卡死
+                editor.on('cursorActivity', function () {
+                    editor.showHint()
+                })
+            }
         }
-      })
-      //代码自动提示功能，记住使用cursorActivity事件不要使用change事件，这是一个坑，那样页面直接会卡死
-      editor.on('cursorActivity', function () {
-        editor.showHint()
-      })
-    },
-      methods: {
-          back() {
-              this.$router.go(-1);
-          },
-          beforeRouteEnter(to,from,next){
-              window.document.body.style.backgroundColor = '#EFEFEF';
-              next();
-          },
-      }
-  }
-
+    }
 </script>
 
 <style scoped>
@@ -100,5 +160,24 @@
 
     .answer_problem_content{
         text-indent: 2em;
+    }
+
+    .language_choose{
+        margin: 20px auto;
+        width: 600px;
+    }
+
+    .test{
+        border: solid 1px black;
+        margin: 20px auto;
+        width: 600px;
+        font-size: 11pt;
+        font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+    }
+
+    .commit{
+        padding-top: 20px;
+        text-align: center;
+        padding-bottom: 20px;
     }
 </style>
