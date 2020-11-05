@@ -2,11 +2,19 @@
     <div class="main">
         <div class="try">
             <h1>尝试过的题目</h1>
-            <span class="is_finish" v-for="(item,i) in finish">{{item}}</span>
+            <span class="is_finish" v-for="(item,i) in finish">
+                <router-link :to='"/problem/" + item'>
+                    {{item}}
+                </router-link>
+            </span>
         </div>
         <div class="finish">
             <h1>已完成的题目</h1>
-            <span class="is_finish" v-for="(item,i) in finish">{{item}}</span>
+            <span class="is_finish" v-for="(item,i) in finish">
+                <router-link :to='"/problem/" + item'>
+                    {{item}}
+                </router-link>
+            </span>
         </div>
     </div>
 
@@ -18,7 +26,7 @@
         data(){
             return{
                 finish: [
-                    "P1","P2","P3"
+                    1, 2, 3
                 ]
             }
             alert(this.finish.toString());

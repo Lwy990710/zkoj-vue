@@ -1,7 +1,6 @@
 <template>
     <div>
         <el-form :model="user_message" :rules="rules" ref="user_message" label-width="60px" key="res">
-
             <el-form-item label="账号" prop="username">
                 <el-input v-model="user_message.username"></el-input>
             </el-form-item>
@@ -11,8 +10,8 @@
             <el-form-item label="昵称" prop="name">
                 <el-input v-model="user_message.name"></el-input>
             </el-form-item>
-
         </el-form>
+
         <div slot="footer" class="register-footer" key="res_btn">
             <el-button type="primary" @click="register">注册</el-button>
         </div>

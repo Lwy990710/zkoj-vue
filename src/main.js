@@ -17,3 +17,10 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
+
+axios.interceptors.request.use(config => {
+  // 为请求头对象，添加 Token 验证的 Authorization 字段
+  config.headers['Authorization'] = store.state.token;
+  //必须return config 这是固定写法
+  return config
+})
