@@ -2,16 +2,15 @@
   <div class="main">
     <div class="problem_nav">
       <div class="problem_msg_main">
-        <h1 class="problem_id">{{this.problem_data.problem_id}}</h1>
+        <h1 class="problem_id">{{problem_data.id}}{{problem_data.title}}</h1>
       </div>
       <div class="msg_detail">
-        <!--        <span class="msg" v-if="this.problem_data.difficulty===1">难度：简单</span>-->
-        <!--        <span class="msg" v-else-if="this.problem_data.difficulty===2">难度：中等</span>-->
-        <!--        <span class="msg" v-else-if="this.problem_data.difficulty===3">难度：困难</span>-->
-        <span class="msg">难度：简单</span>
-        <span class="msg">提交数：1</span>
-        <span class="msg">通过数：1</span>
-        <span class="msg time">时间限制：1.000s</span>
+        <span class="msg" v-if="this.problem_data.difficulty===1">难度：简单</span>
+        <span class="msg" v-else-if="this.problem_data.difficulty===2">难度：中等</span>
+        <span class="msg" v-else-if="this.problem_data.difficulty===3">难度：困难</span>
+        <span class="msg">总提交数:{{this.problem_data.count}}</span>
+        <span class="msg">通过数:{{this.problem_data.accepted}}</span>
+        <span class="msg time">时间:1s</span>
         <span class="msg">内存：100M</span>
       </div>
     </div>
@@ -21,7 +20,7 @@
       <div class="problem_description">
         <h2>问题描述</h2>
         <div class="problem_content" id="problem_description_content">
-          {{this.problem_data.description}}
+          {{problem_data.description}}
         </div>
       </div>
 
@@ -65,14 +64,19 @@ export default {
     return {
 
       problem_data:{
-        problem_id: 1,
+        id: 1,
         title: '',
+        accepted: 0,
+        count: 0,
         description: '',
         sample_input: '',
         sample_output: '',
         hint: '',
         create_data: '',
         difficulty: -1,
+        limit:[{
+            time: 1
+        }],
       },
     }
   },
@@ -82,17 +86,18 @@ export default {
   },
 
   created() {
-    // axios.get(this.base_url + "/problem/2")
-    //         .then(res => {
-    //           console.log("in");
-    //           this.problem_data = res.data.data;
-    //           if (res.data)
-    //             console.log("in")
-    //           console.log(this.problem_data)
-    //         }).catch(err => {
-    //   //请求失败时进入catch
-    //   alert(err);
-    // });
+    // alert(this.problem_data.title);
+    axios.get(this.base_url + "/problem/" + this.problem_data.id )
+            .then(res => {
+              console.log("in");
+              this.problem_data = res.data.data;
+              if (res.data)
+                console.log("in")
+              console.log(this.problem_data)
+            }).catch(err => {
+      //请求失败时进入catch
+      alert(err);
+    });
     //请求数据
     // this.problem_data = {
     //   title : '标题',

@@ -20,7 +20,8 @@ new Vue({
 
 axios.interceptors.request.use(config => {
   // 为请求头对象，添加 Token 验证的 Authorization 字段
-  config.headers['Authorization'] = store.state.token;
+  if (store.state.is_login)
+    config.headers['Authorization'] = store.state.token;
   //必须return config 这是固定写法
   return config
 })
