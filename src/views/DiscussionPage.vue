@@ -1,10 +1,10 @@
 <template>
-    <h1>我的发布</h1>
+    <h1>讨论版块</h1>
 </template>
 
 <script>
     export default {
-        name: "MyRelease"
+        name: "DiscussionPage"
     }
 </script>
 

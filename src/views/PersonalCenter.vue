@@ -12,7 +12,7 @@
                 <div class="page_choose">
                     <el-menu
                             router
-                            default-active="this.$route.path"
+                            :default-active="this.$route.path"
                             class="user_nav">
                         <el-menu-item  index="/userhome">
                             <span slot="title">主页</span>

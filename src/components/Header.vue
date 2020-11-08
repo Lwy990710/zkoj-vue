@@ -11,9 +11,15 @@
                     background-color="#ffffff00"
                     text-color="#ffffff"
                     active-text-color="#ffffff">
-                <el-menu-item index="1">题目</el-menu-item>
-                <el-menu-item index="2">讨论区</el-menu-item>
-                <el-menu-item index="4">竞赛</el-menu-item>
+                <el-menu-item index="1">
+                    <router-link :to='"/"'>题目</router-link>
+                </el-menu-item>
+                <el-menu-item index="2">
+                    <router-link :to='"/discuss"'>讨论区</router-link>
+                </el-menu-item>
+                <el-menu-item index="4">
+                    <router-link :to='"/"'>竞赛</router-link>
+                </el-menu-item>
                 <!--<el-menu-item index="5">个人中心</el-menu-item>-->
             </el-menu>
         </div>
@@ -45,14 +51,15 @@
         <div v-if="$store.state.is_login">
             <el-dropdown>
                 <div class="avatar">
-                    <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" style="margin: 0 10px"></el-avatar>
+                    <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                               style="margin: 0 10px"></el-avatar>
                     <span style="display: inline-block;color: #FFFFFF;float: right;margin-top: 12px">
                         用户名
                     </span>
                 </div>
                 <el-dropdown-menu slot="dropdown" @command="logout">
                     <el-dropdown-item class="user_dropdown_item">
-                        <router-link :to='"/center"' target="_blank"
+                        <router-link :to='"/userhome"' target="_blank"
                                      style="width: 96px;display: inline-block;text-align: center;color: #606266">
                             个人中心
                         </router-link>

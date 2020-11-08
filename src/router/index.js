@@ -9,6 +9,7 @@ import UserHomePage from "../views/UserHomePage";
 import Statistics from "../views/Statistics";
 import MyRelease from "../views/MyRelease";
 import UserOptions from "../views/UserOptions";
+import DiscussionPage from "../views/DiscussionPage";
 import test from "../views/test";
 
 Vue.use(VueRouter)
@@ -56,6 +57,11 @@ const routes = [
       path: "/option",
       name: "设置页面",
       component: UserOptions
+    },
+    {
+        path: "/discuss",
+        name: "讨论页面",
+        component: DiscussionPage
     },
     {
         path: "/test",
