@@ -4,7 +4,7 @@
             <el-form-item label="账号" prop="username">
                 <el-input v-model="user_message.username"></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="password">
+            <el-form-item label="密码" prop="password" show-password>
                 <el-input v-model="user_message.password"></el-input>
             </el-form-item>
             <el-form-item label="昵称" prop="name" @keyup.enter.native="register">

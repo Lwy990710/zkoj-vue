@@ -5,7 +5,7 @@
                 <el-input v-model="user_message.username"></el-input>
             </el-form-item>
             <el-form-item @keyup.enter.native="login" label="密码" prop="password">
-                <el-input v-model="user_message.password"></el-input>
+                <el-input v-model="user_message.password" show-password></el-input>
             </el-form-item>
 
         </el-form>

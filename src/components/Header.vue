@@ -15,7 +15,10 @@
                     <router-link :to='"/"'>题目</router-link>
                 </el-menu-item>
                 <el-menu-item index="2">
-                    <router-link :to='"/discuss"'>讨论区</router-link>
+                    <router-link :to='"/discuss"'>讨论</router-link>
+                </el-menu-item>
+                <el-menu-item index="3">
+                    <router-link :to='"/record"'>记录</router-link>
                 </el-menu-item>
                 <el-menu-item index="4">
                     <router-link :to='"/"'>竞赛</router-link>

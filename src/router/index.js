@@ -10,6 +10,7 @@ import Statistics from "../views/Statistics";
 import MyRelease from "../views/MyRelease";
 import UserOptions from "../views/UserOptions";
 import DiscussionPage from "../views/DiscussionPage";
+import AnswerRecord from "../views/AnswerRecord";
 import test from "../views/test";
 
 Vue.use(VueRouter)
@@ -62,6 +63,11 @@ const routes = [
         path: "/discuss",
         name: "讨论页面",
         component: DiscussionPage
+    },
+    {
+      path: "/record",
+      name: "答题记录" ,
+      component: AnswerRecord
     },
     {
         path: "/test",

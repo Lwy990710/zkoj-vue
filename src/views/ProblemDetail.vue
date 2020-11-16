@@ -5,9 +5,10 @@
         <h1 class="problem_id">{{problem_data.id}}{{problem_data.title}}</h1>
       </div>
       <div class="msg_detail">
-        <span class="msg" v-if="this.problem_data.difficulty===1">难度：简单</span>
-        <span class="msg" v-else-if="this.problem_data.difficulty===2">难度：中等</span>
-        <span class="msg" v-else-if="this.problem_data.difficulty===3">难度：困难</span>
+        <span class="msg">难度：简单</span>
+<!--        <span class="msg" v-if="this.problem_data.difficulty===1">难度：简单</span>-->
+<!--        <span class="msg" v-else-if="this.problem_data.difficulty===2">难度：中等</span>-->
+<!--        <span class="msg" v-else-if="this.problem_data.difficulty===3">难度：困难</span>-->
         <span class="msg">总提交数:{{this.problem_data.count}}</span>
         <span class="msg">通过数:{{this.problem_data.accepted}}</span>
         <span class="msg time">时间:1s</span>

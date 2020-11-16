@@ -153,6 +153,10 @@
 <script>
     export default {
         name: "main",
+        beforeRouteEnter(to,from,next){
+            window.document.body.style.backgroundColor = '#FFFFFF';
+            next();
+        },
         data() {
             return {
                 input: '',
