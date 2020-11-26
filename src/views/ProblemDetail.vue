@@ -88,7 +88,7 @@ export default {
 
   created() {
     // alert(this.problem_data.title);
-    axios.get(this.base_url + "/problem/" + this.problem_data.id )
+    axios.get(this.base_url + "/problem/" + this.$route.params.id)
             .then(res => {
               console.log("in");
               this.problem_data = res.data.data;
@@ -134,7 +134,7 @@ export default {
   // },
   methods: {
     answer() {
-      this.$router.push('/answer')
+      this.$router.push('/answer/' + this.problem_data.id);
     }
   }
 }

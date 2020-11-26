@@ -5,12 +5,12 @@
         <el-button type="primary" @click="back">返回题目</el-button>
       </div>
       <!-- 问题描述 -->
-      <div class="answer_problem_description">
-        <h2>问题描述</h2>
-        <div class="answer_problem_content" id="answer_problem_description_content">
-          这里是问题描述
-        </div>
-      </div>
+<!--      <div class="answer_problem_description">-->
+<!--        <h2>问题描述</h2>-->
+<!--        <div class="answer_problem_content" id="answer_problem_description_content">-->
+<!--          这里是问题描述-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
 
     <div class="language_choose">
@@ -73,6 +73,7 @@ export default {
         label: 'c++'
       }],
       value: '',
+      language_id: 1
     }
   },
   mounted() {
@@ -111,10 +112,13 @@ export default {
       let mime = 'text/x-java'
       if (this.value === 'Java') {
         mime = 'text/x-java'
+        this.language_id = 1;
       } else if (this.value === 'Python') {
         mime = 'text/x-python'
+        this.language_id = 2;
       } else if (this.value === 'c++') {
         mime = 'text/x-c++src'
+        this.language_id = 3;
       }
 
       this.editor.setOption("mode", mime);
@@ -124,7 +128,20 @@ export default {
     // TODO : 提交答案
       let editor = this.editor;
       let source_code = editor.getValue();
+      let language_id = this.language_id;
+      let request_body = {
+        source_code: source_code,
+        language_id: language_id
+      }
 
+      axios.post(this.base_url + "solution/problem/" + this.$route.params.id, request_body)
+      .then(res => {
+        if (res.data.status === 1) {
+          alert("提交成功");
+        } else {
+          alert(res.data.message);
+        }
+      })
 
 
     }
