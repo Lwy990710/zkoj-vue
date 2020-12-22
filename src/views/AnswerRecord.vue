@@ -48,27 +48,26 @@
                         width="120">
                 </el-table-column>
                 <el-table-column
-                        prop="problem"
                         width="360">
-                    <template slot-scope="scope">
-                        {{scope.row.problem.id}}{{scope.row.problem.title}}
-                    </template>
+                <template slot-scope="scope">
+                    {{scope.row.problem_id.id}}  {{scope.row.problem_id.title}}
+                </template>
                 </el-table-column>
                 <el-table-column
                         prop="status.id"
                         width="120">
                     <template slot-scope="scope">
                         <div v-if="scope.row.status.id===0" ><el-tag type="success" effect="dark">Accepted</el-tag></div>
-                        <div v-if="scope.row.status.id === 1" ><el-tag type="warning" effect="dark">Tried</el-tag><</div>
+                        <div v-if="scope.row.status.id === 1" ><el-tag type="warning" effect="dark">Tried</el-tag></div>
                         <div v-if="scope.row.status.id > 1" ><el-tag type="danger" effect="dark">Unaccepted</el-tag></div>
                     </template>
                 </el-table-column>
                 <el-table-column
                         width="360">
                     <template slot-scope="scope">
-                       <i class="el-icon-stopwatch" style="font-size: 18px"></i>{{scope.row.time}}/
+                       <i class="el-icon-stopwatch" style="font-size: 18px"></i>{{scope.row.time}}
                         <i class="el-icon-coin" style="font-size: 18px"></i>{{scope.row.memory}}
-                        /<i class="el-icon-document" style="font-size: 18px"></i>{{scope.row.language.name}}
+                        <i class="el-icon-document" style="font-size: 18px"></i>{{scope.row.language.name}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -123,7 +122,7 @@
                         username:'',
                         name:''
                     },
-                    problem:{
+                    problem_id:{
                         id:-1,
                         title:''
                     },
