@@ -50,16 +50,23 @@
                 <el-table-column
                         width="360">
                 <template slot-scope="scope">
-                    {{scope.row.problem_id.id}}  {{scope.row.problem_id.title}}
+                    {{scope.row.problem.id}}  {{scope.row.problem.title}}
                 </template>
                 </el-table-column>
                 <el-table-column
                         prop="status.id"
                         width="120">
                     <template slot-scope="scope">
-                        <div v-if="scope.row.status.id===0" ><el-tag type="success" effect="dark">Accepted</el-tag></div>
-                        <div v-if="scope.row.status.id === 1" ><el-tag type="warning" effect="dark">Tried</el-tag></div>
-                        <div v-if="scope.row.status.id > 1" ><el-tag type="danger" effect="dark">Unaccepted</el-tag></div>
+                        <div v-if="scope.row.status.id===1" ><el-tag  effect="dark" color="#67C23A">Accepted</el-tag></div>
+                        <div v-if="scope.row.status.id === 2" ><el-tag  effect="dark" color="#F56C6C">Wrong Answer</el-tag></div>
+                        <div v-if="scope.row.status.id ===3" ><el-tag effect="dark" color="#03651A">Running</el-tag></div>
+                        <div v-if="scope.row.status.id ===4" ><el-tag effect="dark" color="#0276BF">Compiling</el-tag></div>
+                        <div v-if="scope.row.status.id ===5" ><el-tag effect="dark" color="#EB5B05">Waiting</el-tag></div>
+                        <div v-if="scope.row.status.id ===6" ><el-tag  effect="dark" color="#E6A23C">Compile Error</el-tag></div>
+                        <div v-if="scope.row.status.id ===7" ><el-tag effect="dark" >Runtime Error</el-tag></div>
+                        <div v-if="scope.row.status.id ===8" ><el-tag effect="dark" color="#052242">Time Limit Exceeded</el-tag></div>
+                        <div v-if="scope.row.status.id ===9" ><el-tag effect="dark">Memory Limit Exceeded</el-tag></div>
+                        <div v-if="scope.row.status.id ===10" ><el-tag effect="dark">PE</el-tag></div>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -122,7 +129,7 @@
                         username:'',
                         name:''
                     },
-                    problem_id:{
+                    problem:{
                         id:-1,
                         title:''
                     },

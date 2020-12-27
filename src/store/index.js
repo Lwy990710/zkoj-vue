@@ -7,7 +7,8 @@ export default new Vuex.Store({
   state: {
     username: '' || localStorage.getItem("username"),
     token: '' || localStorage.getItem("token"),
-    is_login: Boolean(localStorage.getItem('token'))
+    is_login: Boolean(localStorage.getItem('token')),
+    name: '' || localStorage.getItem("name")
   },
   mutations: {
     setUsername: (state, username) => {
@@ -18,6 +19,10 @@ export default new Vuex.Store({
       state.token = token;
       state.is_login = true;
       localStorage.setItem("token", token);
+    },
+    setName: (state, name) => {
+      state.name = name;
+      localStorage.setItem("name", name);
     },
     logout: (state) => {
       state.is_login = false;

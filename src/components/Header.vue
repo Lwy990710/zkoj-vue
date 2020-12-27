@@ -2,7 +2,7 @@
     <div class="body">
         <!-- logo -->
         <div class="logo">
-            ZKOJ
+            <router-link :to='"/"' style="color: white">ZKOJ</router-link>
         </div>
         <!-- 菜单 TODO: 设置事件 -->
         <div>
@@ -57,18 +57,18 @@
                     <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
                                style="margin: 0 10px"></el-avatar>
                     <span style="display: inline-block;color: #FFFFFF;float: right;margin-top: 12px">
-                        用户名
+                        {{this.$store.state.name}}
                     </span>
                 </div>
                 <el-dropdown-menu slot="dropdown" @command="logout">
                     <el-dropdown-item class="user_dropdown_item">
-                        <router-link :to='"/userhome"' target="_blank"
+                        <router-link :to='"/userhome"'
                                      style="width: 96px;display: inline-block;text-align: center;color: #606266">
                             个人中心
                         </router-link>
                     </el-dropdown-item>
                     <el-dropdown-item class="user_dropdown_item">
-                        <router-link :to='"/option"' target="_blank"
+                        <router-link :to='"/option"'
                                      style="width: 96px;display: inline-block;text-align: center;color: #606266">
                             设置
                         </router-link>
@@ -96,7 +96,7 @@
         </el-dialog>
 
         <el-dialog width="350px" title="欢迎使用仲恺OJ" :visible.sync="registerDialogFormVisible">
-            <RegisterDialog @close="closeRegisterDialog"/>
+            <RegisterDialog @close="closeRegisterDialog" @get="get"/>
         </el-dialog>
     </div>
 </template>
@@ -113,20 +113,22 @@
         },
         data() {
             return {
+                name: '',
                 loginDialogFormVisible: false,
                 registerDialogFormVisible: false
             }
         },
         methods: {
-            closeLoginDialog() {
+            closeLoginDialog(data) {
                 this.loginDialogFormVisible = false;
+                this.$store.commit('setName', data);
             },
             closeRegisterDialog() {
                 this.registerDialogFormVisible = false;
             },
             logout() {
                 this.$store.commit('logout');
-            }
+            },
         }
     }
 </script>
@@ -172,7 +174,7 @@
 
     .avatar {
         height: 50px;
-        width: 120px;
+        width: 210px;
         margin-right: 50px;
         padding-top: 10px;
         display: inline-block;

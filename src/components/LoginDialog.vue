@@ -49,6 +49,7 @@
         methods: {
             login() {
                 console.log('login');
+                let name = '';
                 let username = this.user_message.username;
                 let password = this.user_message.password;
                 password = md5('zkoj' + md5(username + password));
@@ -59,9 +60,16 @@
                 axios.post(this.base_url + "/login", request_body)
                     .then(res => {
                         if (res.data.status === 1) {
-                            //登陆成功
                             this.$store.commit('login', res.headers.authorization);
-                            this.$emit('close');
+                            //登陆成功
+                            axios.get(this.base_url + "/user")
+                                .then(result => {
+                                    if(result.data.status ===1 ){
+                                        name = result.data.data.name;
+                                        this.$emit('close',name);
+                                    }
+                                })
+
                         } else {
                             alert(res.data.message);
                         }
