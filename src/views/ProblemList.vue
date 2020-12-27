@@ -7,6 +7,9 @@
                 <el-input v-model="input" placeholder="搜索题目名称或编号"></el-input>
             </div>
 
+            <el-button id="algorithm" type="text" @click="changeAlgorithm" style="display: inline-block;margin: 1px 20px">显示算法标签
+            </el-button>
+
             <el-dropdown @command="choose">
                    <span class="el-dropdown-link">
                       难度<i class="el-icon-arrow-down el-icon--right"></i>
@@ -38,34 +41,34 @@
         <!--        <el-tag type="danger">困难</el-tag>-->
         <!--      </div>-->
 
-          <el-tag
-                  class="tag"
-                  id="tag_easy"
-                  type="success"
-                  closable
-                  :disable-transitions="false"
-                  @close="closeTagEasy">
+        <el-tag
+                class="tag"
+                id="tag_easy"
+                type="success"
+                closable
+                :disable-transitions="false"
+                @close="closeTagEasy">
             简单
-          </el-tag>
+        </el-tag>
 
-          <el-tag
-                  class="tag"
-                  id="tag_normal"
-                  type="warning"
-                  closable
-                  @close="closeTagNormal">
+        <el-tag
+                class="tag"
+                id="tag_normal"
+                type="warning"
+                closable
+                @close="closeTagNormal">
             中等
-          </el-tag>
+        </el-tag>
 
-          <el-tag
-                  class="tag"
-                  id="tag_difficult"
-                  type="danger"
-                  closable
-                  :disable-transitions="false"
-                  @close="closeTagDifficult">
+        <el-tag
+                class="tag"
+                id="tag_difficult"
+                type="danger"
+                closable
+                :disable-transitions="false"
+                @close="closeTagDifficult">
             困难
-          </el-tag>
+        </el-tag>
 
         <el-table
                 :data="tableData"
@@ -92,12 +95,22 @@
             <el-table-column
                     prop="title"
                     label="题目"
-                    width="500">
+                    width="300">
                 <template slot-scope="scope">
-                  <router-link :to='"/problem/" + scope.row.id' target="_blank">
-                    {{scope.row.title}}
-                  </router-link>
+                    <router-link :to='"/problem/" + scope.row.id' target="_blank">
+                        {{scope.row.title}}
+                    </router-link>
                 </template>
+            </el-table-column>
+
+            <el-table-column
+                    class="algorithm"
+                    prop="tag"
+                    label="算法"
+                    width="320">
+                    <template slot-scope="scope">
+                        <el-tag v-bind:class="{showtags: isShow,hidetags: isHide}" v-for="item in scope.row.tag" type="danger" effect="dark" style="font-size: 14px;margin: 0 5px">{{item.name}}</el-tag>
+                    </template>
             </el-table-column>
 
             <el-table-column
@@ -152,7 +165,7 @@
 <script>
     export default {
         name: "main",
-        beforeRouteEnter(to,from,next){
+        beforeRouteEnter(to, from, next) {
             window.document.body.style.backgroundColor = '#FFFFFF';
             next();
         },
@@ -166,9 +179,19 @@
                     accepted: 0,
                     difficulty: -1,
                     status: -1,
+                    tag: [{
+                        id: -1,
+                        name: '',
+                    }],
+                    problem_class: {
+                        id: -1,
+                        name: '',
+                    },
                     pass_rate: -1.0,
                 }
                 ],
+                isShow: false,
+                isHide: true,
                 flag: false,
                 mark: -1,
                 page: 1
@@ -203,6 +226,20 @@
                 });
         },
         methods: {
+
+            changeAlgorithm() {
+                let algorithm = document.getElementById("algorithm");
+                if(this.isShow === false){
+                    algorithm.innerHTML = "隐藏算法标签";
+                    this.isShow = true;
+                    this.isHide = false;
+                } else {
+                    algorithm.innerHTML = "显示算法标签";
+                    this.isShow = false;
+                    this.isHide = true;
+                }
+            },
+
             choose(command) {
                 this.mark = command;
                 axios.get(this.base_url + "/problem?page=" + this.page + "&difficulty=" + command)
@@ -250,68 +287,68 @@
                     normal.style.visibility = "visible";
                     difficult.style.visibility = "hidden";
                 } else if (command == 3) {
-                  easy.style.float = "none";
-                  normal.style.float = "none";
-                  difficult.style.float = "left";
-                  easy.style.visibility = "hidden";
-                  normal.style.visibility = "hidden";
-                  difficult.style.visibility = "visible";
+                    easy.style.float = "none";
+                    normal.style.float = "none";
+                    difficult.style.float = "left";
+                    easy.style.visibility = "hidden";
+                    normal.style.visibility = "hidden";
+                    difficult.style.visibility = "visible";
                 }
             },
             handleSizeChange(val) {
-              console.log(`每页 ${val} 条`);
+                console.log(`每页 ${val} 条`);
             },
 
             handleCurrentChange(val) {
                 this.page = val;
-                if(this.mark!=-1){
-                  axios.get(this.base_url + "/problem?page=" + val + "&difficulty=" + this.mark)
-                          .then(res => {
+                if (this.mark != -1) {
+                    axios.get(this.base_url + "/problem?page=" + val + "&difficulty=" + this.mark)
+                        .then(res => {
                             console.log("in")
                             //请求成功时进入then(HTTP状态码为200)
                             if (res.data.status === 1) {
-                              this.tableData = res.data.data;
-                              for (let i = 0; i < this.tableData.length; i++) {
-                                if (this.tableData[i].count === 0) {
-                                  this.tableData[i].pass_rate = "-";
-                                } else {
-                                  this.tableData[i].pass_rate = this.tableData[i].accepted / this.tableData[i].count;
-                                  this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
-                                  this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
-                                }
+                                this.tableData = res.data.data;
+                                for (let i = 0; i < this.tableData.length; i++) {
+                                    if (this.tableData[i].count === 0) {
+                                        this.tableData[i].pass_rate = "-";
+                                    } else {
+                                        this.tableData[i].pass_rate = this.tableData[i].accepted / this.tableData[i].count;
+                                        this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
+                                        this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
+                                    }
 
-                              }
-                              console.log("in")
-                              console.log(this.tableData)
+                                }
+                                console.log("in")
+                                console.log(this.tableData)
                             }
-                          })
-                          .catch(err => {
+                        })
+                        .catch(err => {
                             //请求失败时进入catch
-                          });
+                        });
                 } else {
-                  axios.get(this.base_url + "/problem?page=" + val)
-                          .then(res => {
+                    axios.get(this.base_url + "/problem?page=" + val)
+                        .then(res => {
                             console.log("in")
                             //请求成功时进入then(HTTP状态码为200)
                             if (res.data.status === 1) {
-                              this.tableData = res.data.data;
-                              for (let i = 0; i < this.tableData.length; i++) {
-                                if (this.tableData[i].count === 0) {
-                                  this.tableData[i].pass_rate = "-";
-                                } else {
-                                  this.tableData[i].pass_rate = this.tableData[i].accepted / this.tableData[i].count;
-                                  this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
-                                  this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
-                                }
+                                this.tableData = res.data.data;
+                                for (let i = 0; i < this.tableData.length; i++) {
+                                    if (this.tableData[i].count === 0) {
+                                        this.tableData[i].pass_rate = "-";
+                                    } else {
+                                        this.tableData[i].pass_rate = this.tableData[i].accepted / this.tableData[i].count;
+                                        this.tableData[i].pass_rate = Number(this.tableData[i].pass_rate * 100).toFixed(1);
+                                        this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
+                                    }
 
-                              }
-                              console.log("in")
-                              console.log(this.tableData)
+                                }
+                                console.log("in")
+                                console.log(this.tableData)
                             }
-                          })
-                          .catch(err => {
+                        })
+                        .catch(err => {
                             //请求失败时进入catch
-                          });
+                        });
                 }
             },
             closeTagEasy() {
@@ -343,8 +380,8 @@
                     });
             },
             closeTagNormal() {
-              this.mark = -1;
-              document.getElementById("tag_normal").style.visibility = "hidden";
+                this.mark = -1;
+                document.getElementById("tag_normal").style.visibility = "hidden";
                 axios.get(this.base_url + "/problem?page=1")
                     .then(res => {
                         console.log("in")
@@ -446,6 +483,14 @@
         width: 70%;
     }
 
+    .showtags{
+        visibility: visible;
+    }
+
+    .hidetags{
+        visibility: hidden;
+    }
+
     .el-dropdown {
         box-sizing: border-box;
         display: block;
@@ -480,15 +525,16 @@
         background-color: #42b983;
     }
 
-    #tag_easy{
-      visibility: hidden;
+
+    #tag_easy {
+        visibility: hidden;
     }
 
-    #tag_normal{
-      visibility: hidden;
+    #tag_normal {
+        visibility: hidden;
     }
 
-    #tag_difficult{
-      visibility: hidden;
+    #tag_difficult {
+        visibility: hidden;
     }
 </style>

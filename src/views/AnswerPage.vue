@@ -134,11 +134,10 @@ export default {
       let source_code = editor.getValue();
       let language_id = this.language_id;
       let request_body = {
-        source_code: source_code,
+        code: source_code,
         language_id: language_id
       }
-
-      axios.post(this.base_url + "solution/problem/" + this.$route.params.id, request_body)
+      axios.post(this.base_url + "/solution/problem/" + this.$route.params.id, request_body)
       .then(res => {
         if (res.data.status === 1) {
           alert("提交成功");
@@ -146,8 +145,6 @@ export default {
           alert(res.data.message);
         }
       })
-
-
     }
   }
 }

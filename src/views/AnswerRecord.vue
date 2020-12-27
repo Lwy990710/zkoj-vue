@@ -28,7 +28,7 @@
                 </div>
                 <div class="state_choose">
                     <span style="margin: 0 20px ;font-size: 18px">状态筛选</span>
-                    <el-select v-model="value" placeholder="全部状态" size="small">
+                    <el-select v-model="value"  size="small" @change="changeStatus(value)">
                         <el-option v-for="state in options"
                                    :key="state.value"
                                    :label="state.label"
@@ -57,9 +57,16 @@
                         prop="status.id"
                         width="120">
                     <template slot-scope="scope">
-                        <div v-if="scope.row.status.id===0" ><el-tag type="success" effect="dark">Accepted</el-tag></div>
-                        <div v-if="scope.row.status.id === 1" ><el-tag type="warning" effect="dark">Tried</el-tag></div>
-                        <div v-if="scope.row.status.id > 1" ><el-tag type="danger" effect="dark">Unaccepted</el-tag></div>
+                        <div v-if="scope.row.status.id===1" ><el-tag  effect="dark" color="#67C23A">Accepted</el-tag></div>
+                        <div v-if="scope.row.status.id === 2" ><el-tag  effect="dark" color="#F56C6C">Wrong Answer</el-tag></div>
+                        <div v-if="scope.row.status.id ===3" ><el-tag effect="dark" color="#03651A">Running</el-tag></div>
+                        <div v-if="scope.row.status.id ===4" ><el-tag effect="dark" color="#0276BF">Compiling</el-tag></div>
+                        <div v-if="scope.row.status.id ===5" ><el-tag effect="dark" color="#EB5B05">Waiting</el-tag></div>
+                        <div v-if="scope.row.status.id ===6" ><el-tag  effect="dark" color="#E6A23C">Compile Error</el-tag></div>
+                        <div v-if="scope.row.status.id ===7" ><el-tag effect="dark" >Runtime Error</el-tag></div>
+                        <div v-if="scope.row.status.id ===8" ><el-tag effect="dark" color="#052242">Time Limit Exceeded</el-tag></div>
+                        <div v-if="scope.row.status.id ===9" ><el-tag effect="dark">Memory Limit Exceeded</el-tag></div>
+                        <div v-if="scope.row.status.id ===10" ><el-tag effect="dark">PE</el-tag></div>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -108,14 +115,10 @@
                         label: '已完成',
                     },
                     {
-                        value: 'Unaccepted',
-                        label: '未完成',
-                    },
-                    {
-                        value: 'Tried',
-                        label: '尝试过'
-                    }],
-                value: '',
+                        value: 'Wrong answer',
+                        label: '错误',
+                    },],
+                value: '全部状态',
                 tableData: [{
                     id: -1,
                     user:{
@@ -152,7 +155,46 @@
                 })
         },
         methods:{
+            changeStatus(value){
+                if(value === "Accepted"){
+                    axios.get(this.base_url + "/solution?status_id=" + 1)
+                        .then(res => {
+                            console.log("in")
+                            if (res.data.status === 1) {
+                            this.tableData = res.data.data;
+                            }
+                        }).catch(err => {
+                        //请求失败时进入catch
+                        alert(err);
+                    });
+                }
 
+                if(value === "Wrong answer"){
+                    axios.get(this.base_url + "/solution?status_id=" + 2)
+                        .then(res => {
+                            console.log("in")
+                            if (res.data.status === 1) {
+                                this.tableData = res.data.data;
+                            }
+                        }).catch(err => {
+                        //请求失败时进入catch
+                        alert(err);
+                    });
+                }
+
+                if(value === "all"){
+                    axios.get(this.base_url + "/solution")
+                        .then(res => {
+                            console.log("in")
+                            if (res.data.status === 1) {
+                                this.tableData = res.data.data;
+                            }
+                        }).catch(err => {
+                        //请求失败时进入catch
+                        alert(err);
+                    });
+                }
+            }
         }
     }
 </script>

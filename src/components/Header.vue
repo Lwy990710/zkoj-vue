@@ -123,6 +123,8 @@ export default {
   methods: {
     closeLoginDialog() {
       this.loginDialogFormVisible = false;
+      this.$store.commit('setName', data);
+
     },
     closeRegisterDialog() {
       this.registerDialogFormVisible = false;
@@ -177,12 +179,12 @@ a {
 }
 
 .avatar {
-  height: 50px;
-  width: 120px;
-  margin-right: 50px;
-  padding-top: 10px;
-  display: inline-block;
-  text-align: center;
+    height: 50px;
+    width: 210px;
+    margin-right: 50px;
+    padding-top: 10px;
+    display: inline-block;
+    text-align: center;
 }
 
 .user-btn {
