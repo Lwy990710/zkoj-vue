@@ -115,7 +115,6 @@
                     <div v-if="scope.row.difficulty === 1" style="color: green">简单</div>
                     <div v-if="scope.row.difficulty === 2" style="color: orange">中等</div>
                     <div v-if="scope.row.difficulty === 3" style="color: red">困难</div>
-
                 </template>
 
             </el-table-column>

@@ -50,7 +50,7 @@
                 <el-table-column
                         width="360">
                 <template slot-scope="scope">
-                    {{scope.row.problem_id.id}}  {{scope.row.problem_id.title}}
+                    {{scope.row.problem.id}}  {{scope.row.problem.title}}
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -122,7 +122,7 @@
                         username:'',
                         name:''
                     },
-                    problem_id:{
+                    problem:{
                         id:-1,
                         title:''
                     },
