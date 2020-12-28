@@ -7,7 +7,8 @@
                 <el-input v-model="input" placeholder="搜索题目名称或编号"></el-input>
             </div>
 
-            <el-button id="algorithm" type="text" @click="changeAlgorithm" style="display: inline-block;margin: 1px 20px">显示算法标签
+            <el-button id="algorithm" type="text" @click="changeAlgorithm"
+                       style="display: inline-block;margin: 1px 20px">显示算法标签
             </el-button>
 
             <el-dropdown @command="choose">
@@ -79,10 +80,16 @@
                     label="状态"
                     width="80">
                 <template slot-scope="scope">
-                    <div v-if="scope.row.status===0" class="el-icon-check" style="color: #67C23A;font-size: 22px"></div>
-                    <div v-if="scope.row.status > 2" class="el-icon-minus" style="color: #E6A23C;font-size: 22px"></div>
+                    <div v-if="$store.state.is_login">
+                        <div v-if="scope.row.status===0" class="el-icon-check"
+                             style="color: #67C23A;font-size: 22px"></div>
+                        <div v-if="scope.row.status ===1 " class="el-icon-close"
+                             style="color: red;font-size: 22px"></div>
+                        <div v-if="scope.row.status > 1 " class="el-icon-minus"
+                             style="color: #E6A23C;font-size: 22px"></div>
+                    </div>
+                    <div v-else class="el-icon-minus" style="color: #E6A23C;font-size: 22px"></div>
                 </template>
-
             </el-table-column>
 
 
@@ -108,9 +115,11 @@
                     prop="tag"
                     label="算法"
                     width="320">
-                    <template slot-scope="scope">
-                        <el-tag v-bind:class="{showtags: isShow,hidetags: isHide}" v-for="item in scope.row.tag" type="danger" effect="dark" style="font-size: 14px;margin: 0 5px">{{item.name}}</el-tag>
-                    </template>
+                <template slot-scope="scope">
+                    <el-tag v-bind:class="{showtags: isShow,hidetags: isHide}" v-for="item in scope.row.tag"
+                            type="danger" effect="dark" style="font-size: 14px;margin: 0 5px">{{item.name}}
+                    </el-tag>
+                </template>
             </el-table-column>
 
             <el-table-column
@@ -229,7 +238,7 @@
 
             changeAlgorithm() {
                 let algorithm = document.getElementById("algorithm");
-                if(this.isShow === false){
+                if (this.isShow === false) {
                     algorithm.innerHTML = "隐藏算法标签";
                     this.isShow = true;
                     this.isHide = false;
@@ -483,11 +492,11 @@
         width: 70%;
     }
 
-    .showtags{
+    .showtags {
         visibility: visible;
     }
 
-    .hidetags{
+    .hidetags {
         visibility: hidden;
     }
 
