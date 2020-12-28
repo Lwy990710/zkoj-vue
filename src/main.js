@@ -12,7 +12,6 @@ Vue.config.productionTip = false
 Vue.prototype.base_url = "http://localhost:8080"
 axios.interceptors.request.use(config => {
   // 为请求头对象，添加 Token 验证的 Authorization 字段
-  console.log("axios: " + store.state.is_login);
   if (store.state.is_login)
     config.headers['Authorization'] = store.state.token;
   //必须return config 这是固定写法
@@ -21,13 +20,14 @@ axios.interceptors.request.use(config => {
 
 // 添加响应拦截器
 axios.interceptors.response.use(response =>{
-
-  console.log("response.status:" + response.status);
-  if(response.status===401){
-    this.$store.commit('logout');
-    this.$router.go(0);
-  }
   return response;
+}, err => {
+
+  if(err.response.status === 401){
+    store.commit('logout');
+    router.go(0);
+  }
+  return Promise.reject(err);
 });
 
 new Vue({

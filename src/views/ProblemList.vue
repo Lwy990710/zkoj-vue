@@ -81,14 +81,11 @@
                     width="80">
                 <template slot-scope="scope">
                     <div v-if="$store.state.is_login">
-                        <div v-if="scope.row.status===0" class="el-icon-check"
+                        <div v-if="scope.row.status===1" class="el-icon-check"
                              style="color: #67C23A;font-size: 22px"></div>
-                        <div v-if="scope.row.status ===1 " class="el-icon-close"
+                        <div v-if="scope.row.status ===2 " class="el-icon-close"
                              style="color: red;font-size: 22px"></div>
-                        <div v-if="scope.row.status > 1 " class="el-icon-minus"
-                             style="color: #E6A23C;font-size: 22px"></div>
                     </div>
-                    <div v-else class="el-icon-minus" style="color: #E6A23C;font-size: 22px"></div>
                 </template>
             </el-table-column>
 
@@ -211,7 +208,6 @@
             //发起get请求
             axios.get(this.base_url + "/problem?page=1")
                 .then(res => {
-                    console.log("in")
                     //请求成功时进入then(HTTP状态码为200)
                     if (res.data.status === 1) {
                         this.tableData = res.data.data;
@@ -224,9 +220,6 @@
                                 this.tableData[i].pass_rate = String(this.tableData[i].pass_rate) + "%"
                             }
                         }
-                        if (res.data)
-                            console.log("in")
-                        console.log(this.tableData)
                     }
                 })
                 .catch(err => {

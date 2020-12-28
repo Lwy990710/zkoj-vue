@@ -48,7 +48,6 @@
         },
         methods: {
             login() {
-                console.log('login');
                 let name = '';
                 let username = this.user_message.username;
                 let password = this.user_message.password;
