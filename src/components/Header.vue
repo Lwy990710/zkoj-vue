@@ -128,6 +128,7 @@
             },
             logout() {
                 this.$store.commit('logout');
+                this.$router.go(0);
             },
         }
     }

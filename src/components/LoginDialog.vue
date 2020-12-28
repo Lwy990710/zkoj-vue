@@ -64,12 +64,12 @@
                             //登陆成功
                             axios.get(this.base_url + "/user")
                                 .then(result => {
-                                    if(result.data.status ===1 ){
+                                    if (result.data.status === 1) {
                                         name = result.data.data.name;
-                                        this.$emit('close',name);
+                                        this.$emit('close', name);
                                     }
                                 })
-
+                            this.$router.go(0);
                         } else {
                             alert(res.data.message);
                         }

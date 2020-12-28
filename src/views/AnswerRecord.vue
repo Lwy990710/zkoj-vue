@@ -50,7 +50,7 @@
                 <el-table-column
                         width="360">
                 <template slot-scope="scope">
-                    {{scope.row.problem.id}}  {{scope.row.problem.title}}
+                    {{scope.row.problem.id}}.  {{scope.row.problem.title}}
                 </template>
                 </el-table-column>
                 <el-table-column
@@ -151,6 +151,10 @@
                     console.log("in");
                     if (res.data.status === 1) {
                         this.tableData = res.data.data;
+                    }
+                    if(res.data.status === 401){
+                        this.$store.commit('logout');
+                        this.$router.go(0);
                     }
                 })
         },

@@ -64,7 +64,7 @@
         background-color: white;
     }
 
-    .name{
+    .name {
         height: 70px;
         line-height: 70px;
         text-align: center;
@@ -72,7 +72,7 @@
         float: left;
     }
 
-    .title{
+    .title {
         height: 70px;
         line-height: 70px;
         text-align: center;
@@ -80,7 +80,7 @@
         float: left;
     }
 
-    .time{
+    .time {
         height: 70px;
         line-height: 70px;
         text-align: center;

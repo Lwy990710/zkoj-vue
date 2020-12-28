@@ -19,6 +19,17 @@ axios.interceptors.request.use(config => {
   return config
 });
 
+// 添加响应拦截器
+axios.interceptors.response.use(response =>{
+
+  console.log("response.status:" + response.status);
+  if(response.status===401){
+    this.$store.commit('logout');
+    this.$router.go(0);
+  }
+  return response;
+});
+
 new Vue({
   router,
   store,
