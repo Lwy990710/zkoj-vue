@@ -59,8 +59,8 @@
           <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
                      style="margin: 0 10px"></el-avatar>
           <span style="display: inline-block;color: #FFFFFF;float: right;margin-top: 12px">
-                        用户名
-                    </span>
+            {{ $store.state.name }}
+          </span>
         </div>
         <el-dropdown-menu slot="dropdown" @command="logout">
           <el-dropdown-item class="user_dropdown_item">
@@ -121,7 +121,7 @@ export default {
     }
   },
   methods: {
-    closeLoginDialog() {
+    closeLoginDialog(data) {
       this.loginDialogFormVisible = false;
       this.$store.commit('setName', data);
 
@@ -179,12 +179,11 @@ a {
 }
 
 .avatar {
-    height: 50px;
-    width: 210px;
-    margin-right: 50px;
-    padding-top: 10px;
-    display: inline-block;
-    text-align: center;
+  height: 50px;
+  margin-right: 50px;
+  padding-top: 10px;
+  display: inline-block;
+  text-align: center;
 }
 
 .user-btn {

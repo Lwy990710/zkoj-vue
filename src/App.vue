@@ -6,10 +6,10 @@
         <Header/>
       </el-header>
       <!-- 内容 -->
-      <el-main>
+      <el-main id="main-view">
         <router-view/>
       </el-main>
-      <!-- 页尾 -->
+      <!-- 页尾 高度60px -->
       <el-footer class="footer-view">
         <Footer/>
       </el-footer>
@@ -27,18 +27,28 @@ export default {
   components: {
     Header,
     Footer
+  },
+  mounted() {
+    let window_height = window.innerHeight;
+    document.getElementById("main-view").style.minHeight = (window_height - 120) + "px";
   }
 }
 </script>
 
 <style>
-  body{
-    margin: 0px;
-  }
-  .header-view {
-    background-color: #269D80;
-  }
-  .footer-view {
-    background-color: gray;
-  }
+body {
+  margin: 0px;
+}
+
+.header-view {
+  background-color: #269D80;
+}
+
+.footer-view {
+  background-color: #269D80;
+}
+
+#main-view {
+
+}
 </style>
