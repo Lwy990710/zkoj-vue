@@ -8,7 +8,7 @@
       <div class="find_record">
         <h3>查找记录</h3>
         <div class="find clear">
-          <span style="margin: 0 20px ;font-size: 18px">题号查找</span>
+          <span style="margin: 0 20px ;font-size: 18px">条件查找</span>
           <el-input
               class="choose"
               size="small"
@@ -17,19 +17,16 @@
               v-model="inputProblemId"
               @change="problemIdRecord">
           </el-input>
-        </div>
-        <div class="find clear">
-          <span style="margin: 0 20px ;font-size: 18px">账号查找</span>
           <el-input
               size="small"
               style="display: inline"
-              placeholder="用户账号"
+              placeholder="用户名"
               v-model="inputUsername"
               @change="usernameRecord">
           </el-input>
         </div>
         <div class="state_choose">
-          <span style="margin: 0 20px ;font-size: 18px">状态筛选</span>
+          <span style="margin: 0 20px ;font-size: 18px;display: inline-block">状态筛选</span>
           <el-select v-model="value" size="small" @change="changeStatus">
             <el-option v-for="state in options"
                        :key="state.value"
@@ -489,12 +486,13 @@ export default {
 }
 
 /deep/ .el-input__inner.el-input__inner {
-  width: 250px !important;
+  margin: 0 5px;
+  width: 180px !important;
 }
 
 .find {
   margin-top: 20px;
-  width: 600px;
+  width: 800px;
 }
 
 .state_choose {
@@ -503,7 +501,6 @@ export default {
 
 .find_list {
   margin-top: 30px;
-
   padding: 20px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
