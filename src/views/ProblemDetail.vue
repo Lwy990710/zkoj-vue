@@ -59,10 +59,10 @@
             <p>创建时间:&emsp;{{this.problem_data.create_date}}</p>
             <p v-if="this.problem_data.difficulty===1">难度:<span style="color: green"><strong>&emsp;简单</strong></span>
             </p>
-            <p v-else-if="this.problem_data.difficulty===2">难度:<span style="color: orange">&emsp;中等</span></p>
-            <p v-else-if="this.problem_data.difficulty===3">难度:<span style="color: red">&emsp;困难</span></p>
+            <p v-else-if="this.problem_data.difficulty===2">难度:<span style="color: orange"><strong>&emsp;中等</strong></span></p>
+            <p v-else-if="this.problem_data.difficulty===3">难度:<span style="color: red"><strong>&emsp;困难</strong></span></p>
             <p>算法标签:
-                <el-tag class="tags" v-for="item in problem_data.tag" type="danger" effect="dark"
+                <el-tag class="tags" v-for="(item, index) in problem_data.tag" :key="index" type="danger" effect="dark"
                         style="font-size: 14px">{{item.name}}
                 </el-tag>
             </p>
@@ -109,16 +109,10 @@
             // alert(this.problem_data.title);
             axios.get(this.base_url + "/problem/" + this.$route.params.id)
                 .then(res => {
-                    console.log("in");
                     if (res.data.status === 1) {
                         this.problem_data = res.data.data;
                         if (res.data)
-                            console.log("in")
                         console.log(this.problem_data)
-                    }
-                    if (res.data.status === 401) {
-                        this.$store.commit('logout');
-                        this.$router.go(0);
                     }
                 }).catch(err => {
                 //请求失败时进入catch

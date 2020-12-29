@@ -108,8 +108,8 @@
             </el-tooltip>
           </template>
           <template slot-scope="scope">
-            <el-tag v-if="isShowTag" v-for="item in scope.row.tag" disable-transitions
-                    type="danger" effect="dark" style="font-size: 14px;margin: 0 5px" size="small">
+            <el-tag v-if="isShowTag" v-for="(item, index) in scope.row.tag"  :key="index" disable-transitions
+                    type="danger" effect="dark" style="font-size: 12px;margin: 0 5px" size="mini">
               {{ item.name }}
             </el-tag>
             <div v-if="!isShowTag && scope.row.problem_class">
@@ -217,7 +217,6 @@ export default {
       this.mark = command;
       axios.get(this.base_url + "/problem?page=" + this.page + "&difficulty=" + command)
           .then(res => {
-            console.log("in")
             //请求成功时进入then(HTTP状态码为200)
             if (res.data.status === 1) {
               this.tableData = res.data.data;
@@ -231,7 +230,6 @@ export default {
                 }
               }
               if (res.data)
-                console.log("in")
               console.log(this.tableData)
             }
           })
@@ -277,7 +275,6 @@ export default {
       if (this.mark != -1) {
         axios.get(this.base_url + "/problem?page=" + val + "&difficulty=" + this.mark)
             .then(res => {
-              console.log("in")
               //请求成功时进入then(HTTP状态码为200)
               if (res.data.status === 1) {
                 this.tableData = res.data.data;
@@ -291,7 +288,6 @@ export default {
                   }
 
                 }
-                console.log("in")
                 console.log(this.tableData)
               }
             })
@@ -301,7 +297,6 @@ export default {
       } else {
         axios.get(this.base_url + "/problem?page=" + val)
             .then(res => {
-              console.log("in")
               //请求成功时进入then(HTTP状态码为200)
               if (res.data.status === 1) {
                 this.tableData = res.data.data;
@@ -315,7 +310,6 @@ export default {
                   }
 
                 }
-                console.log("in")
                 console.log(this.tableData)
               }
             })
@@ -329,7 +323,6 @@ export default {
       document.getElementById("tag_easy").style.visibility = "hidden";
       axios.get(this.base_url + "/problem?page=1")
           .then(res => {
-            console.log("in")
             //请求成功时进入then(HTTP状态码为200)
             if (res.data.status === 1) {
               this.tableData = res.data.data;
@@ -343,7 +336,6 @@ export default {
                 }
               }
               if (res.data)
-                console.log("in")
               console.log(this.tableData)
             }
           })
@@ -357,7 +349,6 @@ export default {
       document.getElementById("tag_normal").style.visibility = "hidden";
       axios.get(this.base_url + "/problem?page=1")
           .then(res => {
-            console.log("in")
             //请求成功时进入then(HTTP状态码为200)
             if (res.data.status === 1) {
               this.tableData = res.data.data;
@@ -371,7 +362,6 @@ export default {
                 }
               }
               if (res.data)
-                console.log("in")
               console.log(this.tableData)
             }
           })
@@ -385,7 +375,6 @@ export default {
       document.getElementById("tag_difficult").style.visibility = "hidden";
       axios.get(this.base_url + "/problem?page=1")
           .then(res => {
-            console.log("in")
             //请求成功时进入then(HTTP状态码为200)
             if (res.data.status === 1) {
               this.tableData = res.data.data;
@@ -399,7 +388,6 @@ export default {
                 }
               }
               if (res.data)
-                console.log("in")
               console.log(this.tableData)
             }
           })

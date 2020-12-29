@@ -14,7 +14,8 @@
               size="small"
               style="display: inline"
               placeholder="题目编号"
-              v-model="input">
+              v-model="inputProblemId"
+              @change="problemIdRecord">
           </el-input>
         </div>
         <div class="find clear">
@@ -23,12 +24,13 @@
               size="small"
               style="display: inline"
               placeholder="用户账号"
-              v-model="input2">
+              v-model="inputUsername"
+              @change="usernameRecord">
           </el-input>
         </div>
         <div class="state_choose">
           <span style="margin: 0 20px ;font-size: 18px">状态筛选</span>
-          <el-select v-model="value" size="small" @change="changeStatus(value)">
+          <el-select v-model="value" size="small" @change="changeStatus">
             <el-option v-for="state in options"
                        :key="state.value"
                        :label="state.label"
@@ -57,35 +59,35 @@
             prop="status.id"
             width="120">
           <template slot-scope="scope">
-            <div v-if="scope.row.status.id===1">
+            <div v-if="scope.row.status.id === 1">
               <el-tag effect="dark" color="#67C23A">Accepted</el-tag>
             </div>
             <div v-if="scope.row.status.id === 2">
               <el-tag effect="dark" color="#F56C6C">Wrong Answer</el-tag>
             </div>
-            <div v-if="scope.row.status.id ===3">
-              <el-tag effect="dark" color="#03651A">Running</el-tag>
+            <div v-if="scope.row.status.id === 3">
+              <el-tag effect="dark" color="#409EFF">Running</el-tag>
             </div>
-            <div v-if="scope.row.status.id ===4">
-              <el-tag effect="dark" color="#0276BF">Compiling</el-tag>
+            <div v-if="scope.row.status.id === 4">
+              <el-tag effect="dark" color="#409EFF">Compiling</el-tag>
             </div>
-            <div v-if="scope.row.status.id ===5">
-              <el-tag effect="dark" color="#EB5B05">Waiting</el-tag>
+            <div v-if="scope.row.status.id === 5">
+              <el-tag effect="dark" color="#409EFF">Waiting</el-tag>
             </div>
-            <div v-if="scope.row.status.id ===6">
+            <div v-if="scope.row.status.id === 6">
               <el-tag effect="dark" color="#E6A23C">Compile Error</el-tag>
             </div>
-            <div v-if="scope.row.status.id ===7">
-              <el-tag effect="dark">Runtime Error</el-tag>
+            <div v-if="scope.row.status.id === 7">
+              <el-tag effect="dark" color="#E6A23C">Runtime Error</el-tag>
             </div>
-            <div v-if="scope.row.status.id ===8">
-              <el-tag effect="dark" color="#052242">Time Limit Exceeded</el-tag>
+            <div v-if="scope.row.status.id === 8">
+              <el-tag effect="dark" color="#E6A23C">Time Limit Exceeded</el-tag>
             </div>
-            <div v-if="scope.row.status.id ===9">
-              <el-tag effect="dark">Memory Limit Exceeded</el-tag>
+            <div v-if="scope.row.status.id === 9">
+              <el-tag effect="dark" color="#E6A23C">Memory Limit Exceeded</el-tag>
             </div>
-            <div v-if="scope.row.status.id ===10">
-              <el-tag effect="dark">PE</el-tag>
+            <div v-if="scope.row.status.id === 10">
+              <el-tag effect="dark" color="#E6A23C">PE</el-tag>
             </div>
           </template>
         </el-table-column>
@@ -123,8 +125,8 @@ export default {
   },
   data() {
     return {
-      input: '',
-      input2: '',
+      inputProblemId: '',
+      inputUsername: '',
       options: [
         {
           value: 'all',
@@ -168,55 +170,293 @@ export default {
   created() {
     axios.get(this.base_url + "/solution")
         .then(res => {
-          console.log("in");
           if (res.data.status === 1) {
             this.tableData = res.data.data;
-          }
-          if (res.data.status === 401) {
-            this.$store.commit('logout');
-            this.$router.go(0);
           }
         })
   },
   methods: {
+
+    problemIdRecord(value){
+      if(this.value === 'all'){
+        if(this.inputUsername === ''){
+          axios.get(this.base_url + "/solution?problem_id=" + value)
+                  .then(res => {
+                    if(res.data.status === 1){
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            alert(err);
+          })
+        } else {
+          axios.get(this.base_url + "/solution?problem_id=" + value + "&username=" + this.inputUsername)
+                  .then(res => {
+                    if(res.data.status === 1){
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            alert(err);
+          })
+        }
+      }
+
+      if(this.value === 'Accepted'){
+        if(this.inputUsername === ''){
+          axios.get(this.base_url + "/solution?problem_id=" + value + "&status_id=" + 1)
+                  .then(res => {
+                    if(res.data.status === 1){
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            alert(err);
+          })
+        } else {
+          axios.get(this.base_url + "/solution?problem_id=" + value + "&status_id=" + 1 + "&username=" + this.inputUsername)
+                  .then(res => {
+                    if(res.data.status === 1){
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            alert(err);
+          })
+        }
+      }
+
+      if(this.value === 'Wrong answer'){
+        if(this.inputUsername === ''){
+          axios.get(this.base_url + "/solution?problem_id=" + + value + "&status_id=" + 2)
+                  .then(res => {
+                    if(res.data.status === 1){
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            alert(err);
+          })
+        } else {
+          axios.get(this.base_url + "/solution?problem_id=" + value + "&status_id=" + 1 + "&username=" + this.inputUsername)
+                  .then(res => {
+                    if(res.data.status === 1){
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            alert(err);
+          })
+        }
+      }
+    },
+
+    usernameRecord(value){
+      if(this.value === 'all'){
+       if (this.inputProblemId === ''){
+         axios.get(this.base_url + "/solution?username=" + value)
+                 .then(res => {
+                   if(res.data.status === 1){
+                     this.tableData = res.data.data;
+                   }
+                 }).catch(err => {
+           alert(err);
+         })
+       } else {
+         axios.get(this.base_url + "/solution?username=" + value + "&problem_id=" + this.inputProblemId)
+                 .then(res => {
+                   if(res.data.status === 1){
+                     this.tableData = res.data.data;
+                   }
+                 }).catch(err => {
+           alert(err);
+         })
+       }
+      }
+      if(this.value === 'Accepted'){
+        if (this.inputProblemId === ''){
+          axios.get(this.base_url + "/solution?username=" + value + "&status_id=" + 1)
+                  .then(res => {
+                    if(res.data.status === 1){
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            alert(err);
+          })
+        } else {
+          axios.get(this.base_url + "/solution?username=" + value + "&problem_id=" + this.inputProblemId + "&status_id=" + 1)
+                  .then(res => {
+                    if(res.data.status === 1){
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            alert(err);
+          })
+        }
+      }
+
+      if(this.value === 'Wrong answer'){
+        if (this.inputProblemId === ''){
+          axios.get(this.base_url + "/solution?username=" + value + "&status_id=" + 2)
+                  .then(res => {
+                    if(res.data.status === 1){
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            alert(err);
+          })
+        } else {
+          axios.get(this.base_url + "/solution?username=" + value + "&problem_id=" + this.inputProblemId + "&status_id=" + 2)
+                  .then(res => {
+                    if(res.data.status === 1){
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            alert(err);
+          })
+        }
+      }
+    },
+
     changeStatus(value) {
-      if (value === "Accepted") {
-        axios.get(this.base_url + "/solution?status_id=" + 1)
-            .then(res => {
-              console.log("in")
-              if (res.data.status === 1) {
-                this.tableData = res.data.data;
-              }
-            }).catch(err => {
-          //请求失败时进入catch
-          alert(err);
-        });
-      }
+      if(this.inputUsername === '' && this.inputProblemId === ''){
+        if (value === "Accepted") {
+          axios.get(this.base_url + "/solution?status_id=" + 1)
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
 
-      if (value === "Wrong answer") {
-        axios.get(this.base_url + "/solution?status_id=" + 2)
-            .then(res => {
-              console.log("in")
-              if (res.data.status === 1) {
-                this.tableData = res.data.data;
-              }
-            }).catch(err => {
-          //请求失败时进入catch
-          alert(err);
-        });
-      }
+        if (value === "Wrong answer") {
+          axios.get(this.base_url + "/solution?status_id=" + 2)
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
 
-      if (value === "all") {
-        axios.get(this.base_url + "/solution")
-            .then(res => {
-              console.log("in")
-              if (res.data.status === 1) {
-                this.tableData = res.data.data;
-              }
-            }).catch(err => {
-          //请求失败时进入catch
-          alert(err);
-        });
+        if (value === "all") {
+          axios.get(this.base_url + "/solution")
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
+      } else if(this.inputProblemId !== '' && this.inputUsername === ''){
+        if (value === "Accepted") {
+          axios.get(this.base_url + "/solution?status_id=" + 1 + "&problem_id=" + this.inputProblemId)
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
+
+        if (value === "Wrong answer") {
+          axios.get(this.base_url + "/solution?status_id=" + 2 + "&problem_id=" + this.inputProblemId)
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
+
+        if (value === "all") {
+          axios.get(this.base_url + "/solution?problem_id=" + this.inputProblemId)
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
+      } else if(this.inputProblemId === '' && this.inputUsername !== ''){
+        if (value === "Accepted") {
+          axios.get(this.base_url + "/solution?status_id=" + 1 + "&username=" + this.inputUsername)
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
+
+        if (value === "Wrong answer") {
+          axios.get(this.base_url + "/solution?status_id=" + 2 + "&username=" + this.inputUsername)
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
+
+        if (value === "all") {
+          axios.get(this.base_url + "/solution?username=" + this.inputUsername)
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
+      } else if(this.inputProblemId !== '' && this.inputUsername !== ''){
+        if (value === "Accepted") {
+          axios.get(this.base_url + "/solution?status_id=" + 1 + "&problem_id=" + this.inputProblemId + "&username=" + this.inputUsername)
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
+
+        if (value === "Wrong answer") {
+          axios.get(this.base_url + "/solution?status_id=" + 2 + "&problem_id=" + this.inputProblemId + "&username=" + this.inputUsername)
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
+
+        if (value === "all") {
+          axios.get(this.base_url + "/solution?problem_id=" + this.inputProblemId + "&username=" + this.inputUsername)
+                  .then(res => {
+                    if (res.data.status === 1) {
+                      this.tableData = res.data.data;
+                    }
+                  }).catch(err => {
+            //请求失败时进入catch
+            alert(err);
+          });
+        }
       }
     }
   }
