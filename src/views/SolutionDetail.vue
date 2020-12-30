@@ -124,7 +124,7 @@
         background-color: white;
         padding: 20px;
         width: 350px;
-        height: 200px;
+        height: 220px;
         float: right;
         box-sizing: border-box;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
