@@ -41,10 +41,8 @@
         created() {
             axios.get(this.base_url + "/user")
                 .then(res => {
-                    console.log("in");
                     this.user_msg = res.data.data;
                     if (res.data)
-                        console.log("in")
                     console.log(this.problem_data)
                 }).catch(err => {
                 //请求失败时进入catch
