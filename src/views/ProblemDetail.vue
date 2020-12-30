@@ -1,7 +1,6 @@
 <template>
     <div class="main clear">
         <div class="detail_main">
-
             <div class="problem_nav">
                 <div class="problem_msg_main">
                     <h1 class="problem_id">{{problem_data.id}}{{problem_data.title}}</h1>
@@ -13,8 +12,8 @@
                     <!--        <span class="msg" v-else-if="this.problem_data.difficulty===3">难度：困难</span>-->
                     <span class="msg">总提交数:{{this.problem_data.count}}</span>
                     <span class="msg">通过数:{{this.problem_data.accepted}}</span>
-                    <span class="msg time">时间:{{this.problem_data.limit.time}}</span>
-                    <span class="msg">内存:{{this.problem_data.limit.memory}}</span>
+                    <span class="msg time"v-for="item in problem_data.limit">时间:{{item.time}}</span>
+                    <span class="msg" v-for="item in problem_data.limit">内存:{{item.memory}}</span>
                 </div>
             </div>
 
@@ -179,6 +178,7 @@
     .main {
         background-color: #EFEFEF !important;
         margin: 0 auto;
+        max-width: 1160px;
         width: 1160px;
         min-width: 800px;
     }
@@ -187,6 +187,7 @@
         float: left;
         width: 800px;
         background-color: #FFFFFF;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
     }
 
     .problem_nav {
@@ -231,6 +232,7 @@
         width: 310px;
         background-color: #FFFFFF;
         float: right;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
     }
 
     .tags {

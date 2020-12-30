@@ -11,10 +11,12 @@ import MyRelease from "../views/MyRelease";
 import UserOptions from "../views/UserOptions";
 import DiscussionPage from "../views/DiscussionPage";
 import AnswerRecord from "../views/AnswerRecord";
+import SolutionDetail from "../views/SolutionDetail";
 import test from "../views/test";
 import Main from "@/views/Main";
 import AdminContainer from "@/views/admin/AdminContainer";
 import ProblemManage from "@/views/admin/ProblemManage";
+import solutionDetail from "../views/SolutionDetail";
 
 Vue.use(VueRouter)
 
@@ -79,6 +81,11 @@ const routes = [
                 path: "/test",
                 name: "代码编译器测试",
                 component: test
+            },
+            {
+                path: "/solution/:id",
+                name: "测评详情",
+                component: SolutionDetail
             }]
     },
     {

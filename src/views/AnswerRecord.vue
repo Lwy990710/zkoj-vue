@@ -43,6 +43,10 @@
           :data="tableData"
           style="width: 100%">
         <el-table-column
+                prop="id"
+                width="60">
+        </el-table-column>
+        <el-table-column
             prop="user.username"
             width="120">
         </el-table-column>
@@ -54,45 +58,45 @@
         </el-table-column>
         <el-table-column
             prop="status.id"
-            width="120">
+            width="200">
           <template slot-scope="scope">
             <div v-if="scope.row.status.id === 1">
-              <el-tag effect="dark" color="#67C23A">Accepted</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#67C23A">Accepted</el-tag>
             </div>
             <div v-if="scope.row.status.id === 2">
-              <el-tag effect="dark" color="#F56C6C">Wrong Answer</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#F56C6C">Wrong Answer</el-tag>
             </div>
             <div v-if="scope.row.status.id === 3">
-              <el-tag effect="dark" color="#409EFF">Running</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#409EFF">Running</el-tag>
             </div>
             <div v-if="scope.row.status.id === 4">
-              <el-tag effect="dark" color="#409EFF">Compiling</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#409EFF">Compiling</el-tag>
             </div>
             <div v-if="scope.row.status.id === 5">
-              <el-tag effect="dark" color="#409EFF">Waiting</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#409EFF">Waiting</el-tag>
             </div>
             <div v-if="scope.row.status.id === 6">
-              <el-tag effect="dark" color="#E6A23C">Compile Error</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#E6A23C">Compile Error</el-tag>
             </div>
             <div v-if="scope.row.status.id === 7">
-              <el-tag effect="dark" color="#E6A23C">Runtime Error</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#E6A23C">Runtime Error</el-tag>
             </div>
             <div v-if="scope.row.status.id === 8">
-              <el-tag effect="dark" color="#E6A23C">Time Limit Exceeded</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#E6A23C">Time Limit Exceeded</el-tag>
             </div>
             <div v-if="scope.row.status.id === 9">
-              <el-tag effect="dark" color="#E6A23C">Memory Limit Exceeded</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#E6A23C">Memory Limit Exceeded</el-tag>
             </div>
             <div v-if="scope.row.status.id === 10">
-              <el-tag effect="dark" color="#E6A23C">PE</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#E6A23C">PE</el-tag>
             </div>
           </template>
         </el-table-column>
         <el-table-column
-            width="360">
+            width="220">
           <template slot-scope="scope">
-            <i class="el-icon-stopwatch" style="font-size: 18px"></i>{{ scope.row.time }}
-            <i class="el-icon-coin" style="font-size: 18px"></i>{{ scope.row.memory }}
+            <i class="el-icon-stopwatch" style="font-size: 18px"></i>{{ scope.row.time }}s
+            <i class="el-icon-coin" style="font-size: 18px"></i>{{ scope.row.memory }}MB
             <i class="el-icon-document" style="font-size: 18px"></i>{{ scope.row.language.name }}
           </template>
         </el-table-column>
@@ -173,6 +177,11 @@ export default {
         })
   },
   methods: {
+
+    showSolutionDetail(id){
+      let routerJump = this.$router.resolve('/solution/' + id);
+      window.open(routerJump.href, '_blank');
+    },
 
     problemIdRecord(value){
       if(this.value === 'all'){
@@ -475,7 +484,6 @@ export default {
   padding: 10px;
   min-width: 800px;
   max-width: 1200px;
-  height: 800px;
   margin: 0 auto;
 }
 
@@ -506,5 +514,8 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
 }
 
+.el-tag:hover {
+  cursor: pointer;
+}
 
 </style>
