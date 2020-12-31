@@ -28,7 +28,7 @@ const routes = [
             path: "/",
             name: "主页面",
             component: ProblemList
-        },
+            },
             {
                 path: "/problem/:id",
                 name: "答题页面",

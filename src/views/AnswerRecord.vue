@@ -34,6 +34,7 @@
                        :value="state.value">
             </el-option>
           </el-select>
+          <el-button type="text" @click="clearCondition" style="display: inline-block;margin: 0 20px;width: 150px;float: right"><strong>清除所有筛选条件</strong></el-button>
         </div>
       </div>
     </div>
@@ -185,6 +186,18 @@ export default {
         })
   },
   methods: {
+
+    clearCondition(){
+      this.inputProblemId = "";
+      this.inputUsername = "";
+      this.value = "全部状态";
+      axios.get(this.base_url + "/solution")
+      .then(res => {
+        this.tableData = res.data.data;
+      }).catch(err => {
+        alert(err);
+      })
+    },
 
     showSolutionDetail(id){
       let routerJump = this.$router.resolve('/solution/' + id);

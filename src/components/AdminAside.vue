@@ -44,3 +44,9 @@ export default {
 <style scoped>
 
 </style>
+
+<style>
+  .el-aside{
+    overflow: hidden!important;
+  }
+</style>
