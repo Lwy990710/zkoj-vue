@@ -49,11 +49,19 @@
         <el-table-column
             prop="user.username"
             width="120">
+          <template slot-scope="scope">
+            <router-link :to='"/userhome"'>
+              {{ scope.row.user.username }}
+            </router-link>
+          </template>
         </el-table-column>
         <el-table-column
             width="360">
           <template slot-scope="scope">
-            {{ scope.row.problem.id }}. {{ scope.row.problem.title }}
+            <router-link :to='"/problem/" + scope.row.problem.id'>
+              {{ scope.row.problem.id }}. {{ scope.row.problem.title }}
+            </router-link>
+
           </template>
         </el-table-column>
         <el-table-column
@@ -471,6 +479,9 @@ export default {
 
 <style scoped>
 
+a{
+  text-decoration: none;
+}
 
 .clear::before,
 .clear::after {
