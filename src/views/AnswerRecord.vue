@@ -34,6 +34,7 @@
                        :value="state.value">
             </el-option>
           </el-select>
+          <el-button type="text" @click="clearCondition" style="display: inline-block;margin: 0 20px;width: 150px;float: right"><strong>清除所有筛选条件</strong></el-button>
         </div>
       </div>
     </div>
@@ -43,56 +44,68 @@
           :data="tableData"
           style="width: 100%">
         <el-table-column
+                prop="id"
+                width="60">
+        </el-table-column>
+        <el-table-column
             prop="user.username"
             width="120">
+          <template slot-scope="scope">
+            <router-link :to='"/userhome"'>
+              {{ scope.row.user.username }}
+            </router-link>
+          </template>
         </el-table-column>
         <el-table-column
             width="360">
           <template slot-scope="scope">
-            {{ scope.row.problem.id }}. {{ scope.row.problem.title }}
+            <router-link :to='"/problem/" + scope.row.problem.id'>
+              {{ scope.row.problem.id }}. {{ scope.row.problem.title }}
+            </router-link>
+
           </template>
         </el-table-column>
         <el-table-column
             prop="status.id"
-            width="120">
+            width="200">
           <template slot-scope="scope">
             <div v-if="scope.row.status.id === 1">
-              <el-tag effect="dark" color="#67C23A">Accepted</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#67C23A">Accepted</el-tag>
             </div>
             <div v-if="scope.row.status.id === 2">
-              <el-tag effect="dark" color="#F56C6C">Wrong Answer</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#F56C6C">Wrong Answer</el-tag>
             </div>
             <div v-if="scope.row.status.id === 3">
-              <el-tag effect="dark" color="#409EFF">Running</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#409EFF">Running</el-tag>
             </div>
             <div v-if="scope.row.status.id === 4">
-              <el-tag effect="dark" color="#409EFF">Compiling</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#409EFF">Compiling</el-tag>
             </div>
             <div v-if="scope.row.status.id === 5">
-              <el-tag effect="dark" color="#409EFF">Waiting</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#409EFF">Waiting</el-tag>
             </div>
             <div v-if="scope.row.status.id === 6">
-              <el-tag effect="dark" color="#E6A23C">Compile Error</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#E6A23C">Compile Error</el-tag>
             </div>
             <div v-if="scope.row.status.id === 7">
-              <el-tag effect="dark" color="#E6A23C">Runtime Error</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#E6A23C">Runtime Error</el-tag>
             </div>
             <div v-if="scope.row.status.id === 8">
-              <el-tag effect="dark" color="#E6A23C">Time Limit Exceeded</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#E6A23C">Time Limit Exceeded</el-tag>
             </div>
             <div v-if="scope.row.status.id === 9">
-              <el-tag effect="dark" color="#E6A23C">Memory Limit Exceeded</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#E6A23C">Memory Limit Exceeded</el-tag>
             </div>
             <div v-if="scope.row.status.id === 10">
-              <el-tag effect="dark" color="#E6A23C">PE</el-tag>
+              <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#E6A23C">PE</el-tag>
             </div>
           </template>
         </el-table-column>
         <el-table-column
-            width="360">
+            width="220">
           <template slot-scope="scope">
-            <i class="el-icon-stopwatch" style="font-size: 18px"></i>{{ scope.row.time }}
-            <i class="el-icon-coin" style="font-size: 18px"></i>{{ scope.row.memory }}
+            <i class="el-icon-stopwatch" style="font-size: 18px"></i>{{ scope.row.time }}s
+            <i class="el-icon-coin" style="font-size: 18px"></i>{{ scope.row.memory }}MB
             <i class="el-icon-document" style="font-size: 18px"></i>{{ scope.row.language.name }}
           </template>
         </el-table-column>
@@ -174,8 +187,25 @@ export default {
   },
   methods: {
 
+    clearCondition(){
+      this.inputProblemId = "";
+      this.inputUsername = "";
+      this.value = "全部状态";
+      axios.get(this.base_url + "/solution")
+      .then(res => {
+        this.tableData = res.data.data;
+      }).catch(err => {
+        alert(err);
+      })
+    },
+
+    showSolutionDetail(id){
+      let routerJump = this.$router.resolve('/solution/' + id);
+      window.open(routerJump.href, '_blank');
+    },
+
     problemIdRecord(value){
-      if(this.value === 'all'){
+      if(this.value === 'all' || this.value === '全部状态'){
         if(this.inputUsername === ''){
           axios.get(this.base_url + "/solution?problem_id=" + value)
                   .then(res => {
@@ -243,7 +273,7 @@ export default {
     },
 
     usernameRecord(value){
-      if(this.value === 'all'){
+      if(this.value === 'all' || this.value === '全部状态'){
        if (this.inputProblemId === ''){
          axios.get(this.base_url + "/solution?username=" + value)
                  .then(res => {
@@ -335,7 +365,7 @@ export default {
           });
         }
 
-        if (value === "all") {
+        if (value === "all" || this.value === '全部状态') {
           axios.get(this.base_url + "/solution")
                   .then(res => {
                     if (res.data.status === 1) {
@@ -462,6 +492,9 @@ export default {
 
 <style scoped>
 
+a{
+  text-decoration: none;
+}
 
 .clear::before,
 .clear::after {
@@ -475,7 +508,6 @@ export default {
   padding: 10px;
   min-width: 800px;
   max-width: 1200px;
-  height: 800px;
   margin: 0 auto;
 }
 
@@ -506,5 +538,8 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
 }
 
+.el-tag:hover {
+  cursor: pointer;
+}
 
 </style>
