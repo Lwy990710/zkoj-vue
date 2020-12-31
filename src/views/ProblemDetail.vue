@@ -65,6 +65,7 @@
                         style="font-size: 14px">{{item.name}}
                 </el-tag>
             </p>
+            <p><router-link style="color: cornflowerblue" :to="{path: '/record',query:{problem_id: problem_data.id }}" target="_blank"><i class="el-icon-s-marketing"></i>提交记录</router-link></p>
         </div>
     </div>
 </template>
@@ -167,6 +168,9 @@
 
 <style scoped>
 
+    a{
+        text-decoration: none;
+    }
 
     .clear::before,
     .clear::after {

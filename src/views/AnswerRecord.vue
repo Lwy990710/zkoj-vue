@@ -41,7 +41,7 @@
 
     <div class="find_list">
       <el-table
-          :data="tableData"
+          :data="record_data"
           style="width: 100%">
         <el-table-column
                 prop="id"
@@ -151,7 +151,7 @@ export default {
           label: '错误',
         },],
       value: '全部状态',
-      tableData: [{
+      record_data: [{
         id: -1,
         user: {
           username: '',
@@ -178,12 +178,27 @@ export default {
     }
   },
   created() {
-    axios.get(this.base_url + "/solution")
-        .then(res => {
-          if (res.data.status === 1) {
-            this.tableData = res.data.data;
-          }
-        })
+
+    if(Boolean((new RegExp("problem_id").exec(location.href)))){
+      this.inputProblemId = this.$route.query.problem_id;
+      axios.get(this.base_url + "/solution?problem_id=" + this.$route.query.problem_id)
+      .then(res => {
+        if (res.data.status === 1){
+          this.record_data = res.data.data;
+        }
+      }).catch(err =>{
+        alert(err);
+      })
+    } else {
+      axios.get(this.base_url + "/solution")
+       .then(res => {
+        if (res.data.status === 1) {
+          this.record_data = res.data.data;
+        }
+       }).catch(err => {
+        alert(err);
+      })
+    }
   },
   methods: {
 
@@ -193,7 +208,7 @@ export default {
       this.value = "全部状态";
       axios.get(this.base_url + "/solution")
       .then(res => {
-        this.tableData = res.data.data;
+        this.record_data = res.data.data;
       }).catch(err => {
         alert(err);
       })
@@ -210,7 +225,7 @@ export default {
           axios.get(this.base_url + "/solution?problem_id=" + value)
                   .then(res => {
                     if(res.data.status === 1){
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             alert(err);
@@ -219,7 +234,7 @@ export default {
           axios.get(this.base_url + "/solution?problem_id=" + value + "&username=" + this.inputUsername)
                   .then(res => {
                     if(res.data.status === 1){
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             alert(err);
@@ -232,7 +247,7 @@ export default {
           axios.get(this.base_url + "/solution?problem_id=" + value + "&status_id=" + 1)
                   .then(res => {
                     if(res.data.status === 1){
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             alert(err);
@@ -241,7 +256,7 @@ export default {
           axios.get(this.base_url + "/solution?problem_id=" + value + "&status_id=" + 1 + "&username=" + this.inputUsername)
                   .then(res => {
                     if(res.data.status === 1){
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             alert(err);
@@ -254,7 +269,7 @@ export default {
           axios.get(this.base_url + "/solution?problem_id=" + + value + "&status_id=" + 2)
                   .then(res => {
                     if(res.data.status === 1){
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             alert(err);
@@ -263,7 +278,7 @@ export default {
           axios.get(this.base_url + "/solution?problem_id=" + value + "&status_id=" + 1 + "&username=" + this.inputUsername)
                   .then(res => {
                     if(res.data.status === 1){
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             alert(err);
@@ -278,7 +293,7 @@ export default {
          axios.get(this.base_url + "/solution?username=" + value)
                  .then(res => {
                    if(res.data.status === 1){
-                     this.tableData = res.data.data;
+                     this.record_data = res.data.data;
                    }
                  }).catch(err => {
            alert(err);
@@ -287,7 +302,7 @@ export default {
          axios.get(this.base_url + "/solution?username=" + value + "&problem_id=" + this.inputProblemId)
                  .then(res => {
                    if(res.data.status === 1){
-                     this.tableData = res.data.data;
+                     this.record_data = res.data.data;
                    }
                  }).catch(err => {
            alert(err);
@@ -299,7 +314,7 @@ export default {
           axios.get(this.base_url + "/solution?username=" + value + "&status_id=" + 1)
                   .then(res => {
                     if(res.data.status === 1){
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             alert(err);
@@ -308,7 +323,7 @@ export default {
           axios.get(this.base_url + "/solution?username=" + value + "&problem_id=" + this.inputProblemId + "&status_id=" + 1)
                   .then(res => {
                     if(res.data.status === 1){
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             alert(err);
@@ -321,7 +336,7 @@ export default {
           axios.get(this.base_url + "/solution?username=" + value + "&status_id=" + 2)
                   .then(res => {
                     if(res.data.status === 1){
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             alert(err);
@@ -330,7 +345,7 @@ export default {
           axios.get(this.base_url + "/solution?username=" + value + "&problem_id=" + this.inputProblemId + "&status_id=" + 2)
                   .then(res => {
                     if(res.data.status === 1){
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             alert(err);
@@ -345,7 +360,7 @@ export default {
           axios.get(this.base_url + "/solution?status_id=" + 1)
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
@@ -357,7 +372,7 @@ export default {
           axios.get(this.base_url + "/solution?status_id=" + 2)
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
@@ -369,7 +384,7 @@ export default {
           axios.get(this.base_url + "/solution")
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
@@ -381,7 +396,7 @@ export default {
           axios.get(this.base_url + "/solution?status_id=" + 1 + "&problem_id=" + this.inputProblemId)
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
@@ -393,7 +408,7 @@ export default {
           axios.get(this.base_url + "/solution?status_id=" + 2 + "&problem_id=" + this.inputProblemId)
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
@@ -405,7 +420,7 @@ export default {
           axios.get(this.base_url + "/solution?problem_id=" + this.inputProblemId)
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
@@ -417,7 +432,7 @@ export default {
           axios.get(this.base_url + "/solution?status_id=" + 1 + "&username=" + this.inputUsername)
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
@@ -429,7 +444,7 @@ export default {
           axios.get(this.base_url + "/solution?status_id=" + 2 + "&username=" + this.inputUsername)
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
@@ -441,7 +456,7 @@ export default {
           axios.get(this.base_url + "/solution?username=" + this.inputUsername)
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
@@ -453,7 +468,7 @@ export default {
           axios.get(this.base_url + "/solution?status_id=" + 1 + "&problem_id=" + this.inputProblemId + "&username=" + this.inputUsername)
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
@@ -465,7 +480,7 @@ export default {
           axios.get(this.base_url + "/solution?status_id=" + 2 + "&problem_id=" + this.inputProblemId + "&username=" + this.inputUsername)
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
@@ -477,7 +492,7 @@ export default {
           axios.get(this.base_url + "/solution?problem_id=" + this.inputProblemId + "&username=" + this.inputUsername)
                   .then(res => {
                     if (res.data.status === 1) {
-                      this.tableData = res.data.data;
+                      this.record_data = res.data.data;
                     }
                   }).catch(err => {
             //请求失败时进入catch
