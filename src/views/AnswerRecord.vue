@@ -178,7 +178,6 @@ export default {
     }
   },
   created() {
-
     if(Boolean((new RegExp("problem_id").exec(location.href)))){
       this.inputProblemId = this.$route.query.problem_id;
       axios.get(this.base_url + "/solution?problem_id=" + this.$route.query.problem_id)
@@ -187,6 +186,16 @@ export default {
           this.record_data = res.data.data;
         }
       }).catch(err =>{
+        alert(err);
+      })
+    } else if(Boolean((new RegExp("username").exec(location.href)))){
+      this.inputUsername = this.$route.query.username;
+      axios.get(this.base_url + "/solution?username=" + this.$route.query.username)
+              .then(res => {
+                if (res.data.status === 1){
+                  this.record_data = res.data.data;
+                }
+              }).catch(err =>{
         alert(err);
       })
     } else {
@@ -320,7 +329,7 @@ export default {
             alert(err);
           })
         } else {
-          axios.get(this.base_url + "/solution?username=" + value + "&problem_id=" + this.inputProblemId + "&status_id=" + 1)
+          axios.get(this.base_url + "/solution?problem_id=" + this.inputProblemId + "&username=" + value + "&status_id=" + 1)
                   .then(res => {
                     if(res.data.status === 1){
                       this.record_data = res.data.data;
@@ -342,7 +351,7 @@ export default {
             alert(err);
           })
         } else {
-          axios.get(this.base_url + "/solution?username=" + value + "&problem_id=" + this.inputProblemId + "&status_id=" + 2)
+          axios.get(this.base_url + "/solution?problem_id=" + this.inputProblemId + "&username=" + value + "&status_id=" + 2)
                   .then(res => {
                     if(res.data.status === 1){
                       this.record_data = res.data.data;
@@ -355,6 +364,7 @@ export default {
     },
 
     changeStatus(value) {
+      alert(1);
       if(this.inputUsername === '' && this.inputProblemId === ''){
         if (value === "Accepted") {
           axios.get(this.base_url + "/solution?status_id=" + 1)

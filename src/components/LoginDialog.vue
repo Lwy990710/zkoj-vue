@@ -65,7 +65,9 @@
                                 .then(result => {
                                     if (result.data.status === 1) {
                                         name = result.data.data.name;
+                                        this.$store.commit('setUsername', username);
                                         this.$emit('close', name);
+
                                     }
                                 })
                             this.$router.go(0);

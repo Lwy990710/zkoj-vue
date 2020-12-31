@@ -133,7 +133,11 @@ import router from "@/router";
                 this.$store.commit('logout');
             },
           changeMenu(index) {
-            router.push({path: index});
+                if(index === "record" && this.$store.state.username !== ''){
+                    router.push({path: index,query: {username: this.$store.state.username}});
+                } else {
+                    router.push({path: index});
+                }
           },
         }
     }
