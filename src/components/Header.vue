@@ -19,7 +19,7 @@
               <el-menu-item index="discuss">
                 讨论
               </el-menu-item>
-              <el-menu-item v-if="$store.state.is_login" index="record">
+              <el-menu-item index="record">
                 记录
               </el-menu-item>
               <el-menu-item index="/no">

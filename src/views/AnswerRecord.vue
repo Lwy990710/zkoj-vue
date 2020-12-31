@@ -205,7 +205,7 @@ export default {
     },
 
     problemIdRecord(value){
-      if(this.value === 'all'){
+      if(this.value === 'all' || this.value === '全部状态'){
         if(this.inputUsername === ''){
           axios.get(this.base_url + "/solution?problem_id=" + value)
                   .then(res => {
@@ -273,7 +273,7 @@ export default {
     },
 
     usernameRecord(value){
-      if(this.value === 'all'){
+      if(this.value === 'all' || this.value === '全部状态'){
        if (this.inputProblemId === ''){
          axios.get(this.base_url + "/solution?username=" + value)
                  .then(res => {
@@ -365,7 +365,7 @@ export default {
           });
         }
 
-        if (value === "all") {
+        if (value === "all" || this.value === '全部状态') {
           axios.get(this.base_url + "/solution")
                   .then(res => {
                     if (res.data.status === 1) {
