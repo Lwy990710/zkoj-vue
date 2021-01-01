@@ -1,7 +1,7 @@
 <template>
     <div class="main clear">
 
-        <div class="msg_main">
+        <div class="msg_main" v-loading="is_loading_table">
             <div id="msg_code">
                 <el-button style="max-width: 150px;display: inline-block" @click="isSolutionMsg=true,isCode=false" type="text">评测信息</el-button>
                 <el-divider direction="vertical"></el-divider>
@@ -11,7 +11,7 @@
             <div v-if="isSolutionMsg" class="solution_msg">
                 <p>使用内存: {{solutionDetailData.memory}}MB</p>
                 <p>执行耗时: {{solutionDetailData.time}}s</p>
-                <p>错误信息: {{solutionDetailData.error_massage}}</p>
+                <p>错误信息: {{solutionDetailData.error_message}}</p>
             </div>
 
             <div v-if="isCode" class="solution_msg">
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div id="submit_msg">
+        <div id="submit_msg" v-loading="is_loading_table">
             <p>题目名:<router-link :to='"/problem/" + solutionDetailData.problem.id'> {{solutionDetailData.problem.id}}</router-link></p>
             <p>用户: <router-link :to='"/userhome"'>{{solutionDetailData.user.username}}</router-link> </p>
             <p>提交时间: {{solutionDetailData.submit_date}}</p>
@@ -35,6 +35,7 @@
         name: "solutionDetail",
         data(){
             return {
+                is_loading_table: false,
                 isSolutionMsg: true,
                 isCode: false,
                 solutionDetailData: {
@@ -44,7 +45,7 @@
                         description: ''
                     },
                     source_code: '',
-                    error_massage: '',
+                    error_message: '',
                     submit_date: '',
                     time: -1,
                     memory: -1,
@@ -70,13 +71,16 @@
             next();
         },
         created() {
+            this.is_loading_table = true
             axios.get(this.base_url + "/solution/" + this.$route.params.id)
                 .then(res => {
                     if(res.data.status === 1){
                         this.solutionDetailData = res.data.data;
+                        this.is_loading_table = false;
                     }
                 }).catch(err => {
                     alert(err);
+                    this.is_loading_table = false;
             })
         },
         methods: {

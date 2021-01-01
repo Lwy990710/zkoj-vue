@@ -119,7 +119,9 @@
         <el-pagination
             background
             layout="prev, pager, next"
-            :total="1000">
+            :page-size="20"
+            @current-change="handleCurrentChange"
+            :total="100">
         </el-pagination>
       </div>
     </div>
@@ -188,10 +190,21 @@ export default {
       this.getDefaultUsernameRecord();
     } else {
       /* 显示所有记录 */
-      this.clearCondition();
+      this.handleCurrentChange(1);
     }
   },
   methods: {
+
+    handleCurrentChange(val){
+      axios.get(this.base_url + "/solution?page=" + val)
+              .then(res => {
+                this.record_data = res.data.data;
+                this.is_loading_table = false;
+              }).catch(err => {
+        alert(err);
+        this.is_loading_table = false;
+      })
+    },
 
     clearCondition(){
       this.is_loading_table = true;

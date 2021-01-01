@@ -7,42 +7,42 @@
       <div class="search">
         <el-input v-model="input" placeholder="搜索题目名称或编号"></el-input>
       </div>
-      <el-dropdown @command="choose_difficulty">
+      <el-dropdown @command="chooseDifficulty">
         <span class="el-dropdown-link">
           难度<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
-        <el-dropdown-menu slot="dropdown">
+        <el-dropdown-menu slot="dropdown" class="difficulty_menu" >
           <el-dropdown-item command="1">简单</el-dropdown-item>
           <el-dropdown-item command="2">中等</el-dropdown-item>
           <el-dropdown-item command="3">困难</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
 
-      <el-dropdown>
+      <el-dropdown @command="chooseStatus">
         <span class="el-dropdown-link">
           状态<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>解决</el-dropdown-item>
-          <el-dropdown-item>未完成</el-dropdown-item>
-          <el-dropdown-item>尝试过</el-dropdown-item>
+        <el-dropdown-menu slot="dropdown" class="status_menu" >
+          <el-dropdown-item command="1">解决</el-dropdown-item>
+          <el-dropdown-item command="0">未完成</el-dropdown-item>
+          <el-dropdown-item command="2">尝试过</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
 
-      <el-dropdown>
-        <span class="el-dropdown-link">
+      <el-dropdown @command="chooseClass">
+        <span class="el-dropdown-link" >
           分组<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-for="(item,index) in class_list" :command="item.id" :key="index">{{item.name}}</el-dropdown-item>
+        <el-dropdown-menu slot="dropdown" class="class_menu" >
+          <el-dropdown-item v-for="(item,index) in class_list" :command='item.id' :key="index">{{item.name}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
 
-      <el-dropdown>
-        <span class="el-dropdown-link">
+      <el-dropdown @command="chooseAlgorithm">
+        <span class="el-dropdown-link" >
           算法<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
-        <el-dropdown-menu slot="dropdown">
+        <el-dropdown-menu slot="dropdown" class="algorithm_menu" >
           <el-dropdown-item v-for="(item,index) in tag_list" :command='item.id' :key="index">{{item.name}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -53,36 +53,44 @@
     <div class="question-line clear"></div>
     <!-- 标注难度 -->
     <el-tag
-        class="tag"
         id="tag_difficulty"
         type="success"
         v-show="is_show_tag.difficulty"
         closable
         :disable-transitions="false"
-        @close="close_tag('tag_difficulty')">
+        @close="closeTagDifficulty('tag_difficulty')">
       难度 - {{tag_text.difficulty}}
     </el-tag>
     <!-- 标注状态 -->
     <el-tag
-        class="tag"
-        id="tag_normal"
+        id="tag_status"
         type="warning"
+        v-show="is_show_tag.status"
         closable
-        @close="closeTagNormal">
+        :disable-transitions="false"
+        @close="closeTagStatus('tag_status')">
       状态 - {{tag_text.status}}
     </el-tag>
     <!-- 标注分组 -->
     <el-tag
-        class="tag"
-        id="tag_difficult"
+        id="tag_class"
         type="danger"
+        v-show="is_show_tag.class"
         closable
         :disable-transitions="false"
-        @close="closeTagDifficult">
-      困难
+        @close="closeTagClass('tag_class')">
+      分组 - {{tag_text.class}}
     </el-tag>
-    <!-- 标注标签 -->
-
+    <!-- 标注算法 -->
+    <el-tag
+        id="tag_algorithm"
+        type="danger"
+        v-show="is_show_tag.tag"
+        closable
+        :disable-transitions="false"
+        @close="closeTagAlgorithm('tag_algorithm')">
+      算法 - {{tag_text.tag}}
+    </el-tag>
 
     <!-- 列表区域 -->
     <div>
@@ -219,19 +227,23 @@ export default {
         page: 1,
         limit: 20,
         difficulty: null,
+        status: null,
         tag_id: null,
         class_id: null
       },
       /* 控制标签显示 */
       is_show_tag: {
         difficulty: false,
+        status: false,
+        tag: false,
+        class: false
       },
       /* 标签内容 */
       tag_text: {
         difficulty: "",
         status: "",
         tag: "",
-        classes: ""
+        class: ""
       }
     }
   },
@@ -256,6 +268,7 @@ export default {
       .then(res => {
         if(res.data.status === 1) {
           this.class_list = res.data.data;
+          console.log(this.class_list);
         }
         else {
           alert(this.data.message);
@@ -292,14 +305,36 @@ export default {
 
 
     /* 选择难度 */
-    choose_difficulty(command) {
-
+    chooseDifficulty(command) {
       let temp = {1: '简单', 2: '中等', 3: '困难'};
-
       this.request_query.difficulty = command;
       this.request_problem_list();
       this.tag_text.difficulty = temp[command]
       this.is_show_tag.difficulty = true;
+    },
+
+    chooseStatus(command) {
+      let temp = {1: '解决', 0: '未完成', 2: '尝试过'};
+      this.request_query.status = command;
+      this.request_problem_list();
+      this.tag_text.status = temp[command]
+      this.is_show_tag.status = true;
+    },
+
+    chooseClass(command) {
+      let temp = {1: '红桥杯', 2: '绿桥杯'};
+      this.request_query.class_id = command;
+      this.request_problem_list();
+      this.tag_text.class = temp[command]
+      this.is_show_tag.class = true;
+    },
+
+    chooseAlgorithm(command) {
+      let temp = {1: '深度优先搜索', 2: '广度优先搜索', 3: '二叉树'};
+      this.request_query.tag_id = command;
+      this.request_problem_list();
+      this.tag_text.tag = temp[command]
+      this.is_show_tag.tag = true;
     },
 
     handleSizeChange(val) {
@@ -335,52 +370,34 @@ export default {
       }
     },
 
-    close_tag(id) {
-
+    closeTagDifficulty(id) {
       let temp = {tag_difficulty: 'difficulty'};
-
       let tag = document.getElementById(id);
       this.is_show_tag.difficulty = false;
       this.request_query[temp[id]] = null;
       this.request_problem_list();
     },
 
-    closeTagNormal() {
-      this.mark = -1;
-      document.getElementById("tag_normal").style.visibility = "hidden";
-      axios.get(this.base_url + "/problem?page=1")
-          .then(res => {
-            //请求成功时进入then(HTTP状态码为200)
-            if (res.data.status === 1) {
-              this.problem_list = res.data.data;
-              if (res.data)
-              console.log(this.problem_list)
-            }
-          })
-          .catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
+    closeTagStatus(id){
+      let temp = {tag_status: 'status'};
+      this.is_show_tag.status = false;
+      this.request_query[temp[id]] = null;
+      this.request_problem_list();
     },
 
-    closeTagDifficult() {
-      this.mark = -1;
-      document.getElementById("tag_difficult").style.visibility = "hidden";
-      axios.get(this.base_url + "/problem?page=1")
-          .then(res => {
-            //请求成功时进入then(HTTP状态码为200)
-            if (res.data.status === 1) {
-              this.problem_list = res.data.data;
-              if (res.data)
-              console.log(this.problem_list)
-            }
-          })
-          .catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-    }
+    closeTagClass(id){
+      let temp = {tag_class: 'class_id'}
+      this.is_show_tag.class = false;
+      this.request_query[temp[id]] = null;
+      this.request_problem_list();
+    },
 
+    closeTagAlgorithm(id){
+      let temp = {tag_algorithm: 'tag_id'}
+      this.is_show_tag.tag = false;
+      this.request_query[temp[id]] = null;
+      this.request_problem_list();
+    }
   }
 
 }
@@ -434,6 +451,22 @@ a {
   float: left;
 }
 
+/*.difficulty_menu{*/
+/*  left: 1030px !important;*/
+/*}*/
+
+/*.status_menu{*/
+/*  left: 1100px !important;*/
+/*}*/
+
+/*.class_menu{*/
+/*  left: 1180px !important;*/
+/*}*/
+
+/*.algorithm_menu{*/
+/*  left: 1220px !important;*/
+/*}*/
+
 .el-dropdown-link {
   display: inline-block;
   float: right;
@@ -441,13 +474,6 @@ a {
   color: black;
 }
 
-
-.el-dropdown-link {
-  display: inline-block;
-  float: right;
-  cursor: pointer;
-  color: black;
-}
 
 .el-icon-arrow-down {
   font-size: 12px;
@@ -465,21 +491,5 @@ a {
 
 el-pagination {
   background-color: #42b983;
-}
-
-.tag {
-
-}
-
-#tag_easy {
-  visibility: hidden;
-}
-
-#tag_normal {
-  visibility: hidden;
-}
-
-#tag_difficult {
-  visibility: hidden;
 }
 </style>
