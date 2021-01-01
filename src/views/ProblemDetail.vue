@@ -1,5 +1,5 @@
 <template>
-    <div class="main clear">
+    <div class="main clear" v-loading="is_loading_table">
         <div class="detail_main">
             <div class="problem_nav">
                 <div class="problem_msg_main">
@@ -65,7 +65,7 @@
                         style="font-size: 14px">{{item.name}}
                 </el-tag>
             </p>
-            <p><router-link style="color: cornflowerblue" :to="{path: '/record',query:{problem_id: problem_data.id }}" target="_blank"><i class="el-icon-s-marketing"></i>提交记录</router-link></p>
+            <p><router-link style="color: cornflowerblue" :to="{path: '/record',query:{problem_id: problem_data.id }}"><i class="el-icon-s-marketing"></i>提交记录</router-link></p>
         </div>
     </div>
 </template>
@@ -79,7 +79,7 @@
         name: "questionMain",
         data() {
             return {
-
+                is_loading_table : true,
                 problem_data: {
                     id: 1,
                     title: '',
@@ -107,16 +107,19 @@
 
         created() {
             // alert(this.problem_data.title);
+            this.is_loading_table = true;
             axios.get(this.base_url + "/problem/" + this.$route.params.id)
                 .then(res => {
                     if (res.data.status === 1) {
                         this.problem_data = res.data.data;
+                        this.is_loading_table = false;
                         if (res.data)
                         console.log(this.problem_data)
                     }
                 }).catch(err => {
                 //请求失败时进入catch
                 alert(err);
+                this.is_loading_table = false;
             });
             //请求数据
             // this.problem_data = {

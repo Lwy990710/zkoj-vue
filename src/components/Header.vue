@@ -16,10 +16,10 @@
               <el-menu-item index="/">
                 题目
               </el-menu-item>
-              <el-menu-item index="discuss">
+              <el-menu-item index="/discuss">
                 讨论
               </el-menu-item>
-              <el-menu-item index="record">
+              <el-menu-item index="/record">
                 记录
               </el-menu-item>
               <el-menu-item index="/no">
@@ -133,8 +133,12 @@ import router from "@/router";
                 this.$store.commit('logout');
             },
           changeMenu(index) {
-                if(index === "record" && this.$store.state.username !== ''){
-                    router.push({path: index,query: {username: this.$store.state.username}});
+                if(this.$store.state.is_login){
+                    if(index === "/record" && this.$store.state.username !== ''){
+                        router.push({path: index,query: {username: this.$store.state.username}});
+                    } else {
+                        router.push({path: index});
+                    }
                 } else {
                     router.push({path: index});
                 }

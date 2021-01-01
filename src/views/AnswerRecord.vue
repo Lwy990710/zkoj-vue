@@ -41,6 +41,7 @@
 
     <div class="find_list">
       <el-table
+          v-loading="is_loading_table"
           :data="record_data"
           style="width: 100%">
         <el-table-column
@@ -137,6 +138,7 @@ export default {
     return {
       inputProblemId: '',
       inputUsername: '',
+      is_loading_table: true,
       options: [
         {
           value: 'all',
@@ -179,53 +181,66 @@ export default {
   },
   created() {
     if(Boolean((new RegExp("problem_id").exec(location.href)))){
-      this.inputProblemId = this.$route.query.problem_id;
-      axios.get(this.base_url + "/solution?problem_id=" + this.$route.query.problem_id)
-      .then(res => {
-        if (res.data.status === 1){
-          this.record_data = res.data.data;
-        }
-      }).catch(err =>{
-        alert(err);
-      })
+      /* 默认显示该题的记录 */
+      this.getDefaultProblemIdRecord();
     } else if(Boolean((new RegExp("username").exec(location.href)))){
-      this.inputUsername = this.$route.query.username;
-      axios.get(this.base_url + "/solution?username=" + this.$route.query.username)
-              .then(res => {
-                if (res.data.status === 1){
-                  this.record_data = res.data.data;
-                }
-              }).catch(err =>{
-        alert(err);
-      })
+      /* 默认显示该用户的记录 */
+      this.getDefaultUsernameRecord();
     } else {
-      axios.get(this.base_url + "/solution")
-       .then(res => {
-        if (res.data.status === 1) {
-          this.record_data = res.data.data;
-        }
-       }).catch(err => {
-        alert(err);
-      })
+      /* 显示所有记录 */
+      this.clearCondition();
     }
   },
   methods: {
 
     clearCondition(){
+      this.is_loading_table = true;
       this.inputProblemId = "";
       this.inputUsername = "";
       this.value = "全部状态";
       axios.get(this.base_url + "/solution")
       .then(res => {
         this.record_data = res.data.data;
+        this.is_loading_table = false;
       }).catch(err => {
         alert(err);
+        this.is_loading_table = false;
       })
     },
 
     showSolutionDetail(id){
       let routerJump = this.$router.resolve('/solution/' + id);
       window.open(routerJump.href, '_blank');
+    },
+
+    getDefaultProblemIdRecord(){
+      this.inputProblemId = this.$route.query.problem_id;
+      this.is_loading_table = true;
+      axios.get(this.base_url + "/solution?problem_id=" + this.$route.query.problem_id)
+              .then(res => {
+                if (res.data.status === 1){
+                  this.record_data = res.data.data;
+                  this.is_loading_table = false;
+                }
+              }).catch(err =>{
+                  alert(err);
+                  this.is_loading_table = false;
+              })
+    },
+
+    getDefaultUsernameRecord(){
+      this.inputUsername = this.$route.query.username;
+      this.is_loading_table = true;
+      axios.get(this.base_url + "/solution?username=" + this.$route.query.username)
+              .then(res => {
+                if (res.data.status === 1){
+                  this.record_data = res.data.data;
+                  this.is_loading_table = false;
+                }
+              }).catch(err =>{
+                  alert(err);
+                  this.is_loading_table = false;
+              })
     },
 
     problemIdRecord(value){

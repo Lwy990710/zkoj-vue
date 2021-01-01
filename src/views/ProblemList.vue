@@ -34,9 +34,7 @@
           分组<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>解决</el-dropdown-item>
-          <el-dropdown-item>未完成</el-dropdown-item>
-          <el-dropdown-item>尝试过</el-dropdown-item>
+          <el-dropdown-item v-for="(item,index) in class_list" :command="item.id" :key="index">{{item.name}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
 
@@ -45,7 +43,7 @@
           算法<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-for="item in tag_list" :command='item.id'>{{item.name}}</el-dropdown-item>
+          <el-dropdown-item v-for="(item,index) in tag_list" :command='item.id' :key="index">{{item.name}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -211,10 +209,6 @@ export default {
       /*  */
       isShowTag: false,
       /*  */
-      isShow: false,
-      /*  */
-      isHide: true,
-      /*  */
       flag: false,
       /*  */
       mark: -1,
@@ -236,6 +230,8 @@ export default {
       tag_text: {
         difficulty: "",
         status: "",
+        tag: "",
+        classes: ""
       }
     }
   },
@@ -293,6 +289,8 @@ export default {
             this.is_loading_table = false;
           });
     },
+
+
     /* 选择难度 */
     choose_difficulty(command) {
 
@@ -302,7 +300,6 @@ export default {
       this.request_problem_list();
       this.tag_text.difficulty = temp[command]
       this.is_show_tag.difficulty = true;
-
     },
 
     handleSizeChange(val) {
@@ -317,16 +314,6 @@ export default {
               //请求成功时进入then(HTTP状态码为200)
               if (res.data.status === 1) {
                 this.problem_list = res.data.data;
-                for (let i = 0; i < this.problem_list.length; i++) {
-                  if (this.problem_list[i].count === 0) {
-                    this.problem_list[i].pass_rate = "-";
-                  } else {
-                    this.problem_list[i].pass_rate = this.problem_list[i].accepted / this.problem_list[i].count;
-                    this.problem_list[i].pass_rate = Number(this.problem_list[i].pass_rate * 100).toFixed(1);
-                    this.problem_list[i].pass_rate = String(this.problem_list[i].pass_rate) + "%"
-                  }
-
-                }
                 console.log(this.problem_list)
               }
             })
@@ -339,16 +326,6 @@ export default {
               //请求成功时进入then(HTTP状态码为200)
               if (res.data.status === 1) {
                 this.problem_list = res.data.data;
-                for (let i = 0; i < this.problem_list.length; i++) {
-                  if (this.problem_list[i].count === 0) {
-                    this.problem_list[i].pass_rate = "-";
-                  } else {
-                    this.problem_list[i].pass_rate = this.problem_list[i].accepted / this.problem_list[i].count;
-                    this.problem_list[i].pass_rate = Number(this.problem_list[i].pass_rate * 100).toFixed(1);
-                    this.problem_list[i].pass_rate = String(this.problem_list[i].pass_rate) + "%"
-                  }
-
-                }
                 console.log(this.problem_list)
               }
             })
@@ -366,7 +343,6 @@ export default {
       this.is_show_tag.difficulty = false;
       this.request_query[temp[id]] = null;
       this.request_problem_list();
-
     },
 
     closeTagNormal() {
@@ -377,15 +353,6 @@ export default {
             //请求成功时进入then(HTTP状态码为200)
             if (res.data.status === 1) {
               this.problem_list = res.data.data;
-              for (let i = 0; i < this.problem_list.length; i++) {
-                if (this.problem_list[i].count === 0) {
-                  this.problem_list[i].pass_rate = "-";
-                } else {
-                  this.problem_list[i].pass_rate = this.problem_list[i].accepted / this.problem_list[i].count;
-                  this.problem_list[i].pass_rate = Number(this.problem_list[i].pass_rate * 100).toFixed(1);
-                  this.problem_list[i].pass_rate = String(this.problem_list[i].pass_rate) + "%"
-                }
-              }
               if (res.data)
               console.log(this.problem_list)
             }
@@ -404,15 +371,6 @@ export default {
             //请求成功时进入then(HTTP状态码为200)
             if (res.data.status === 1) {
               this.problem_list = res.data.data;
-              for (let i = 0; i < this.problem_list.length; i++) {
-                if (this.problem_list[i].count === 0) {
-                  this.problem_list[i].pass_rate = "-";
-                } else {
-                  this.problem_list[i].pass_rate = this.problem_list[i].accepted / this.problem_list[i].count;
-                  this.problem_list[i].pass_rate = Number(this.problem_list[i].pass_rate * 100).toFixed(1);
-                  this.problem_list[i].pass_rate = String(this.problem_list[i].pass_rate) + "%"
-                }
-              }
               if (res.data)
               console.log(this.problem_list)
             }
