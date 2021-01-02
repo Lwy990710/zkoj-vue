@@ -130,7 +130,7 @@
           </template>
         </el-table-column>
         <el-table-column
-            prop="problem_class.name"
+            prop="problem_class"
             min-width="120"
             align="center">
           <template slot="header" slot-scope="scope">
@@ -158,9 +158,9 @@
           width="100"
           align="center">
           <template slot-scope="scope">
-            <div v-if="scope.row.difficulty === 1" style="color: green">简单</div>
-            <div v-if="scope.row.difficulty === 2" style="color: orange">中等</div>
-            <div v-if="scope.row.difficulty === 3" style="color: red">困难</div>
+            <div v-if="scope.row.difficulty === 1" style="color: green"><strong>简单</strong></div>
+            <div v-if="scope.row.difficulty === 2" style="color: orange"><strong>中等</strong></div>
+            <div v-if="scope.row.difficulty === 3" style="color: red"><strong>困难</strong></div>
           </template>
         </el-table-column>
         <el-table-column
@@ -208,6 +208,8 @@ export default {
       input: '',
       /* 显示读取状态 */
       is_loading_table: true,
+      /* 是否切换算法标签 */
+      isShowTag: false,
       /* 问题列表数据 */
       problem_list: null,
       /* 标签数据 */
@@ -336,7 +338,6 @@ export default {
     handleCurrentChange(val) {
       this.request_query.page = val;
       this.request_problem_list();
-
     },
 
 
