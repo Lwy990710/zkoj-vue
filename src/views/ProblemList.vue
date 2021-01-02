@@ -214,14 +214,6 @@ export default {
       tag_list: null,
       /* 分组数据 */
       class_list: null,
-      /*  */
-      isShowTag: false,
-      /*  */
-      flag: false,
-      /*  */
-      mark: -1,
-      /*  */
-      page: 1,
       /* 请求url参数 */
       request_query: {
         page: 1,
@@ -342,34 +334,13 @@ export default {
     },
 
     handleCurrentChange(val) {
-      this.page = val;
-      if (this.mark != -1) {
-        axios.get(this.base_url + "/problem?page=" + val + "&difficulty=" + this.mark)
-            .then(res => {
-              //请求成功时进入then(HTTP状态码为200)
-              if (res.data.status === 1) {
-                this.problem_list = res.data.data;
-                console.log(this.problem_list)
-              }
-            })
-            .catch(err => {
-              //请求失败时进入catch
-            });
-      } else {
-        axios.get(this.base_url + "/problem?page=" + val)
-            .then(res => {
-              //请求成功时进入then(HTTP状态码为200)
-              if (res.data.status === 1) {
-                this.problem_list = res.data.data;
-                console.log(this.problem_list)
-              }
-            })
-            .catch(err => {
-              //请求失败时进入catch
-            });
-      }
+      this.request_query.page = val;
+      this.request_problem_list();
+
     },
 
+
+    /* 取消难度筛选 */
     closeTagDifficulty(id) {
       let temp = {tag_difficulty: 'difficulty'};
       let tag = document.getElementById(id);
@@ -377,21 +348,21 @@ export default {
       this.request_query[temp[id]] = null;
       this.request_problem_list();
     },
-
+    /* 取消状态筛选 */
     closeTagStatus(id){
       let temp = {tag_status: 'status'};
       this.is_show_tag.status = false;
       this.request_query[temp[id]] = null;
       this.request_problem_list();
     },
-
+    /* 取消分组筛选 */
     closeTagClass(id){
       let temp = {tag_class: 'class_id'}
       this.is_show_tag.class = false;
       this.request_query[temp[id]] = null;
       this.request_problem_list();
     },
-
+    /* 取消算法筛选 */
     closeTagAlgorithm(id){
       let temp = {tag_algorithm: 'tag_id'}
       this.is_show_tag.tag = false;

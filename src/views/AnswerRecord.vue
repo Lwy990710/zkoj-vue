@@ -15,14 +15,14 @@
               style="display: inline"
               placeholder="题目编号"
               v-model="inputProblemId"
-              @change="problemIdRecord">
+              @change="changeProblemId">
           </el-input>
           <el-input
               size="small"
               style="display: inline"
               placeholder="用户名"
               v-model="inputUsername"
-              @change="usernameRecord">
+              @change="changeUsername">
           </el-input>
         </div>
         <div class="state_choose">
@@ -42,7 +42,7 @@
     <div class="find_list">
       <el-table
           v-loading="is_loading_table"
-          :data="record_data"
+          :data="record_list"
           style="width: 100%">
         <el-table-column
                 prop="id"
@@ -138,8 +138,8 @@ export default {
   },
   data() {
     return {
-      inputProblemId: '',
-      inputUsername: '',
+      inputProblemId: null,
+      inputUsername: null,
       is_loading_table: true,
       options: [
         {
@@ -155,57 +155,81 @@ export default {
           label: '错误',
         },],
       value: '全部状态',
-      record_data: [{
-        id: -1,
-        user: {
-          username: '',
-          name: ''
-        },
-        problem: {
-          id: -1,
-          title: ''
-        },
-        status: {
-          id: -1,
-          short_name: '',
-          name: '',
-        },
-        time: 0,
-        memory: 0,
-        language: {
-          id: -1,
-          name: ''
-        },
-        submit_date: ''
-      }
-      ]
+      /* 记录列表数据 */
+      record_list: null,
+      /* 请求url参数 */
+      request_query: {
+        page: 1,
+        status_id: null,
+        problem_id: null,
+        username: null
+      },
+
     }
   },
   created() {
     if(Boolean((new RegExp("problem_id").exec(location.href)))){
-      /* 默认显示该题的记录 */
-      this.getDefaultProblemIdRecord();
+      /* 从题目详情页面进入默认显示该题的记录 */
+      this.request_query.problem_id = this.$route.query.problem_id;
+      this.inputProblemId = this.$route.query.problem_id;
+      this.request_record_list();
     } else if(Boolean((new RegExp("username").exec(location.href)))){
-      /* 默认显示该用户的记录 */
-      this.getDefaultUsernameRecord();
+      /* 登录状态时进入默认显示该用户的记录 */
+      this.request_query.username = this.$route.query.username;
+      this.inputUsername = this.$route.query.username;
+      this.request_record_list();
     } else {
       /* 显示所有记录 */
-      this.handleCurrentChange(1);
+      this.request_record_list();
     }
   },
   methods: {
 
-    handleCurrentChange(val){
-      axios.get(this.base_url + "/solution?page=" + val)
-              .then(res => {
-                this.record_data = res.data.data;
-                this.is_loading_table = false;
-              }).catch(err => {
+    /* 请求测评列表 */
+    request_record_list() {
+      let query = {};
+      this.is_loading_table = true;
+      Object.keys(this.request_query).forEach(key => {
+        if (this.request_query[key] !== null){
+          query[key] = this.request_query[key];
+        }
+      })
+      axios.get(this.base_url + "/solution", {params: query})
+      .then(res => {
+        if (res.data.status === 1){
+          this.record_list = res.data.data;
+          this.is_loading_table = false;
+        }
+      })
+      .catch(err => {
         alert(err);
         this.is_loading_table = false;
       })
     },
+    /* 状态筛选 */
+    changeStatus(value){
+      let temp = {"Accepted": 1, "Wrong answer": 2, "all": null}
+      this.request_query.status_id = temp[value];
+      this.request_record_list();
+    },
+    /* 题号筛选 */
+    changeProblemId(value){
+      this.request_query.problem_id = value;
+      this.request_record_list();
+    },
+    /* 用户名筛选 */
+    changeUsername(value){
+      this.request_query.username = value;
+      this.request_record_list();
+    },
 
+    handleCurrentChange(val){
+      this.request_query.page = val;
+      this.request_record_list();
+    },
+
+
+    /* 清空筛选条件 */
     clearCondition(){
       this.is_loading_table = true;
       this.inputProblemId = "";
@@ -213,7 +237,7 @@ export default {
       this.value = "全部状态";
       axios.get(this.base_url + "/solution")
       .then(res => {
-        this.record_data = res.data.data;
+        this.record_list = res.data.data;
         this.is_loading_table = false;
       }).catch(err => {
         alert(err);
@@ -225,320 +249,6 @@ export default {
       let routerJump = this.$router.resolve('/solution/' + id);
       window.open(routerJump.href, '_blank');
     },
-
-    getDefaultProblemIdRecord(){
-      this.inputProblemId = this.$route.query.problem_id;
-      this.is_loading_table = true;
-      axios.get(this.base_url + "/solution?problem_id=" + this.$route.query.problem_id)
-              .then(res => {
-                if (res.data.status === 1){
-                  this.record_data = res.data.data;
-                  this.is_loading_table = false;
-                }
-              }).catch(err =>{
-                  alert(err);
-                  this.is_loading_table = false;
-              })
-    },
-
-    getDefaultUsernameRecord(){
-      this.inputUsername = this.$route.query.username;
-      this.is_loading_table = true;
-      axios.get(this.base_url + "/solution?username=" + this.$route.query.username)
-              .then(res => {
-                if (res.data.status === 1){
-                  this.record_data = res.data.data;
-                  this.is_loading_table = false;
-                }
-              }).catch(err =>{
-                  alert(err);
-                  this.is_loading_table = false;
-              })
-    },
-
-    problemIdRecord(value){
-      if(this.value === 'all' || this.value === '全部状态'){
-        if(this.inputUsername === ''){
-          axios.get(this.base_url + "/solution?problem_id=" + value)
-                  .then(res => {
-                    if(res.data.status === 1){
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            alert(err);
-          })
-        } else {
-          axios.get(this.base_url + "/solution?problem_id=" + value + "&username=" + this.inputUsername)
-                  .then(res => {
-                    if(res.data.status === 1){
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            alert(err);
-          })
-        }
-      }
-
-      if(this.value === 'Accepted'){
-        if(this.inputUsername === ''){
-          axios.get(this.base_url + "/solution?problem_id=" + value + "&status_id=" + 1)
-                  .then(res => {
-                    if(res.data.status === 1){
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            alert(err);
-          })
-        } else {
-          axios.get(this.base_url + "/solution?problem_id=" + value + "&status_id=" + 1 + "&username=" + this.inputUsername)
-                  .then(res => {
-                    if(res.data.status === 1){
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            alert(err);
-          })
-        }
-      }
-
-      if(this.value === 'Wrong answer'){
-        if(this.inputUsername === ''){
-          axios.get(this.base_url + "/solution?problem_id=" + + value + "&status_id=" + 2)
-                  .then(res => {
-                    if(res.data.status === 1){
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            alert(err);
-          })
-        } else {
-          axios.get(this.base_url + "/solution?problem_id=" + value + "&status_id=" + 1 + "&username=" + this.inputUsername)
-                  .then(res => {
-                    if(res.data.status === 1){
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            alert(err);
-          })
-        }
-      }
-    },
-
-    usernameRecord(value){
-      if(this.value === 'all' || this.value === '全部状态'){
-       if (this.inputProblemId === ''){
-         axios.get(this.base_url + "/solution?username=" + value)
-                 .then(res => {
-                   if(res.data.status === 1){
-                     this.record_data = res.data.data;
-                   }
-                 }).catch(err => {
-           alert(err);
-         })
-       } else {
-         axios.get(this.base_url + "/solution?username=" + value + "&problem_id=" + this.inputProblemId)
-                 .then(res => {
-                   if(res.data.status === 1){
-                     this.record_data = res.data.data;
-                   }
-                 }).catch(err => {
-           alert(err);
-         })
-       }
-      }
-      if(this.value === 'Accepted'){
-        if (this.inputProblemId === ''){
-          axios.get(this.base_url + "/solution?username=" + value + "&status_id=" + 1)
-                  .then(res => {
-                    if(res.data.status === 1){
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            alert(err);
-          })
-        } else {
-          axios.get(this.base_url + "/solution?problem_id=" + this.inputProblemId + "&username=" + value + "&status_id=" + 1)
-                  .then(res => {
-                    if(res.data.status === 1){
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            alert(err);
-          })
-        }
-      }
-
-      if(this.value === 'Wrong answer'){
-        if (this.inputProblemId === ''){
-          axios.get(this.base_url + "/solution?username=" + value + "&status_id=" + 2)
-                  .then(res => {
-                    if(res.data.status === 1){
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            alert(err);
-          })
-        } else {
-          axios.get(this.base_url + "/solution?problem_id=" + this.inputProblemId + "&username=" + value + "&status_id=" + 2)
-                  .then(res => {
-                    if(res.data.status === 1){
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            alert(err);
-          })
-        }
-      }
-    },
-
-    changeStatus(value) {
-      alert(1);
-      if(this.inputUsername === '' && this.inputProblemId === ''){
-        if (value === "Accepted") {
-          axios.get(this.base_url + "/solution?status_id=" + 1)
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-
-        if (value === "Wrong answer") {
-          axios.get(this.base_url + "/solution?status_id=" + 2)
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-
-        if (value === "all" || this.value === '全部状态') {
-          axios.get(this.base_url + "/solution")
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-      } else if(this.inputProblemId !== '' && this.inputUsername === ''){
-        if (value === "Accepted") {
-          axios.get(this.base_url + "/solution?status_id=" + 1 + "&problem_id=" + this.inputProblemId)
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-
-        if (value === "Wrong answer") {
-          axios.get(this.base_url + "/solution?status_id=" + 2 + "&problem_id=" + this.inputProblemId)
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-
-        if (value === "all") {
-          axios.get(this.base_url + "/solution?problem_id=" + this.inputProblemId)
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-      } else if(this.inputProblemId === '' && this.inputUsername !== ''){
-        if (value === "Accepted") {
-          axios.get(this.base_url + "/solution?status_id=" + 1 + "&username=" + this.inputUsername)
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-
-        if (value === "Wrong answer") {
-          axios.get(this.base_url + "/solution?status_id=" + 2 + "&username=" + this.inputUsername)
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-
-        if (value === "all") {
-          axios.get(this.base_url + "/solution?username=" + this.inputUsername)
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-      } else if(this.inputProblemId !== '' && this.inputUsername !== ''){
-        if (value === "Accepted") {
-          axios.get(this.base_url + "/solution?status_id=" + 1 + "&problem_id=" + this.inputProblemId + "&username=" + this.inputUsername)
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-
-        if (value === "Wrong answer") {
-          axios.get(this.base_url + "/solution?status_id=" + 2 + "&problem_id=" + this.inputProblemId + "&username=" + this.inputUsername)
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-
-        if (value === "all") {
-          axios.get(this.base_url + "/solution?problem_id=" + this.inputProblemId + "&username=" + this.inputUsername)
-                  .then(res => {
-                    if (res.data.status === 1) {
-                      this.record_data = res.data.data;
-                    }
-                  }).catch(err => {
-            //请求失败时进入catch
-            alert(err);
-          });
-        }
-      }
-    }
   }
 }
 </script>
