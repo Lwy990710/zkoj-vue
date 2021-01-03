@@ -163,6 +163,14 @@
             <div v-if="scope.row.difficulty === 3" style="color: red"><strong>困难</strong></div>
           </template>
         </el-table-column>
+
+        <el-table-column
+                prop="count"
+                label="提交数"
+                width="120"
+                align="center">
+        </el-table-column>
+
         <el-table-column
           prop="pass_rate"
           label="通过率"

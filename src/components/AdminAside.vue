@@ -10,7 +10,7 @@
       default-active="/iacs"
       @select="changeMenu"
       background-color="rgba(0,0,0,0)"
-      style="width: 100%"
+      style="width: 100%;height: 100%"
       text-color="#fff"
       active-text-color="#269D80">
       <el-menu-item index="/iacs">

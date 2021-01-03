@@ -66,7 +66,6 @@
                                 .then(result => {
                                     if (result.data.status === 1) {
                                         name = result.data.data.name;
-
                                         this.$emit('close', name);
 
                                     }
@@ -77,7 +76,7 @@
                         }
                     })
                     .catch(err => {
-
+                        alert(err);
                     });
             },
 

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container>
-      <el-aside id="aside-view" width="200px"><AdminAside/></el-aside>
+      <el-aside id="aside-view" width="200px" ><AdminAside/></el-aside>
       <el-container id="main-footer-container">
         <el-main id="main-view"><router-view/></el-main>
         <el-footer id="footer-view"><Footer/></el-footer>
@@ -27,7 +27,7 @@ export default {
 
 #aside-view {
   background-color: #545c64;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 #main-footer-container {

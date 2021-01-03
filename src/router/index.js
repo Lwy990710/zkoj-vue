@@ -12,11 +12,11 @@ import UserOptions from "../views/UserOptions";
 import DiscussionPage from "../views/DiscussionPage";
 import AnswerRecord from "../views/AnswerRecord";
 import SolutionDetail from "../views/SolutionDetail";
+import AddProblem from "../views/admin/AddProblem";
 import test from "../views/test";
 import Main from "@/views/Main";
 import AdminContainer from "@/views/admin/AdminContainer";
 import ProblemManage from "@/views/admin/ProblemManage";
-import solutionDetail from "../views/SolutionDetail";
 
 Vue.use(VueRouter)
 
@@ -94,9 +94,13 @@ const routes = [
         children: [{
             path: "problem",
             component: ProblemManage
+        },
+        {
+            path: "add",
+            name: "增加问题",
+            component: AddProblem,
         }]
-    }
-
+    },
 ]
 
 const router = new VueRouter({

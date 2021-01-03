@@ -3,7 +3,9 @@
     <!-- TODO: 筛选条件区域 -->
     <div class="problem_screen">
       <div class="add_problem">
-        <el-button size="small" style="display: inline-block; margin-right: 10px">增加题目</el-button>
+        <el-button size="small" style="display: inline-block; margin-right: 10px">
+        <router-link style="color: black" :to="'add'">增加题目</router-link>
+        </el-button>
         <el-button size="small" style="display: inline-block; margin: 0 10px">删除题目</el-button>
         <el-button size="small" style="display: inline-block; margin: 0 10px">增加标签</el-button>
         <el-button size="small" style="display: inline-block; margin: 0 10px">增加分类</el-button>
@@ -88,6 +90,11 @@
           label="题名"
           align="center"
           width="200">
+          <template slot-scope="scope">
+            <router-link :to='"/problem/" + scope.row.id' target="_blank">
+              {{ scope.row.title }}
+            </router-link>
+          </template>
         </el-table-column>
         <el-table-column
           prop="tag"
@@ -235,6 +242,7 @@ export default {
         value_difficulty: '3',
         label: '困难'
       }],
+      is_private: '',
       value_difficulty: '全部难度',
       value_class: '全部分组',
       value_algorithm: '全部算法标签',
@@ -361,6 +369,10 @@ export default {
 </script>
 
 <style scoped>
+
+a{
+  text-decoration: none;
+}
 
 span{
   margin: 0 20px;
