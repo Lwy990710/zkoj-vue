@@ -83,23 +83,19 @@
           prop="id"
           label="题号"
           align="center"
-          width="90">
+          width="80">
         </el-table-column>
         <el-table-column
           prop="title"
           label="题名"
-          align="center"
-          width="200">
-          <template slot-scope="scope">
-            <router-link :to='"/problem/" + scope.row.id' target="_blank">
-              {{ scope.row.title }}
-            </router-link>
-          </template>
+          min-width="150"
+          show-overflow-tooltip="true">
         </el-table-column>
         <el-table-column
           prop="tag"
           label="算法标签"
-          width="320">
+          min-width="200"
+          show-overflow-tooltip="true">
           <template slot-scope="scope">
             <el-tag type="danger" effect="dark" size="mini" v-for="(item, index) in scope.row.tag" :key="index" style="margin: 0 5px">
               {{item.name}}
@@ -108,9 +104,10 @@
         </el-table-column>
         <el-table-column
           prop="problem_class.name"
-          width="80"
+          min-width="100"
           align="center"
-          label="分组">
+          label="分组"
+          show-overflow-tooltip="true">
         </el-table-column>
         <el-table-column
           prop="difficulty"
@@ -139,7 +136,7 @@
         </el-table-column>
         <el-table-column
           sortable
-          width="90"
+          width="100"
           align="center"
           label="通过率">
           <template slot-scope="scope">
