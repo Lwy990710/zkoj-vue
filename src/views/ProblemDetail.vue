@@ -80,6 +80,7 @@
                 <span>{{item.memory}}MB</span>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -89,7 +90,7 @@
 
     export default {
 
-        name: "questionMain",
+        name: "problemDetail",
         data() {
             return {
                 is_loading_table : true,

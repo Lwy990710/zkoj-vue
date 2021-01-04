@@ -25,7 +25,7 @@ axios.interceptors.response.use(response =>{
 
   if(err.response.status === 401){
     store.commit('logout');
-    router.go(0);
+    router.push("/");
   }
   return Promise.reject(err);
 });

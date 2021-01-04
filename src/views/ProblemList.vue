@@ -18,16 +18,16 @@
         </el-dropdown-menu>
       </el-dropdown>
 
-      <el-dropdown @command="chooseStatus">
+      <!--<el-dropdown @command="chooseStatus" v-if="$store.state.is_login">
         <span class="el-dropdown-link">
-          状态<i class="el-icon-arrow-down el-icon--right"></i>
+          状态<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
         </span>
         <el-dropdown-menu slot="dropdown" class="status_menu" >
           <el-dropdown-item command="1">解决</el-dropdown-item>
           <el-dropdown-item command="0">未完成</el-dropdown-item>
           <el-dropdown-item command="2">尝试过</el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
+      </el-dropdown>-->
 
       <el-dropdown @command="chooseClass">
         <span class="el-dropdown-link" >
@@ -62,7 +62,7 @@
       难度 - {{tag_text.difficulty}}
     </el-tag>
     <!-- 标注状态 -->
-    <el-tag
+    <!--<el-tag
         id="tag_status"
         type="warning"
         v-show="is_show_tag.status"
@@ -70,7 +70,7 @@
         :disable-transitions="false"
         @close="closeTagStatus('tag_status')">
       状态 - {{tag_text.status}}
-    </el-tag>
+    </el-tag>-->
     <!-- 标注分组 -->
     <el-tag
         id="tag_class"
@@ -196,7 +196,7 @@
             @size-change="handleSizeChange"
             background
             layout="prev, pager, next, sizes, jumper"
-            :total="100">
+            :total="problem_total">
         </el-pagination>
       </div>
     </div>
@@ -220,6 +220,8 @@ export default {
       isShowTag: false,
       /* 问题列表数据 */
       problem_list: null,
+      /* 问题总数 */
+      problem_total: 0,
       /* 标签数据 */
       tag_list: null,
       /* 分组数据 */
@@ -294,7 +296,8 @@ export default {
           .then(res => {
             //请求成功时进入then(HTTP状态码为200)
             if (res.data.status === 1) {
-              this.problem_list = res.data.data;
+              this.problem_list = res.data.data.problem_list;
+              this.problem_total = res.data.data.count;
               this.is_loading_table = false;
             }
           })
