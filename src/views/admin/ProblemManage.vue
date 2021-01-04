@@ -75,10 +75,10 @@
       <el-tabs v-model="active_name" type="card" >
         <!-- 算法管理页面 -->
         <el-tab-pane label="算法标签管理" name="algorithm">
-          <div>
+          <div style="overflow: auto;height: 200px">
             <div v-for="item in algorithm_list" style="margin: 20px">
               <span style="width: 100px">{{item.name}}</span>
-              <el-button @click="modify_algorithm_dialog=true" style="width: 60px;display: inline-block" size="mini">修改</el-button>
+              <el-button @click="modify_algorithm_dialog=true,modify_algorithm_id = item.id" style="width: 60px;display: inline-block" size="mini">修改</el-button>
               <el-button @click="delAlgorithm(item)" style="width: 60px;display: inline-block" size="mini" type="danger">删除</el-button>
             </div>
             <!-- 修改算法对话框 -->
@@ -107,10 +107,12 @@
         </el-tab-pane>
         <!-- 分组管理页面 -->
         <el-tab-pane label="分组管理" name="class">
-          <div v-for="item in class_list" style="margin: 20px">
-            <span style="width: 100px">{{item.name}}</span>
-            <el-button @click="modify_class_dialog=true" style="width: 60px;display: inline-block" size="mini">修改</el-button>
-            <el-button @click="delClass(item)" style="width: 60px;display: inline-block" size="mini" type="danger">删除</el-button>
+          <div style="height: 200px;overflow: auto">
+            <div v-for="item in class_list" style="margin: 20px">
+              <span style="width: 100px">{{item.name}}</span>
+              <el-button @click="modify_class_dialog=true,modify_class_id = item.id" style="width: 60px;display: inline-block" size="mini">修改</el-button>
+              <el-button @click="delClass(item)" style="width: 60px;display: inline-block" size="mini" type="danger">删除</el-button>
+            </div>
           </div>
           <!-- 修改分组对话框 -->
           <el-dialog title="修改分组" :visible.sync="modify_class_dialog" style="width: 1000px;margin: 0 auto">
@@ -125,14 +127,14 @@
                       show-word-limit
                       resize="none"
                       :autosize="{minRows: 6, maxRows: 6}"
-                      v-model="modify_class_describe"
+                      v-model="modify_class_description"
                       size="small" placeholder="分组描述"
                       style="width: 400px;font-size: 16px">
               </el-input>
             </div>
             <div slot="footer" class="dialog-footer">
               <el-button size="small" @click="add_class_dialog = false">取 消</el-button>
-              <el-button size="small"  @click="addAlgorithm()" type="primary" >确 定</el-button>
+              <el-button size="small"  @click="modifyClass()" type="primary" >确 定</el-button>
             </div>
           </el-dialog>
           <!-- 新增分组按钮 -->
@@ -152,7 +154,7 @@
                 show-word-limit
                 resize="none"
                 :autosize="{minRows: 6, maxRows: 6}"
-                v-model="new_class_describe"
+                v-model="new_class_description"
                 size="small" placeholder="分组描述"
                 style="width: 400px;font-size: 16px">
               </el-input>
@@ -283,13 +285,12 @@ export default {
       /* 增加分组对话框 */
       add_class_dialog: false,
       new_class_name: '',
-      new_class_describe: '',
+      new_class_description: '',
       /* 修改分组对话框 */
       modify_class_dialog: false,
       modify_class_id: null,
       modify_class_name: '',
-      modify_class_describe: '',
-
+      modify_class_description: '',
       options_difficulty: [{
         value_difficulty: null,
         label: '全部难度'
@@ -377,7 +378,19 @@ export default {
     },
     /* 增加算法标签 */
     addAlgorithm(){
-
+      let add_quest = {name: this.new_algorithm_name};
+      axios.post(this.base_url + "/tag", add_quest)
+              .then(res => {
+                if(res.data.status === 1){
+                  this.getAllClass();
+                  alert("增加成功，新算法标签id为:" + res.data.data.id)
+                  this.$router.go(0);
+                } else if(res.data.status === 0) {
+                  alert(res.data.message);
+                }
+              }).catch(err => {
+        alert(err);
+      })
     },
     /* 删除算法标签 */
     delAlgorithm(item){
@@ -398,19 +411,37 @@ export default {
       });
     },
     /* 修改算法标签 */
-
+    modifyAlgorithm(){
+      let modify_quest = {
+        id: this.modify_algorithm_id + "",
+        name: this.modify_algorithm_name
+      }
+      alert(modify_quest.id);
+      axios.put(this.base_url + "/tag", modify_quest)
+              .then(res => {
+                if(res.data.status === 1){
+                  alert("修改成功");
+                  this.getAllClass();
+                  this.$router.go(0);
+                }
+                if(res.data.status === 0){
+                  alert(res.data.message);
+                }
+              }).catch(err => {
+        alert(err);
+      })
+    },
     /* 增加分组 */
     addClass(){
-      let add_quest = {name: this.new_class_name, describe: this.new_class_describe};
-      axios.get(this.base_url + "problem-class", {params: add_quest})
+      let add_quest = {name: this.new_class_name, description: this.new_class_description};
+      axios.post(this.base_url + "/problem-class", add_quest)
       .then(res => {
-        if(res.status === 1){
+        if(res.data.status === 1){
           this.getAllClass();
-          alert("增加成功，新分组id为:" + res.data.id)
-        } else {
-          if(res.data.message === "Duplicate Name"){
-            alert("分组已存在")
-          }
+          alert("增加成功，新分组id为:" + res.data.data.id);
+          this.$router.go(0);
+        } else if(res.data.status === 0) {
+            alert("res.data.message")
         }
       }).catch(err => {
         alert(err);
@@ -438,7 +469,24 @@ export default {
 
     /* 修改分组 */
     modifyClass(){
-
+      let modify_quest = {
+        id: this.modify_class_id + "",
+        name: this.modify_class_name,
+        description: this.modify_class_description
+      }
+      axios.put(this.base_url + "/problem-class", modify_quest)
+      .then(res => {
+        if(res.data.status === 1){
+          alert("修改成功");
+          this.getAllClass();
+          this.$router.go(0);
+        }
+        if(res.data.status === 0){
+          alert(res.data.message);
+        }
+      }).catch(err => {
+        alert(err);
+      })
     },
 
     /* 难度筛选 */
@@ -535,7 +583,7 @@ p{
   min-width: 600px;
   width: 56%;
   float: left;
-  height: 260px;
+  height: 300px;
   margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
   background-color: white;
@@ -547,12 +595,10 @@ p{
   min-width: 350px;
   float: right;
   width: 36%;
-  height: 260px;
+  height: 300px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
   padding: 20px;
-  overflow:auto;
-
 }
 
 .table_area {

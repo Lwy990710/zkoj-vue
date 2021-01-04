@@ -58,12 +58,12 @@
                 <div id="class_tag">
                     <p>分组 :</p>
                     <el-checkbox-group v-model="checked_class">
-                       <el-checkbox v-for="item in class_list" :key="item.id" :label="item.id" border>{{item.name}}</el-checkbox>
+                       <el-checkbox style="display: inline-block;margin: 5px" v-for="item in class_list" :key="item.id" :label="item.id" border>{{item.name}}</el-checkbox>
                     </el-checkbox-group>
                     <el-divider></el-divider>
                     <p>算法标签 :</p>
                     <el-checkbox-group v-model="checked_tag">
-                        <el-checkbox v-for="item in tag_list" :key="item.id" :label="item.id" border>{{item.name}}</el-checkbox>
+                        <el-checkbox style="display: inline-block;margin: 5px" v-for="item in tag_list" :key="item.id" :label="item.id" border>{{item.name}}</el-checkbox>
                     </el-checkbox-group>
                 </div>
             </el-collapse-item>
