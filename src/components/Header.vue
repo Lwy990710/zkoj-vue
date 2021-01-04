@@ -16,11 +16,14 @@
               <el-menu-item index="/">
                 题目
               </el-menu-item>
-              <el-menu-item index="/discuss">
-                讨论
-              </el-menu-item>
               <el-menu-item index="/record">
                 记录
+              </el-menu-item>
+               <el-menu-item index="/rank">
+                    排行榜
+               </el-menu-item>
+              <el-menu-item index="/discuss">
+                    讨论
               </el-menu-item>
               <el-menu-item index="/no">
                 竞赛

@@ -11,6 +11,7 @@ import MyRelease from "../views/MyRelease";
 import UserOptions from "../views/UserOptions";
 import DiscussionPage from "../views/DiscussionPage";
 import AnswerRecord from "../views/AnswerRecord";
+import RankPage from "../views/RankPage";
 import SolutionDetail from "../views/SolutionDetail";
 import AddProblem from "../views/admin/AddProblem";
 import test from "../views/test";
@@ -71,6 +72,11 @@ const routes = [
                 path: "/discuss",
                 name: "讨论页面",
                 component: DiscussionPage
+            },
+            {
+                path: "/rank",
+                name: "排行榜",
+                component: RankPage
             },
             {
                 path: "/record",

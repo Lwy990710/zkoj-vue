@@ -159,7 +159,7 @@
             </div>
             <div slot="footer" class="dialog-footer">
               <el-button size="small" @click="add_class_dialog = false">取 消</el-button>
-              <el-button size="small"  @click="addAlgorithm()" type="primary" >确 定</el-button>
+              <el-button size="small"  @click="addClass()" type="primary" >确 定</el-button>
             </div>
           </el-dialog>
         </el-tab-pane>
@@ -351,30 +351,9 @@ export default {
     /* 获取问题列表 */
     this.request_problem_list();
     /* 获取标签列表 */
-    axios.get(this.base_url + "/tag")
-            .then(res => {
-              if(res.data.status === 1) {
-                this.algorithm_list = res.data.data;
-              }
-              else {
-                alert(this.data.message);
-              }
-            }).catch(err => {
-      alert(err);
-    });
+    this.getAllAlgorithm();
     /* 获取分组列表 */
-    axios.get(this.base_url + "/class")
-            .then(res => {
-              if(res.data.status === 1) {
-                this.class_list = res.data.data;
-                console.log(this.class_list);
-              }
-              else {
-                alert(this.data.message);
-              }
-            }).catch(err => {
-      alert(err);
-    });
+    this.getAllClass();
   },
 
   methods:{
@@ -422,7 +401,20 @@ export default {
 
     /* 增加分组 */
     addClass(){
-
+      let add_quest = {name: this.new_class_name, describe: this.new_class_describe};
+      axios.get(this.base_url + "problem-class", {params: add_quest})
+      .then(res => {
+        if(res.status === 1){
+          this.getAllClass();
+          alert("增加成功，新分组id为:" + res.data.id)
+        } else {
+          if(res.data.message === "Duplicate Name"){
+            alert("分组已存在")
+          }
+        }
+      }).catch(err => {
+        alert(err);
+      })
     },
 
     /* 删除分组 */
@@ -479,6 +471,35 @@ export default {
       this.request_query.upload_user_id = this.input_up_username;
       this.request_problem_list();
     },
+    /* 获取所有分组 */
+    getAllClass(){
+      axios.get(this.base_url + "/class")
+              .then(res => {
+                if(res.data.status === 1) {
+                  this.class_list = res.data.data;
+                  console.log(this.class_list);
+                }
+                else {
+                  alert(this.data.message);
+                }
+              }).catch(err => {
+        alert(err);
+      });
+    },
+    /* 获取所有算法 */
+    getAllAlgorithm(){
+      axios.get(this.base_url + "/tag")
+              .then(res => {
+                if(res.data.status === 1) {
+                  this.algorithm_list = res.data.data;
+                }
+                else {
+                  alert(this.data.message);
+                }
+              }).catch(err => {
+        alert(err);
+      });
+    }
   }
 }
 </script>
