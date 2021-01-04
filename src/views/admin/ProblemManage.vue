@@ -511,8 +511,8 @@ p{
 }
 
 .problem_screen {
-  min-width: 780px;
-  width: 780px;
+  min-width: 600px;
+  width: 56%;
   float: left;
   height: 260px;
   margin-bottom: 20px;
@@ -525,7 +525,7 @@ p{
 .manage_area {
   min-width: 350px;
   float: right;
-  width: 400px;
+  width: 36%;
   height: 260px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
