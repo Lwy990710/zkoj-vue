@@ -511,7 +511,7 @@ p{
 }
 
 .problem_screen {
-  min-width: 780px;
+  min-width: 600px;
   width: 56%;
   float: left;
   height: 260px;

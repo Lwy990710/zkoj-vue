@@ -3,17 +3,15 @@
         <div class="detail_main">
             <div class="problem_nav">
                 <div class="problem_msg_main">
-                    <h1 class="problem_id">{{problem_data.id}}{{problem_data.title}}</h1>
+                    <h1 class="problem_id">{{problem_detail.id}}{{problem_detail.title}}</h1>
                 </div>
                 <div class="msg_detail">
 
-                    <!--        <span class="msg" v-if="this.problem_data.difficulty===1">难度：简单</span>-->
-                    <!--        <span class="msg" v-else-if="this.problem_data.difficulty===2">难度：中等</span>-->
-                    <!--        <span class="msg" v-else-if="this.problem_data.difficulty===3">难度：困难</span>-->
-                    <span class="msg">总提交数:{{this.problem_data.count}}</span>
-                    <span class="msg">通过数:{{this.problem_data.accepted}}</span>
-                    <span class="msg time"v-for="item in problem_data.limit">时间:{{item.time}}</span>
-                    <span class="msg" v-for="item in problem_data.limit">内存:{{item.memory}}</span>
+                    <!--        <span class="msg" v-if="this.problem_detail.difficulty===1">难度：简单</span>-->
+                    <!--        <span class="msg" v-else-if="this.problem_detail.difficulty===2">难度：中等</span>-->
+                    <!--        <span class="msg" v-else-if="this.problem_detail.difficulty===3">难度：困难</span>-->
+                    <span class="msg">总提交数 : {{this.problem_detail.count}}</span>
+                    <span class="msg">通过数 : {{this.problem_detail.accepted}}</span>
                 </div>
             </div>
 
@@ -22,7 +20,7 @@
                 <div class="problem_description">
                     <h2>问题描述</h2>
                     <div class="problem_content" id="problem_description_content">
-                        {{problem_data.description}}
+                        {{problem_detail.description}}
                     </div>
                 </div>
 
@@ -30,21 +28,21 @@
                 <div class="problem_input">
                     <h2>样例输入</h2>
                     <div class="problem_input_content" id="problem_input_content">
-                        {{this.problem_data.sample_input}}
+                        {{this.problem_detail.sample_input}}
                     </div>
                 </div>
                 <!-- 样例输出 -->
                 <div class="problem_output">
                     <h2>样例输出</h2>
                     <div class="problem_output_content" id="problem_output_content">
-                        {{this.problem_data.sample_output}}
+                        {{this.problem_detail.sample_output}}
                     </div>
                 </div>
                 <!-- 提示 -->
                 <div class="problem_hint">
                     <h2>提示</h2>
                     <div class="problem_hint_content" id="problem_hint_content">
-                        {{this.problem_data.hint}}
+                        {{this.problem_detail.hint}}
                     </div>
                 </div>
             </div>
@@ -53,19 +51,34 @@
                 <el-button type="primary" @click="answer">提交答案</el-button>
             </div>
         </div>
-        <div class="line"></div>
         <div class="aside_main">
-            <p>创建时间:&emsp;{{this.problem_data.create_date}}</p>
-            <p v-if="this.problem_data.difficulty===1">难度:<span style="color: green"><strong>&emsp;简单</strong></span>
+            <p>创建时间:&emsp;{{this.problem_detail.create_date}}</p>
+            <p v-if="this.problem_detail.difficulty===1">难度:<span style="color: green"><strong>&emsp;简单</strong></span>
             </p>
-            <p v-else-if="this.problem_data.difficulty===2">难度:<span style="color: orange"><strong>&emsp;中等</strong></span></p>
-            <p v-else-if="this.problem_data.difficulty===3">难度:<span style="color: red"><strong>&emsp;困难</strong></span></p>
+            <p v-else-if="this.problem_detail.difficulty===2">难度:<span style="color: orange"><strong>&emsp;中等</strong></span></p>
+            <p v-else-if="this.problem_detail.difficulty===3">难度:<span style="color: red"><strong>&emsp;困难</strong></span></p>
             <p>算法标签:
-                <el-tag class="tags" v-for="(item, index) in problem_data.tag" :key="index" type="danger" effect="dark"
+                <el-tag class="tags" v-for="(item, index) in problem_detail.tag" :key="index" type="danger" effect="dark"
                         style="font-size: 14px">{{item.name}}
                 </el-tag>
             </p>
-            <p><router-link style="color: cornflowerblue" :to="{path: '/record',query:{problem_id: problem_data.id }}"><i class="el-icon-s-marketing"></i>提交记录</router-link></p>
+            <p><router-link style="color: cornflowerblue" :to="{path: '/record',query:{problem_id: problem_detail.id }}"><i class="el-icon-s-marketing"></i>提交记录</router-link></p>
+        </div>
+        <div class="limit_msg">
+            <div>
+                <span>语言类型</span>
+                <span>最长用时</span>
+                <span>最大内存</span>
+            </div>
+            <div v-for="item in problem_detail.limit">
+                <span v-if="item.id===0">默认限制</span>
+                <span v-if="item.id===1">C语言</span>
+                <span v-if="item.id===2">CPP</span>
+                <span v-if="item.id===3">JAVA</span>
+                <span v-if="item.id===4">PYTHON</span>
+                <span>{{item.time}}ms</span>
+                <span>{{item.memory}}MB</span>
+            </div>
         </div>
 
     </div>
@@ -81,24 +94,25 @@
         data() {
             return {
                 is_loading_table : true,
-                problem_data: {
-                    id: 1,
-                    title: '',
-                    accepted: 0,
-                    count: 0,
-                    description: '',
-                    sample_input: '',
-                    sample_output: '',
-                    hint: '',
-                    create_date: '',
-                    difficulty: -1,
-                    tag: [],
-                    limit: [{
-                        language: '',
-                        time: 1,
-                        memory: ''
-                    }],
-                },
+                problem_detail: null,
+                // problem_detail: {
+                //     id: 1,
+                //     title: '',
+                //     accepted: 0,
+                //     count: 0,
+                //     description: '',
+                //     sample_input: '',
+                //     sample_output: '',
+                //     hint: '',
+                //     create_date: '',
+                //     difficulty: -1,
+                //     tag: [],
+                //     limit: [{
+                //         language: '',
+                //         time: 1,
+                //         memory: ''
+                //     }],
+                // },
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -107,15 +121,15 @@
         },
 
         created() {
-            // alert(this.problem_data.title);
+            // alert(this.problem_detail.title);
             this.is_loading_table = true;
             axios.get(this.base_url + "/problem/" + this.$route.params.id)
                 .then(res => {
                     if (res.data.status === 1) {
-                        this.problem_data = res.data.data;
+                        this.problem_detail = res.data.data;
                         this.is_loading_table = false;
                         if (res.data)
-                        console.log(this.problem_data)
+                        console.log(this.problem_detail)
                     }
                 }).catch(err => {
                 //请求失败时进入catch
@@ -123,7 +137,7 @@
                 this.is_loading_table = false;
             });
             //请求数据
-            // this.problem_data = {
+            // this.problem_detail = {
             //   title : '标题',
             //   description : '这里是描述 \n ## 输入格式 \n\n ## 输出格式',
             //   sample_input : '样例输入',
@@ -150,19 +164,19 @@
         //     }
         //   });
         //
-        //   description.innerHTML = marked(this.problem_data['description']);
-        //   sample_input.innerHTML = marked(this.problem_data['sample_input']);
-        //   sample_output.innerHTML = marked(this.problem_data['sample_output']);
+        //   description.innerHTML = marked(this.problem_detail['description']);
+        //   sample_input.innerHTML = marked(this.problem_detail['sample_input']);
+        //   sample_output.innerHTML = marked(this.problem_detail['sample_output']);
         //
         // },
         methods: {
             answer() {
                 this.$router.push({
-                    path: '/answer/' + this.problem_data.id,
+                    path: '/answer/' + this.problem_detail.id,
                     // query: {
-                    //     answer_description: this.problem_data.description,
-                    //     answer_sample_input: this.problem_data.sample_input,
-                    //     answer_sample_output: this.problem_data.sample_output
+                    //     answer_description: this.problem_detail.description,
+                    //     answer_sample_input: this.problem_detail.sample_input,
+                    //     answer_sample_output: this.problem_detail.sample_output
                     // }
                 });
             }
@@ -241,6 +255,21 @@
         background-color: #FFFFFF;
         float: right;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
+    }
+
+    .limit_msg{
+        float: right;
+        width: 310px;
+        margin-top: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+        background-color: white;
+        padding: 20px;
+    }
+
+    .limit_msg span{
+        display: inline-block;
+        width: 33%;
+        margin-bottom: 5px;
     }
 
     .tags {

@@ -191,7 +191,7 @@
         <div class="page-line"></div>
         <el-pagination
             :page-sizes="[10,20,30,40]"
-            :page-size="20"
+            :page-size="this.request_query.limit"
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
@@ -343,7 +343,8 @@ export default {
     },
 
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.request_query.limit = val;
+      this.request_problem_list();
     },
 
     handleCurrentChange(val) {
