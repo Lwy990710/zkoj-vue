@@ -67,6 +67,7 @@
             </p>
             <p><router-link style="color: cornflowerblue" :to="{path: '/record',query:{problem_id: problem_data.id }}"><i class="el-icon-s-marketing"></i>提交记录</router-link></p>
         </div>
+
     </div>
 </template>
 
@@ -76,7 +77,7 @@
 
     export default {
 
-        name: "questionMain",
+        name: "problemDetail",
         data() {
             return {
                 is_loading_table : true,
