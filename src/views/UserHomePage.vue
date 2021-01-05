@@ -46,7 +46,7 @@
                     console.log(this.problem_data)
                 }).catch(err => {
                 //请求失败时进入catch
-                alert(err);
+                this.$message.error(err);;
             })
         }
     }

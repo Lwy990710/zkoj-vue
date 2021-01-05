@@ -265,7 +265,7 @@ export default {
           alert(this.data.message);
         }
       }).catch(err => {
-       alert(err);
+       this.$message.error(err);;
     });
     // 获取分组列表
     axios.get(this.base_url + "/class")
@@ -278,7 +278,7 @@ export default {
           alert(this.data.message);
         }
       }).catch(err => {
-       alert(err);
+       this.$message.error(err);;
     });
   },
   methods: {
@@ -303,7 +303,7 @@ export default {
           })
           .catch(err => {
             //请求失败时进入catch
-            alert(err);
+            this.$message.error(err);;
             this.is_loading_table = false;
           });
     },

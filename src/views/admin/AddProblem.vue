@@ -1,6 +1,7 @@
 <template>
     <div class="main">
         <el-collapse id="add_problem" v-model="activeNames" @change="handleChange">
+            <!-- 题目信息 -->
             <el-collapse-item name="1">
                 <template slot="title">
                     <div style="padding-left: 20px;font-size: 16px"><strong>题目信息</strong></div>
@@ -9,6 +10,10 @@
                     <p>是否公开 :</p>
                     <el-radio v-model="is_private" label="false" >是</el-radio>
                     <el-radio v-model="is_private" label="true">否</el-radio>
+                    <p>选择难度 :</p>
+                    <el-radio v-model="difficulty" label="1">简单</el-radio>
+                    <el-radio v-model="difficulty" label="2">中等</el-radio>
+                    <el-radio v-model="difficulty" label="3">困难</el-radio>
                     <el-divider></el-divider>
                     <p>题目名字 :</p>
                     <el-input v-model="new_title" placeholder="输入新增题目名" size="small" style="width: 400px"></el-input>
@@ -49,8 +54,30 @@
                       resize="none" placeholder="输入提示"
                       v-model="new_output">
                     </el-input>
+                    <el-divider></el-divider>
+                    <p>限制 :</p>
+                    <div class="limit">
+                        <el-button size="small" @click="addLimits" type="primary" ><i class="el-icon-plus"></i></el-button>
+                        <el-button size="small" @click="delLimits"><i class="el-icon-minus"></i></el-button>
+                        <span class="normal">默认</span>
+                        <span>内存(MB) : </span><el-input size="small" style="width: 200px" placeholder="最大运行时间"></el-input>
+                        <span>时间(ms) : </span><el-input size="small" style="width: 200px" placeholder="最大内存"></el-input>
+                    </div>
+                    <div class="languages" v-for="item in languages">
+                        <el-select  v-model="value" placeholder="请选择" style="width: 120px;margin: 10px 20px 10px 120px" >
+                            <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                        <span>内存(MB) : </span><el-input size="small" style="width: 200px" placeholder="最大运行时间"></el-input>
+                        <span>时间(ms) : </span><el-input size="small" style="width: 200px" placeholder="最大内存"></el-input>
+                    </div>
                 </div>
             </el-collapse-item>
+            <!-- 算法和分组 -->
             <el-collapse-item name="2">
                 <template slot="title">
                     <div style="padding-left: 20px;font-size: 16px"><strong>算法标签及分组</strong></div>
@@ -67,6 +94,7 @@
                     </el-checkbox-group>
                 </div>
             </el-collapse-item>
+            <!-- 评测数据 -->
             <el-collapse-item name="3">
                 <template slot="title">
                     <div style="padding-left: 20px;font-size: 16px"><strong>评测数据</strong></div>
@@ -94,7 +122,9 @@
 
         data(){
             return {
-                is_private: false,
+                languages: [],
+                is_private: null,
+                difficulty: null,
                 activeNames: ['1'],
                 new_title: '',
                 new_describe: '',
@@ -114,20 +144,30 @@
             .then(res => {
                 this.class_list = res.data.data;
             }).catch(err =>{
-                alert(err);
+                this.$message.error(err);;
             })
             /* 获取所有算法标签 */
             axios.get(this.base_url + "/tag")
             .then(res => {
                 this.tag_list = res.data.data
             }).catch(err => {
-                alert(err);
+                this.$message.error(err);;
             })
         },
 
         methods: {
             handleChange(){
 
+            },
+            addLimits(){
+              let language = 1;
+              this.languages.push(language);
+            },
+            delLimits(){
+                if(this.languages.length === 1){
+                    this.languages.length = 0;
+                }
+                this.languages.splice(1, 1);
             }
         }
     }
@@ -144,6 +184,22 @@
         display: inline-block;
     }
 
+    .limit span{
+        display: inline-block;
+        font-size: 14px;
+        margin: 10px 20px;
+    }
+
+    .languages span{
+        display: inline-block;
+        font-size: 14px;
+        margin: 10px 20px;
+    }
+
+    .limit span.normal{
+        width: 120px;text-align: center;
+        margin-right: 20px
+    }
 
     #vertical_divider{
         height: 15em !important;
@@ -154,7 +210,6 @@
         min-width: 800px;
         max-width: 1200px;
         width: 1200px;
-
         margin: 0 auto;
     }
 

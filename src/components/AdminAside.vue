@@ -24,7 +24,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="/iacs/problem">题目信息</el-menu-item>
-          <el-menu-item index="add">增加问题</el-menu-item>
+          <el-menu-item index="/iacs/add">增加问题</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 <!--      <el-menu-item index="/iacs/problem">-->

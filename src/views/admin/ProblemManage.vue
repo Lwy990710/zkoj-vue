@@ -72,7 +72,7 @@
 
     <!-- 分组和算法标签管理区 -->
     <div class="manage_area clear">
-      <el-tabs v-model="active_name" type="card" >
+      <el-tabs v-model="active_name" type="border-card" >
         <!-- 算法管理页面 -->
         <el-tab-pane label="算法标签管理" name="algorithm">
           <div style="overflow: auto;height: 200px">
@@ -372,7 +372,7 @@ export default {
         this.problem_list = res.data.data.problem_list;
         this.is_loading_table = false
       }).catch(err => {
-        alert(err);
+        this.$message.error(err);;
         this.is_loading_table = false;
       })
     },
@@ -389,7 +389,7 @@ export default {
                   alert(res.data.message);
                 }
               }).catch(err => {
-        alert(err);
+        this.$message.error(err);;
       })
     },
     /* 删除算法标签 */
@@ -428,7 +428,7 @@ export default {
                   alert(res.data.message);
                 }
               }).catch(err => {
-        alert(err);
+        this.$message.error(err);;
       })
     },
     /* 增加分组 */
@@ -444,7 +444,7 @@ export default {
             alert("res.data.message")
         }
       }).catch(err => {
-        alert(err);
+        this.$message.error(err);;
       })
     },
 
@@ -485,7 +485,7 @@ export default {
           alert(res.data.message);
         }
       }).catch(err => {
-        alert(err);
+        this.$message.error(err);;
       })
     },
 
@@ -531,7 +531,7 @@ export default {
                   alert(this.data.message);
                 }
               }).catch(err => {
-        alert(err);
+        this.$message.error(err);;
       });
     },
     /* 获取所有算法 */
@@ -545,7 +545,7 @@ export default {
                   alert(this.data.message);
                 }
               }).catch(err => {
-        alert(err);
+                  this.$message.error(err);
       });
     }
   }

@@ -202,7 +202,7 @@ export default {
         }
       })
       .catch(err => {
-        alert(err);
+        this.$message.error(err);;
         this.is_loading_table = false;
       })
     },
@@ -240,7 +240,7 @@ export default {
         this.record_list = res.data.data;
         this.is_loading_table = false;
       }).catch(err => {
-        alert(err);
+        this.$message.error(err);;
         this.is_loading_table = false;
       })
     },

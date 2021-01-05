@@ -1,56 +1,80 @@
 <template>
     <div class="main clear" v-loading="is_loading_table">
-        <div class="detail_main">
-            <div class="problem_nav">
-                <div class="problem_msg_main">
-                    <h1 class="problem_id">{{problem_detail.id}}{{problem_detail.title}}</h1>
-                </div>
-                <div class="msg_detail">
+        <el-tabs type="border-card" style="float: left;width: 800px">
+            <el-tab-pane label="问题详情" >
+                <div class="detail_main">
+                    <div class="problem_nav">
+                        <div class="problem_msg_main">
+                            <h1 class="problem_id">{{problem_detail.id}}{{problem_detail.title}}</h1>
+                        </div>
+                        <div class="msg_detail">
 
-                    <!--        <span class="msg" v-if="this.problem_detail.difficulty===1">难度：简单</span>-->
-                    <!--        <span class="msg" v-else-if="this.problem_detail.difficulty===2">难度：中等</span>-->
-                    <!--        <span class="msg" v-else-if="this.problem_detail.difficulty===3">难度：困难</span>-->
-                    <span class="msg">总提交数 : {{this.problem_detail.count}}</span>
-                    <span class="msg">通过数 : {{this.problem_detail.accepted}}</span>
-                </div>
-            </div>
+                            <!--        <span class="msg" v-if="this.problem_detail.difficulty===1">难度：简单</span>-->
+                            <!--        <span class="msg" v-else-if="this.problem_detail.difficulty===2">难度：中等</span>-->
+                            <!--        <span class="msg" v-else-if="this.problem_detail.difficulty===3">难度：困难</span>-->
+                            <span class="msg">总提交数 : {{this.problem_detail.count}}</span>
+                            <span class="msg">通过数 : {{this.problem_detail.accepted}}</span>
+                        </div>
+                    </div>
 
-            <div class="problem_main">
-                <!-- 问题描述 -->
-                <div class="problem_description">
-                    <h2>问题描述</h2>
-                    <div class="problem_content" id="problem_description_content">
-                        {{problem_detail.description}}
+                    <div class="problem_main">
+                        <!-- 问题描述 -->
+                        <div class="problem_description">
+                            <h2>问题描述</h2>
+                            <div class="problem_content" id="problem_description_content">
+                                {{problem_detail.description}}
+                            </div>
+                        </div>
+
+                        <!-- 样例输入 -->
+                        <div class="problem_input">
+                            <h2>样例输入</h2>
+                            <div class="problem_input_content" id="problem_input_content">
+                                {{this.problem_detail.sample_input}}
+                            </div>
+                        </div>
+                        <!-- 样例输出 -->
+                        <div class="problem_output">
+                            <h2>样例输出</h2>
+                            <div class="problem_output_content" id="problem_output_content">
+                                {{this.problem_detail.sample_output}}
+                            </div>
+                        </div>
+                        <!-- 提示 -->
+                        <div class="problem_hint" style="margin-bottom: 40px">
+                            <h2>提示</h2>
+                            <div class="problem_hint_content" id="problem_hint_content">
+                                {{this.problem_detail.hint}}
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </el-tab-pane>
+            <el-tab-pane label="提交答案">
+                <div class="answer">
+                    <div class="language_choose">
+                        <el-select v-model="value" placeholder="请选择语言" @change="change">
+                            <el-option v-for="language in language_options"
+                                       :key="language.value"
+                                       :label="language.label"
+                                       :value="language.value">
+                            </el-option>
+                        </el-select>
+                    </div>
 
-                <!-- 样例输入 -->
-                <div class="problem_input">
-                    <h2>样例输入</h2>
-                    <div class="problem_input_content" id="problem_input_content">
-                        {{this.problem_detail.sample_input}}
+<!--                    <div class="test" style="margin: 20px 0">-->
+<!--                        <textarea id="input_area" ref="mycode" style="height:200px;width:600px;resize: none"></textarea>-->
+<!--                    </div>-->
+                    <div style="margin: 20px 0">
+                        <codemirror style="font-size: 14px;border: 1px solid slategray" v-model="code" :options="options"></codemirror>
+                    </div>
+                    <div class="btms">
+                        <el-button type="danger" @click="submit">提交答案</el-button>
                     </div>
                 </div>
-                <!-- 样例输出 -->
-                <div class="problem_output">
-                    <h2>样例输出</h2>
-                    <div class="problem_output_content" id="problem_output_content">
-                        {{this.problem_detail.sample_output}}
-                    </div>
-                </div>
-                <!-- 提示 -->
-                <div class="problem_hint">
-                    <h2>提示</h2>
-                    <div class="problem_hint_content" id="problem_hint_content">
-                        {{this.problem_detail.hint}}
-                    </div>
-                </div>
-            </div>
+            </el-tab-pane>
+        </el-tabs>
 
-            <div class="submit">
-                <el-button type="primary" @click="answer">提交答案</el-button>
-            </div>
-        </div>
         <div class="aside_main">
             <p>创建时间:&emsp;{{this.problem_detail.create_date}}</p>
             <p v-if="this.problem_detail.difficulty===1">难度:<span style="color: green"><strong>&emsp;简单</strong></span>
@@ -83,36 +107,65 @@
 
     </div>
 </template>
-
 <script>
+    import "codemirror/theme/ambiance.css";
+    import "codemirror/lib/codemirror.css";
+    import "codemirror/addon/hint/show-hint.css";
+    import { codemirror } from 'vue-codemirror';
+    let CodeMirror = require("codemirror/lib/codemirror");
+    // require("codemirror/addon/edit/matchbrackets");
+    // require("codemirror/addon/selection/active-line");
+    // require ("codemirror/mode/clike/clike");
+    // require("codemirror/mode/sql/sql");
+    // require("codemirror/addon/hint/sql-hint");
+    import 'codemirror/mode/javascript/javascript'
+    import 'codemirror/mode/clike/clike'
+    import 'codemirror/mode/go/go'
+    import 'codemirror/mode/htmlmixed/htmlmixed'
+    import 'codemirror/mode/http/http'
+    import 'codemirror/mode/php/php'
+    import 'codemirror/mode/python/python'
+    import 'codemirror/mode/http/http'
+    import 'codemirror/mode/sql/sql'
+    import 'codemirror/mode/vue/vue'
+    import 'codemirror/mode/xml/xml'
     import marked from 'marked';
     import hljs from 'highlight.js';
 
     export default {
 
         name: "problemDetail",
+        components: {
+            codemirror
+        },
         data() {
             return {
                 is_loading_table : true,
                 problem_detail: null,
-                // problem_detail: {
-                //     id: 1,
-                //     title: '',
-                //     accepted: 0,
-                //     count: 0,
-                //     description: '',
-                //     sample_input: '',
-                //     sample_output: '',
-                //     hint: '',
-                //     create_date: '',
-                //     difficulty: -1,
-                //     tag: [],
-                //     limit: [{
-                //         language: '',
-                //         time: 1,
-                //         memory: ''
-                //     }],
-                // },
+                language_options: [{
+                    value: 'Java',
+                    label: 'Java',
+                }, {
+                    value: 'Python',
+                    label: 'Python',
+                }, {
+                    value: 'c++',
+                    label: 'c++'
+                }],
+                value: '',
+                language_id: 1,
+                code: '', // 编辑器绑定的值
+                // 默认配置
+                options: {
+                    tabSize: 2, // 缩进格式
+                    lineNumbers: true, // 显示行号
+                    line: true,
+                    styleActiveLine: true, // 高亮选中行
+                    mode: 'text/x-java',
+                    indentWithTabs: true,
+                    smartIndent: true,
+                    matchBrackets: true,
+                }
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -133,52 +186,71 @@
                     }
                 }).catch(err => {
                 //请求失败时进入catch
-                alert(err);
+                this.$message.error(err);;
                 this.is_loading_table = false;
             });
-            //请求数据
-            // this.problem_detail = {
-            //   title : '标题',
-            //   description : '这里是描述 \n ## 输入格式 \n\n ## 输出格式',
-            //   sample_input : '样例输入',
-            //   sample_output : '* 输出1 \n\n\n * 输出2\n\n ```System.out.println("Hello world")```'
-            //
-            // }
-
         },
-        // mounted() {
-        //   hljs.initHighlightingOnLoad();
-        //   highlight
-        //   marked.setOptions({
-        //     highlight: function (code) {
-        //       return hljs.highlightAuto(code).value;
-        //     }
-        //   })
-        //
-        //   渲染数据
-        //   let description = document.getElementById('problem_description_content');
-        //   let sample_input = document.getElementById('problem_input_content');
-        //   let sample_output = document.getElementById('problem_output_content', {
-        //     highlight: function (code) {
-        //       return hljs.highlightAuto(code).value;
-        //     }
-        //   });
-        //
-        //   description.innerHTML = marked(this.problem_detail['description']);
-        //   sample_input.innerHTML = marked(this.problem_detail['sample_input']);
-        //   sample_output.innerHTML = marked(this.problem_detail['sample_output']);
-        //
-        // },
+        mounted() {
+
+            /*let editor = CodeMirror.fromTextArea(document.getElementById("input_area"), {
+                mode: 'text/x-java',
+                indentWithTabs: true,
+                smartIndent: true,
+                lineNumbers: true,
+                matchBrackets: true,
+                     extraKeys: {'Ctrl': 'autocomplete'},自定义快捷键
+                      hintOptions: {自定义提示选项
+                          tables: {
+                              users: ['name', 'score', 'birthDate'],
+                              countries: ['name', 'population', 'size']
+                          }
+                      }
+            })
+            //代码自动提示功能，记住使用cursorActivity事件不要使用change事件，这是一个坑，那样页面直接会卡死
+            editor.on('cursorActivity', function () {
+              editor.showHint()
+            });
+
+            this.editor = editor;*/
+        },
         methods: {
             answer() {
                 this.$router.push({
                     path: '/answer/' + this.problem_detail.id,
-                    // query: {
-                    //     answer_description: this.problem_detail.description,
-                    //     answer_sample_input: this.problem_detail.sample_input,
-                    //     answer_sample_output: this.problem_detail.sample_output
-                    // }
                 });
+            },
+            change() {
+                let mime = 'text/x-java'
+                if (this.value === 'Java') {
+                    mime = 'text/x-java'
+                    this.language_id = 1;
+                } else if (this.value === 'Python') {
+                    mime = 'text/x-python'
+                    this.language_id = 2;
+                } else if (this.value === 'c++') {
+                    mime = 'text/x-c++src'
+                    this.language_id = 3;
+                }
+
+                this.options.mode = mime;
+
+            },
+            submit() {
+                // TODO : 提交答案
+                let source_code = this.code
+                let language_id = this.language_id;
+                let request_body = {
+                    code: source_code,
+                    language_id: language_id
+                }
+                axios.post(this.base_url + "/solution/problem/" + this.$route.params.id, request_body)
+                    .then(res => {
+                        if (res.data.status === 1) {
+                            alert("提交成功");
+                        } else {
+                            alert(res.data.message);
+                        }
+                    })
             }
         }
     }
@@ -208,8 +280,6 @@
     .detail_main {
         float: left;
         width: 800px;
-        background-color: #FFFFFF;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
     }
 
     .problem_nav {
@@ -275,4 +345,5 @@
     .tags {
         margin: 5px;
     }
+
 </style>

@@ -76,7 +76,7 @@
                         }
                     })
                     .catch(err => {
-                        alert(err);
+                        this.$message.error(err);;
                     });
             },
 
