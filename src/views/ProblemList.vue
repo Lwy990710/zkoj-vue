@@ -102,7 +102,7 @@
         <el-table-column
           prop="status"
           label="状态"
-          width="80"
+          width="60"
           align="center">
           <template slot-scope="scope">
             <div v-if="$store.state.is_login">

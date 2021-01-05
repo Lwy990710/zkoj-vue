@@ -1,12 +1,10 @@
 <template>
   <div class="main">
-    <div class="evaluation_record">
-      <h1>
-        评测记录
-      </h1>
-      <el-divider></el-divider>
-      <div class="find_record">
-        <h3>查找记录</h3>
+    <el-card shadow="hover">
+      <div slot="header">
+        <b style="font-size: 20px">查找评测记录</b>
+      </div>
+      <div>
         <div class="find clear">
           <span style="margin: 0 20px ;font-size: 18px">条件查找</span>
           <el-input
@@ -37,7 +35,7 @@
           <el-button type="text" @click="clearCondition" style="display: inline-block;margin: 0 20px;width: 150px;float: right"><strong>清除所有筛选条件</strong></el-button>
         </div>
       </div>
-    </div>
+    </el-card>
 
     <div class="find_list">
       <el-table
@@ -105,8 +103,8 @@
         <el-table-column
             width="220">
           <template slot-scope="scope">
-            <i class="el-icon-stopwatch" style="font-size: 18px"></i>{{ scope.row.time }}s
-            <i class="el-icon-coin" style="font-size: 18px"></i>{{ scope.row.memory }}MB
+            <i class="el-icon-stopwatch" style="font-size: 18px"></i>{{ scope.row.time }}ms
+            <i class="el-icon-coin" style="font-size: 18px"></i>{{ (scope.row.memory / 1024).toFixed(0)}}MB
             <i class="el-icon-document" style="font-size: 18px"></i>{{ scope.row.language.name }}
           </template>
         </el-table-column>
@@ -286,7 +284,7 @@ a{
 }
 
 .find {
-  margin-top: 20px;
+
   width: 800px;
 }
 

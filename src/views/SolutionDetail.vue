@@ -1,149 +1,158 @@
 <template>
-    <div class="main clear">
+  <div class="main clear">
 
-        <div class="msg_main" v-loading="is_loading_table">
-            <div id="msg_code">
-                <el-button style="max-width: 150px;display: inline-block" @click="isSolutionMsg=true,isCode=false" type="text">评测信息</el-button>
-                <el-divider direction="vertical"></el-divider>
-                <el-button style="max-width: 150px;display: inline-block" @click="isSolutionMsg=false,isCode=true" type="text">源代码</el-button>
+    <div class="msg_main" v-loading="is_loading_table">
+      <el-card body-style="{ padding-top: 0px }" shadow="hover">
+        <el-tabs value="solution_message">
+          <el-tab-pane label="评测信息" name="solution_message">
+            <div style="font-size: 14px; line-height: 32px">
+              <div>
+                <span>内存消耗：</span>
+                <b>{{ (solutionDetailData.memory / 1024).toFixed(2) }} MB</b>
+              </div>
+              <div>
+                <span>执行耗时：</span>
+                <b>{{ (solutionDetailData.time / 1000).toFixed(3) }} S</b>
+              </div>
+              <div v-show="'error_message' in solutionDetailData">
+                <span>错误信息：</span>
+                <div>
+                  {{ solutionDetailData.error_message }}
+                </div>
+              </div>
             </div>
-
-            <div v-if="isSolutionMsg" class="solution_msg">
-                <p>使用内存: {{solutionDetailData.memory}}MB</p>
-                <p>执行耗时: {{solutionDetailData.time}}s</p>
-                <p>错误信息: {{solutionDetailData.error_message}}</p>
+          </el-tab-pane>
+          <el-tab-pane label="源代码" name="source_code">
+            <div>
+              <highlightjs autodetect :code="solutionDetailData.source_code"/>
             </div>
-
-            <div v-if="isCode" class="solution_msg">
-                <h3>提交代码为:</h3>
-                <div>{{solutionDetailData.source_code}}</div>
-            </div>
-        </div>
-
-        <div id="submit_msg" v-loading="is_loading_table">
-            <p>题目名:<router-link :to='"/problem/" + solutionDetailData.problem.id'> {{solutionDetailData.problem.id}}</router-link></p>
-            <p>用户: <router-link :to='"/userhome"'>{{solutionDetailData.user.username}}</router-link> </p>
-            <p>提交时间: {{solutionDetailData.submit_date}}</p>
-            <p>状态: {{solutionDetailData.status.name}}</p>
-            <p>语言: {{solutionDetailData.language.name}}</p>
-        </div>
+          </el-tab-pane>
+        </el-tabs>
+      </el-card>
     </div>
+
+    <el-card id="submit_msg" shadow="hover" v-loading="is_loading_table">
+      <div>
+        <span>题目：</span>
+        <router-link class="hyperlink" style="float: right" :to='"/problem/" + solutionDetailData.problem.id'>
+          {{ solutionDetailData.problem.title }}
+        </router-link>
+      </div>
+      <div>
+        <span>用户：</span>
+        <router-link class="hyperlink" style="float: right" :to='"/userhome"'>
+          {{ solutionDetailData.user.name }}
+        </router-link>
+      </div>
+      <div>
+        <span>评测状态：</span>
+        <span style="float: right">{{ solutionDetailData.status.name }}</span>
+      </div>
+      <div>
+        <span>编程语言：</span>
+        <span style="float: right">{{ solutionDetailData.language.name }}</span>
+      </div>
+      <div>
+        <span>提交日期：</span>
+        <span style="float: right">{{ solutionDetailData.submit_date }}</span>
+      </div>
+    </el-card>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "solutionDetail",
-        data(){
-            return {
-                is_loading_table: false,
-                isSolutionMsg: true,
-                isCode: false,
-                solutionDetailData: {
-                    status: {
-                        id: -1,
-                        name: '',
-                        description: ''
-                    },
-                    source_code: '',
-                    error_message: '',
-                    submit_date: '',
-                    time: -1,
-                    memory: -1,
-                    language: {
-                        id: -1,
-                        name: ''
-                    },
-                    problem: {
-                        id: -1,
-                        title: ''
-                    },
-                    user: {
-                        username: '',
-                        name: ''
-                    },
-                    status: -1,
-                    message: ''
-                }
-            }
+export default {
+  name: "solutionDetail",
+  data() {
+    return {
+      is_loading_table: false,
+      isSolutionMsg: true,
+      isCode: false,
+      solutionDetailData: {
+        status: {
+          id: -1,
+          name: '',
+          description: ''
         },
-        beforeRouteEnter(to, from, next) {
-            window.document.body.style.backgroundColor = '#EFEFEF';
-            next();
+        source_code: '',
+        error_message: '',
+        submit_date: '',
+        time: -1,
+        memory: -1,
+        language: {
+          id: -1,
+          name: ''
         },
-        created() {
-            this.is_loading_table = true
-            axios.get(this.base_url + "/solution/" + this.$route.params.id)
-                .then(res => {
-                    if(res.data.status === 1){
-                        this.solutionDetailData = res.data.data;
-                        this.is_loading_table = false;
-                    }
-                }).catch(err => {
-                    this.$message.error(err);;
-                    this.is_loading_table = false;
-            })
+        problem: {
+          id: -1,
+          title: ''
         },
-        methods: {
-
-        }
+        user: {
+          username: '',
+          name: ''
+        },
+      }
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    window.document.body.style.backgroundColor = '#EFEFEF';
+    next();
+  },
+  created() {
+    this.is_loading_table = true
+    axios.get(this.base_url + "/solution/" + this.$route.params.id)
+        .then(res => {
+          if (res.data.status === 1) {
+            this.solutionDetailData = res.data.data;
+            this.is_loading_table = false;
+          }
+        }).catch(err => {
+      this.$message.error(err);
+      ;
+      this.is_loading_table = false;
+    })
+  },
+  methods: {}
+}
 </script>
 
 <style scoped>
 
-    a{
-        text-decoration: none;
-    }
+a {
+  text-decoration: none;
+}
 
-    .clear::before,
-    .clear::after {
-        content: '';
-        display: table;
-        clear: both;
-    }
+.clear::before,
+.clear::after {
+  content: '';
+  display: table;
+  clear: both;
+}
 
-    .main{
-        padding: 20px;
-        max-width: 1050px;
-        width: 1000px;
-        min-width: 1000px;
-        margin: 0 auto;
-    }
+.hyperlink {
+  color: #409EFF;
+}
 
-    .msg_main{
-        width: 640px;
-        float: left;
-    }
+.hyperlink:hover {
+  color: #0000ff;
+}
 
-    #msg_code{
-        background-color: white;
-        padding:  0 20px;
-        width: 600px;
-        height: 40px;
-        line-height: 40px;
-        float: left;
-        font-size: 22px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
-    }
+.main {
+  padding: 20px;
+  max-width: 1050px;
+  width: 1000px;
+  min-width: 1000px;
+  margin: 0 auto;
+}
 
-    .solution_msg{
-        background-color: white;
-        padding: 20px;
-        width: 640px;
-        margin-top: 20px;
-        float: left;
-        height: 400px;
-        box-sizing: border-box;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
-    }
+.msg_main {
+  width: 640px;
+  float: left;
+}
 
-    #submit_msg{
-        background-color: white;
-        padding: 20px;
-        width: 350px;
-        height: 220px;
-        float: right;
-        box-sizing: border-box;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
-    }
+#submit_msg {
+  width: 350px;
+  float: right;
+  line-height: 32px;
+}
 </style>

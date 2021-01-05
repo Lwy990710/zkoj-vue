@@ -95,11 +95,11 @@
                 <span>最大内存</span>
             </div>
             <div v-for="item in problem_detail.limit">
-                <span v-if="item.id===0">默认限制</span>
-                <span v-if="item.id===1">C语言</span>
-                <span v-if="item.id===2">CPP</span>
-                <span v-if="item.id===3">JAVA</span>
-                <span v-if="item.id===4">PYTHON</span>
+                <span v-if="item.language_id===0">默认</span>
+                <span v-if="item.language_id===1">C语言</span>
+                <span v-if="item.language_id===2">CPP</span>
+                <span v-if="item.language_id===3">JAVA</span>
+                <span v-if="item.language_id===4">PYTHON</span>
                 <span>{{item.time}}ms</span>
                 <span>{{item.memory}}MB</span>
             </div>
@@ -223,13 +223,13 @@
                 let mime = 'text/x-java'
                 if (this.value === 'Java') {
                     mime = 'text/x-java'
-                    this.language_id = 1;
+                    this.language_id = 3;
                 } else if (this.value === 'Python') {
                     mime = 'text/x-python'
-                    this.language_id = 2;
+                    this.language_id = 4;
                 } else if (this.value === 'c++') {
                     mime = 'text/x-c++src'
-                    this.language_id = 3;
+                    this.language_id = 2;
                 }
 
                 this.options.mode = mime;
