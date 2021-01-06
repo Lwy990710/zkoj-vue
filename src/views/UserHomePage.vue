@@ -48,7 +48,11 @@
                 //请求失败时进入catch
                 this.$message.error(err);;
             })
-        }
+        },
+        beforeRouteEnter(to, from, next) {
+            window.document.body.style.backgroundImage = 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)';
+            next();
+        },
     }
 </script>
 

@@ -95,7 +95,7 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    window.document.body.style.backgroundColor = '#EFEFEF';
+    window.document.body.style.backgroundImage = 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)';
     next();
   },
   created() {

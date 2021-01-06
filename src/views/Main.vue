@@ -31,7 +31,8 @@ export default {
   mounted() {
     let window_height = window.innerHeight;
     document.getElementById("main-view").style.minHeight = (window_height - 120) + "px";
-  }
+  },
+
 
 }
 </script>

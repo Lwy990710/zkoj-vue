@@ -206,10 +206,6 @@
 <script>
 export default {
   name: "main",
-  beforeRouteEnter(to, from, next) {
-    window.document.body.style.backgroundColor = '#FFFFFF';
-    next();
-  },
   data() {
     return {
       /* 输入显示框 */
@@ -252,6 +248,8 @@ export default {
     }
   },
   created() {
+    window.document.body.style.backgroundColor='#ffffff';
+    window.document.body.style.backgroundImage='none';
     this.mark = -1;
     // 获取问题列表
     this.request_problem_list();
@@ -407,6 +405,7 @@ a {
   min-width: 800px;
   max-width: 1200px;
   margin: 0 auto;
+  background-color: white;
   /*width: 80%;*/
   /*border: black solid 1px;*/
 }

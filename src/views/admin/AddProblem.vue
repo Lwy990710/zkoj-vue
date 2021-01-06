@@ -122,13 +122,13 @@
               <span>时间(ms) : </span>
               <el-input size="small" style="width: 200px" placeholder="最大内存"></el-input>
             </div>
-            <div class="languages" v-for="item in languages">
-              <el-select v-model="value" placeholder="请选择" style="width: 120px;margin: 10px 20px 10px 120px">
+            <div class="languages" v-for="(item,index) in languages" >
+              <el-select  @change="chooseLanguage" v-model="languages[index].name" placeholder="请选择" style="width: 120px;margin: 10px 20px 10px 120px">
                 <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    v-for="item in language_list"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
                 </el-option>
               </el-select>
               <span>内存(MB) : </span>
@@ -191,7 +191,6 @@ export default {
 
   data() {
     return {
-
       /** 问题基本信息 */
       problem_data: {
         title: "",
@@ -206,7 +205,7 @@ export default {
         difficulty: null,
         limit: []
       },
-      /** 后端返回的language列表 */
+      /** 循环用数组 */
       languages: [],
       /** 默认展开折叠列表 */
       activeNames: [
@@ -218,6 +217,14 @@ export default {
       class_list: null,
       /** 后端返回的tag列表 */
       tag_list: null,
+      /** 后端返回的language列表*/
+      language_list: [],
+      /** 恢复语言数组数据 */
+      recovery_list: [],
+      /** 被选中语言数组数据 */
+      choosing_language: null,
+      /** 语言名 */
+      language_name:["C","CPP","JAVA","PYTHON"],
       /** mavon-editor的空间栏设置 */
       mavon_editor_toolbar: {
         bold: true, // 粗体
@@ -264,6 +271,16 @@ export default {
   },
 
   created() {
+    /* 获取所有语言种类 */
+    axios.get(this.base_url + "/language")
+    .then(res => {
+      if(res.data.status === 1){
+        this.language_list = res.data.data;
+        this.language_list.splice(0,1);
+      }
+    }).catch(err => {
+      this.$message.error(err);
+    })
     /* 获取所有分组 */
     axios.get(this.base_url + "/class")
         .then(res => {
@@ -287,15 +304,24 @@ export default {
 
     },
     addLimits() {
-      let language = 1;
-      this.languages.push(language);
+      this.languages.push({id: null, name: ''});
     },
     delLimits() {
-      if (this.languages.length === 1) {
-        this.languages.length = 0;
+      if (this.languages.length > 0) {
+        this.languages.pop();
       }
-      this.languages.splice(1, 1);
+      this.language_list.push(this.recovery_list.pop());
     },
+    chooseLanguage(value){
+      for(let i=0;i<this.language_list.length;i++){
+        if(this.language_list[i].id === value){
+          this.recovery_list.push({id: this.language_list[i].id, name: this.language_list[i].name})
+          this.language_list.splice(i,1);
+          break;
+
+        }
+      }
+    }
   }
 }
 </script>

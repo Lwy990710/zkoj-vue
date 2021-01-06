@@ -5,7 +5,7 @@
                 <div class="detail_main">
                     <div class="problem_nav">
                         <div class="problem_msg_main">
-                            <h1 class="problem_id">{{problem_detail.id}}{{problem_detail.title}}</h1>
+                            <h1 class="problem_id">{{problem_detail.id}} . {{problem_detail.title}}</h1>
                         </div>
                         <div class="msg_detail">
 
@@ -169,7 +169,8 @@
             }
         },
         beforeRouteEnter(to, from, next) {
-            window.document.body.style.backgroundColor = '#EFEFEF';
+            window.document.body.style.backgroundImage = 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)'
+            ;
             next();
         },
 
@@ -270,7 +271,6 @@
     }
 
     .main {
-        background-color: #EFEFEF !important;
         margin: 0 auto;
         max-width: 1160px;
         width: 1160px;
