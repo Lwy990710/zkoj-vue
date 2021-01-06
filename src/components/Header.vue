@@ -20,7 +20,7 @@
                 记录
               </el-menu-item>
                <el-menu-item index="/rank">
-                    排行榜
+                    排行
                </el-menu-item>
               <el-menu-item index="/discuss">
                     讨论

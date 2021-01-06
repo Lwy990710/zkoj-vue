@@ -342,11 +342,12 @@ export default {
       this.is_show_tag.tag = true;
     },
 
+    /* 每一页数据条数 */
     handleSizeChange(val) {
       this.request_query.limit = val;
       this.request_problem_list();
     },
-
+    /* 换页 */
     handleCurrentChange(val) {
       this.request_query.page = val;
       this.request_problem_list();

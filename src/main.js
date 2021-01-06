@@ -8,7 +8,7 @@ import 'codemirror/lib/codemirror.css'
 import "codemirror/addon/hint/show-hint.css";
 import hljs from 'highlight.js';
 import 'highlight.js/styles/a11y-light.css';
-import './assets/theme/index.css';
+//import './assets/theme/index.css';
 import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
 

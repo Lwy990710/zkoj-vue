@@ -72,7 +72,7 @@
 
     <!-- 分组和算法标签管理区 -->
     <div class="manage_area clear">
-      <el-tabs v-model="active_name" type="border-card" >
+      <el-tabs id="manege" v-model="active_name" type="border-card">
         <!-- 算法管理页面 -->
         <el-tab-pane label="算法标签管理" name="algorithm">
           <div style="overflow: auto;height: 200px">
@@ -93,7 +93,7 @@
           </div>
           <!-- 新增算法按钮 -->
           <div style="text-align: center">
-            <el-button @click="add_algorithm_dialog = true" type="primary" size="small">增加算法标签</el-button>
+            <el-button style="margin-top: 10px" @click="add_algorithm_dialog = true" type="primary" size="small">增加算法标签</el-button>
           </div>
           <!-- 增加算法对话框 -->
           <el-dialog title="增加算法" :visible.sync="add_algorithm_dialog" style="width: 1000px;margin: 0 auto">
@@ -139,7 +139,7 @@
           </el-dialog>
           <!-- 新增分组按钮 -->
           <div style="text-align: center">
-            <el-button @click="add_class_dialog = true" type="primary" size="small">增加分组</el-button>
+            <el-button style="margin-top: 10px" @click="add_class_dialog = true" type="primary" size="small">增加分组</el-button>
           </div>
           <!-- 新增分组对话框 -->
           <el-dialog title="增加分组" :visible.sync="add_class_dialog" style="width: 1000px;margin: 0 auto">
@@ -191,6 +191,11 @@
           label="题名"
           min-width="150"
           show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            <router-link :to='"/problem/" + scope.row.id' target="_blank">
+              {{ scope.row.title }}
+            </router-link>
+          </template>
         </el-table-column>
         <el-table-column
           prop="tag"
@@ -258,7 +263,21 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-divider></el-divider>
+      <!-- 切换页面区域 -->
+      <div class="page" style="text-align: center;margin: 20px 0">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :page-sizes="[10, 20, 30, 40]"
+                :page-size="this.request_query.limit"
+                background
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -314,6 +333,7 @@ export default {
       class_list: null,
       /* 问题列表 */
       problem_list: null,
+      total: 0,
       /* 请求参数列表 */
       request_query: {
         page: 1,
@@ -326,23 +346,6 @@ export default {
         sort_type: null,
         search: null,
       }
-      // problem_list: [{
-      //   id: 10000,
-      //   title: "标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题",
-      //   count: 111111111,
-      //   accepted: 31111111,
-      //   difficulty: 1,
-      //   tag: [{
-      //     id: 1,
-      //     name: '标签',
-      //   }],
-      //   problem_class: {
-      //     id: 1,
-      //     name: '分类分类分类分类分类分类分类',
-      //   },
-      //   is_private: false
-      // }
-      // ],
 
     }
   },
@@ -370,6 +373,7 @@ export default {
       axios.get(this.base_url + "/iacs/problem", {params: query})
       .then(res => {
         this.problem_list = res.data.data.problem_list;
+        this.total = res.data.data.count;
         this.is_loading_table = false
       }).catch(err => {
         this.$message.error(err);;
@@ -547,7 +551,17 @@ export default {
               }).catch(err => {
                   this.$message.error(err);
       });
-    }
+    },
+    /* 每一页数据条数 */
+    handleSizeChange(val) {
+      this.request_query.limit = val;
+      this.request_problem_list();
+    },
+    /* 换页 */
+    handleCurrentChange(val) {
+      this.request_query.page = val;
+      this.request_problem_list();
+    },
   }
 }
 </script>
@@ -607,8 +621,13 @@ p{
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
 }
 
+#manege{
+  background-color: white;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .text-center{
   text-align: center;
 }
-
 </style>

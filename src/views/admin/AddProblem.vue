@@ -79,7 +79,8 @@
             <p>分组 :</p>
             <el-radio
                 style="display: inline-block;margin: 5px"
-                v-for="item in class_list"
+                v-for="(item,index) in class_list"
+                :key="index"
                 v-model="problem_data.problem_class"
                 :label="item.id" border>
               {{ item.name }}
@@ -190,6 +191,7 @@ export default {
 
   data() {
     return {
+
       /** 问题基本信息 */
       problem_data: {
         title: "",
@@ -199,9 +201,9 @@ export default {
         hint: "",
         problem_class: 0,
         tag: [],
-        is_private: false,
+        is_private: null,
         source_code: [],
-        difficulty: 1,
+        difficulty: null,
         limit: []
       },
       /** 后端返回的language列表 */
