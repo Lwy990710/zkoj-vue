@@ -62,10 +62,11 @@
                         if (res.data.status === 1) {
                             this.$store.commit('login', res.headers.authorization);
                             //登陆成功
-                            axios.get(this.base_url + "/user")
+                            axios.get(this.base_url + "/user/id/" + username)
                                 .then(result => {
                                     if (result.data.status === 1) {
                                         name = result.data.data.name;
+                                        alert(name)
                                         this.$emit('close', name);
 
                                     }
