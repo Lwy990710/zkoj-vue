@@ -67,7 +67,7 @@
                 </div>
                 <el-dropdown-menu slot="dropdown" @command="logout">
                     <el-dropdown-item class="user_dropdown_item">
-                        <router-link :to='"/userhome"'
+                        <router-link :to='"/usercenter/" + this.$store.state.username'
                                      style="width: 96px;display: inline-block;text-align: center;color: #606266">
                             个人中心
                         </router-link>

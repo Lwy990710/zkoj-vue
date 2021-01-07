@@ -4,20 +4,15 @@ import VueRouter from 'vue-router'
 import ProblemList from '../views/ProblemList'
 import ProblemDetail from "../views/ProblemDetail"
 import AnswerPage from "../views/AnswerPage"
-import PersonalCenter from "../views/PersonalCenter";
-import UserHomePage from "../views/UserHomePage";
-import Statistics from "../views/Statistics";
-import MyRelease from "../views/MyRelease";
-import UserOptions from "../views/UserOptions";
 import DiscussionPage from "../views/DiscussionPage";
 import AnswerRecord from "../views/AnswerRecord";
 import RankPage from "../views/RankPage";
 import SolutionDetail from "../views/SolutionDetail";
 import AddProblem from "../views/admin/AddProblem";
-import test from "../views/test";
 import Main from "@/views/Main";
 import AdminContainer from "@/views/admin/AdminContainer";
 import ProblemManage from "@/views/admin/ProblemManage";
+import UserCenter from "../views/UserCenter";
 
 Vue.use(VueRouter)
 
@@ -41,32 +36,9 @@ const routes = [
                 component: AnswerPage
             },
             {
-                path: "/center",
+                path: "/usercenter/:username",
                 name: "个人中心",
-                component: PersonalCenter,
-                children: [{
-                    path: "/userhome",
-                    name: "主页",
-                    component: UserHomePage
-                },
-                    {
-                        path: "/statistics",
-                        name: "统计",
-                        component: Statistics
-                    },
-
-
-                    {
-                        path: "/release",
-                        name: "我的发布",
-                        component: MyRelease
-                    }
-                ]
-            },
-            {
-                path: "/option",
-                name: "设置页面",
-                component: UserOptions
+                component: UserCenter,
             },
             {
                 path: "/discuss",
@@ -82,11 +54,6 @@ const routes = [
                 path: "/record",
                 name: "答题记录",
                 component: AnswerRecord
-            },
-            {
-                path: "/test",
-                name: "代码编译器测试",
-                component: test
             },
             {
                 path: "/solution/:id",
