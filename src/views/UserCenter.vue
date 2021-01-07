@@ -1,8 +1,10 @@
 <template>
     <div class="main">
+        <!-- 背景图与头像区域 -->
         <div class="background">
             <img src="https://portrait.gitee.com/uploads/avatars/user/2721/8165732_lastbzzb_1609261536.png!avatar100">
         </div>
+        <!-- 菜单区域 -->
         <div id="user_menu" class="clear">
             <div id="option_menu">
                 <el-button type="text" style="margin: 0 20px" @click="is_msg=true,is_record=false">主页</el-button>
@@ -19,15 +21,18 @@
                 <span v-else>{{this.user_message_list.rank}}</span>
             </div>
         </div>
+        <!-- 基本信息 -->
         <div v-if="is_msg" id="user_msg">
+            <div class="msg">用户名 : {{this.user_message_list.username}}</div>
             <div class="msg">邮箱 : {{this.user_message_list.email}}</div>
             <div class="msg">简介 : {{this.user_message_list.description}}</div>
         </div>
+        <!-- 统计 -->
         <div v-if="is_record" id="user_record">
             统计
         </div>
+        <!-- 侧边栏 -->
         <div id="user_msg_aside">
-            <div class="msg">用户ID : {{this.user_message_list.id}}</div>
             <div class="msg">注册日期 : {{this.user_message_list.create_date}}</div>
             <div class="msg">最后登录日期 : {{this.user_message_list.last_date}}</div>
         </div>
@@ -39,7 +44,9 @@
         name: "UserCenter",
         data(){
             return {
+                /** 开关信息页面 */
                 is_msg: true,
+                /** 开关统计页面 */
                 is_record: false,
                 /** 用户信息列表 */
                 user_message_list: null,
