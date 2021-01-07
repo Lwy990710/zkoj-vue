@@ -5,27 +5,31 @@
         </div>
         <div id="user_menu" class="clear">
             <div id="option_menu">
-                <el-button type="text" style="margin: 0 20px">主页</el-button>
-                <el-button type="text">统计</el-button>
+                <el-button type="text" style="margin: 0 20px" @click="is_msg=true,is_record=false">主页</el-button>
+                <el-button type="text" @click="is_msg=false,is_record=true">统计</el-button>
             </div>
-            <span id="name" style="color:#606266;font-size:18px;display:inline-block;width: 16%;height: 50px;line-height: 50px">
-                昵称
+            <span id="name" style="color:#606266;font-size:18px;display:inline-block;width: 16%;height: 70px;line-height: 70px">
+                {{this.user_message_list.name}}
             </span>
             <div id="user_problem_msg">
                 <span>提交</span><span>通过</span><span>排名</span>
-                <span>100</span><span>100</span><span>1</span>
+                <span>{{this.user_message_list.submit_count}}</span>
+                <span>{{this.user_message_list.accepted_count}}</span>
+                <span v-if="this.user_message_list.rank === -1">无</span>
+                <span v-else>{{this.user_message_list.rank}}</span>
             </div>
         </div>
         <div v-if="is_msg" id="user_msg">
-            <div class="msg">账号 : {{}}</div>
-            <div class="msg">邮箱 : {{}}</div>
-            <div class="msg">简介 : {{}}</div>
+            <div class="msg">邮箱 : {{this.user_message_list.email}}</div>
+            <div class="msg">简介 : {{this.user_message_list.description}}</div>
         </div>
-        <div v-if="is_record" id="user_record"></div>
+        <div v-if="is_record" id="user_record">
+            统计
+        </div>
         <div id="user_msg_aside">
-            <div class="msg">用户ID : {{}}</div>
-            <div class="msg">注册日期 : {{}}</div>
-            <div class="msg">最后登录日期 : {{}}</div>
+            <div class="msg">用户ID : {{this.user_message_list.id}}</div>
+            <div class="msg">注册日期 : {{this.user_message_list.create_date}}</div>
+            <div class="msg">最后登录日期 : {{this.user_message_list.last_date}}</div>
         </div>
     </div>
 </template>
@@ -47,8 +51,27 @@
             next();
         },
         created() {
-
+            /** 获取用户信息 */
+            this.requestUserMessage();
         },
+
+        methods: {
+            /** 请求用户信息 */
+            requestUserMessage(){
+                if(this.$store.state.username !== ''){
+                    axios.get(this.base_url + "/user/id/" + this.$store.state.username)
+                    .then(res => {
+                        if(res.data.status === 1){
+                            this.user_message_list = res.data.data;
+                        }
+                    }).catch(err => {
+                        this.$message.error(err);
+                    })
+                }
+
+            }
+        }
+
     }
 </script>
 
@@ -70,6 +93,7 @@
         width: 30%;
         height: 50%;
         text-align: center;
+
     }
 
     .clear::before,
@@ -99,6 +123,7 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
         padding-left: 20px;
         background-color: white;
+        height: 70px;
     }
 
     #option_menu{
@@ -111,28 +136,28 @@
         margin-right: 10px;
         margin-top: 5px;
         float: right;
-        height: 50px;
+        height: 70px;
     }
     #user_msg,#user_record{
         float: left;
         margin-top: 10px;
-        width: 70%;
+        width: 60%;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
         padding: 20px;
         background-color: white;
     }
     #user_msg_aside{
+        margin-top: 5px;
         float: right;
-        margin-top: 10px;
-        width: 22%;
+        width: 32%;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
         padding: 20px;
         background-color: white;
     }
 
     .msg{
-        font-size: 18px;
-        margin: 10px;
+        font-size: 16px;
+        margin:  10px;
         color: #606266;
         font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
     }
