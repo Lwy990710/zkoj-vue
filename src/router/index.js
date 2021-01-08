@@ -13,7 +13,6 @@ import Main from "@/views/Main";
 import AdminContainer from "@/views/admin/AdminContainer";
 import ProblemManage from "@/views/admin/ProblemManage";
 import UserCenter from "../views/UserCenter";
-import UserOptions from "../views/UserOptions";
 
 Vue.use(VueRouter)
 
@@ -41,14 +40,14 @@ const routes = [
                 name: "个人中心",
                 component: UserCenter,
             },
-            {
-                path: "/option/:username",
-                name: "用户设置",
-                component: UserOptions,
-                meta: {
-                    requiresAuth: true
-                }
-            },
+            // {
+            //     path: "/option/:username",
+            //     name: "用户设置",
+            //     component: UserOptions,
+            //     meta: {
+            //         requiresAuth: true
+            //     }
+            // },
             {
                 path: "/discuss",
                 name: "讨论页面",
