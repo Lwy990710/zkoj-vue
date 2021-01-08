@@ -59,6 +59,12 @@ function check(record) {
   if('requiresAuth' in record.meta && !store.state.is_login) {
     return false;
   }
+  if('role' in record.meta) {
+    let roles = record.meta.role;
+    if( roles.indexOf(store.state.role) === -1) {
+      return false;
+    }
+  }
   return true;
 }
 

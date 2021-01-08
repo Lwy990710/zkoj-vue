@@ -5,7 +5,7 @@
     <!-- 搜索条件区域 -->
     <div class="question-bar clear">
       <div class="search">
-        <el-input v-model="input" placeholder="搜索题目名称或编号"></el-input>
+        <el-input v-model="input" placeholder="搜索题目名称或编号" @change="searchProblem()"></el-input>
       </div>
       <el-dropdown @command="chooseDifficulty">
         <span class="el-dropdown-link">
@@ -229,7 +229,8 @@ export default {
         difficulty: null,
         status: null,
         tag_id: null,
-        class_id: null
+        class_id: null,
+        search: null,
       },
       /* 控制标签显示 */
       is_show_tag: {
@@ -305,8 +306,15 @@ export default {
             this.is_loading_table = false;
           });
     },
-
-
+    /** 触发搜索题目 */
+    searchProblem() {
+      if(this.input === '') {
+        this.request_query.search = null;
+      } else {
+        this.request_query.search = this.input;
+      }
+      this.request_problem_list()
+    },
     /* 选择难度 */
     chooseDifficulty(command) {
       let temp = {1: '简单', 2: '中等', 3: '困难'};

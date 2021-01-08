@@ -74,7 +74,8 @@ const routes = [
         path: "/iacs",
         component: AdminContainer,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            role: ['ADMIN', 'SUPER_ADMIN']
         },
         children: [{
             path: "problem",
