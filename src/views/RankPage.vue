@@ -50,7 +50,7 @@
                     background
                     page-size="50"
                     layout="prev, pager, next"
-                    :total="100">
+                    :total="total">
             </el-pagination>
         </div>
     </div>
@@ -62,6 +62,7 @@
         data(){
             return {
               rank_list: null,
+              total: null,
             }
         },
         created() {
@@ -74,7 +75,8 @@
             axios.get(this.base_url + "/rank")
               .then(res => {
                   if(res.data.status === 1){
-                      this.rank_list = res.data.data;
+                      this.rank_list = res.data.data.rank_list;
+                      this.total = res.data.data.count;
                   }
               }).catch(err => {
                   this.$message.error(err);

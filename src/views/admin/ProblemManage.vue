@@ -403,10 +403,19 @@ export default {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
+        let query = {id: item.id}
+        axios.delete(this.base_url + "/tag", {data: query})
+                .then(res => {
+                  if (res.data.status === 1){
+                    this.$message({
+                      type: 'success',
+                      message: '删除成功!'
+                    });
+                    this.$router.go(0);
+                  }
+                }).catch(err => {
+          this.$message.error(err);
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -459,10 +468,19 @@ export default {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
+        let query = {id: item.id}
+        axios.delete(this.base_url + "/problem-class", {data: query})
+        .then(res => {
+          if (res.data.status === 1){
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.$router.go(0);
+          }
+        }).catch(err => {
+          this.$message.error(err);
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
