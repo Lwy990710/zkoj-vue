@@ -37,11 +37,30 @@ axios.interceptors.response.use(response =>{
   return Promise.reject(err);
 });
 
+/** 前置钩子 */
+router.beforeEach((to, from, next) => {
+
+  if(!to.matched.some(check)) {
+    next({path: "/"});
+    return;
+  }
+  next();
+
+});
+
 new Vue({
   router,
   store,
   render: h => h(App)
 }).$mount('#app');
+
+function check(record) {
+  // 是否需要登录
+  if('requiresAuth' in record.meta && !store.state.is_login) {
+    return false;
+  }
+  return true;
+}
 
 
 

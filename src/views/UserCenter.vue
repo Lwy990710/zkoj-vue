@@ -6,6 +6,11 @@
         </div>
         <!-- 菜单区域 -->
         <div id="user_menu" class="clear">
+          <!--<el-tabs v-model="current_tab" @tab-click="handleClick">
+            <el-tab-pane label="主页" name="base"></el-tab-pane>
+            <el-tab-pane label="统计" name="count"></el-tab-pane>
+            <el-tab-pane label="设置" name="option"></el-tab-pane>
+          </el-tabs>-->
             <div id="option_menu">
                 <el-button type="text" style="margin: 0 20px" @click="is_msg=true,is_record=false">主页</el-button>
                 <el-button type="text" style="margin: 0 20px" @click="is_msg=false,is_record=true">统计</el-button>
@@ -88,6 +93,8 @@
                 is_msg: true,
                 /** 开关统计页面 */
                 is_record: false,
+                /** 当前标签页 */
+                current_tab: 'base',
                 /** 用户信息列表 */
                 user_message_list: null,
                 /** 提交问题列表 */

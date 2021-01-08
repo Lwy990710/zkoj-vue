@@ -64,9 +64,14 @@
                 axios.post(this.base_url + "/login", request_body)
                     .then(res => {
                         if (res.data.status === 1) {
-                            this.$store.commit('login', res.headers.authorization);
+                          let payload = {
+                            token: res.headers.authorization,
+                            username: username,
+                            name: res.data.data.name,
+                            role: res.data.data.role
+                          }
+                            this.$store.commit('login', payload);
                             //登陆成功
-                            this.$emit('close', name);
                             this.$router.go(0);
                         } else {
                             alert(res.data.message);

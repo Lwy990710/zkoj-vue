@@ -8,17 +8,24 @@ export default new Vuex.Store({
     username: '' || localStorage.getItem("username"),
     token: '' || localStorage.getItem("token"),
     is_login: Boolean(localStorage.getItem('token')),
-    name: '' || localStorage.getItem("name")
+    name: '' || localStorage.getItem("name"),
+    role: '' || localStorage.getItem("role")
   },
   mutations: {
     setUsername: (state, username) => {
       state.username = username;
       localStorage.setItem("username", username);
     },
-    login: (state, token) => {
-      state.token = token;
+    login: (state, payload) => {
+      state.token = payload.token;
       state.is_login = true;
-      localStorage.setItem("token", token);
+      state.username = payload.username;
+      state.name = payload.name;
+      state.role = payload.role;
+      localStorage.setItem("token", payload.token);
+      localStorage.setItem("username", payload.username);
+      localStorage.setItem("name", payload.name);
+      localStorage.setItem("role", payload.role);
     },
     setName: (state, name) => {
       state.name = name;

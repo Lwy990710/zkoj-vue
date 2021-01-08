@@ -125,9 +125,8 @@ import router from "@/router";
             }
         },
         methods: {
-            closeLoginDialog(data) {
+            closeLoginDialog() {
                 this.loginDialogFormVisible = false;
-                this.$store.commit('setName', data);
             },
             closeRegisterDialog() {
                 this.registerDialogFormVisible = false;

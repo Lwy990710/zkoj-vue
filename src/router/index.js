@@ -44,7 +44,10 @@ const routes = [
             {
                 path: "/option/:username",
                 name: "用户设置",
-                component: UserOptions
+                component: UserOptions,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: "/discuss",
@@ -70,6 +73,9 @@ const routes = [
     {
         path: "/iacs",
         component: AdminContainer,
+        meta: {
+            requiresAuth: true
+        },
         children: [{
             path: "problem",
             component: ProblemManage
@@ -87,5 +93,7 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes
 })
+
+
 
 export default router
