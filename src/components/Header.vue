@@ -67,7 +67,7 @@
                 </div>
                 <el-dropdown-menu slot="dropdown" @command="logout">
                     <el-dropdown-item class="user_dropdown_item">
-                        <router-link :to='"/usercenter/" + this.$store.state.username'
+                        <router-link :to='"/usercenter/" + this.$store.state.username' @click.native="flushCom"
                                      style="width: 96px;display: inline-block;text-align: center;color: #606266">
                             个人中心
                         </router-link>
@@ -135,7 +135,7 @@ import router from "@/router";
             logout() {
                 this.$store.commit('logout');
             },
-          changeMenu(index) {
+            changeMenu(index) {
                 if(this.$store.state.is_login){
                     if(index === "/record" && this.$store.state.username !== ''){
                         router.push({path: index,query: {username: this.$store.state.username}});
@@ -145,7 +145,10 @@ import router from "@/router";
                 } else {
                     router.push({path: index});
                 }
-          },
+            },
+            flushCom(){
+                this.$router.go(0);
+            }
         }
     }
 </script>

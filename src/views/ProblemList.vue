@@ -301,7 +301,7 @@ export default {
           })
           .catch(err => {
             //请求失败时进入catch
-            this.$message.error(err);;
+            this.$message.error(err);
             this.is_loading_table = false;
           });
     },

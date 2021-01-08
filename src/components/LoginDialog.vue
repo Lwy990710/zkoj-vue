@@ -1,14 +1,15 @@
 <template>
     <div>
-        <el-form :model="user_message" :rules="rules" ref="user_message" label-width="60px" key="login">
-            <el-form-item label="账号" prop="username">
-                <el-input v-model="user_message.username"></el-input>
-            </el-form-item>
-            <el-form-item @keyup.enter.native="login" label="密码" prop="password">
-                <el-input v-model="user_message.password" show-password></el-input>
-            </el-form-item>
-
-        </el-form>
+        <div>
+            <el-form :model="user_message" :rules="rules" label-width="60px" >
+                <el-form-item label="账号" prop="username">
+                    <el-input v-model="user_message.username"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="password">
+                    <el-input v-model="user_message.password" show-password></el-input>
+                </el-form-item>
+            </el-form>
+        </div>
         <div slot="footer" class="dialog-footer ">
             <el-button type="primary" @click="login">登录</el-button>
         </div>
@@ -48,29 +49,24 @@
         },
         methods: {
             login() {
+                this.getName();
                 let name = '';
                 let username = this.user_message.username;
                 let password = this.user_message.password;
                 this.$store.commit('setUsername', username);
                 password = md5('zkoj' + md5(username + password));
+
                 let request_body = {
                     username: username,
                     password: password
                 };
+
                 axios.post(this.base_url + "/login", request_body)
                     .then(res => {
                         if (res.data.status === 1) {
                             this.$store.commit('login', res.headers.authorization);
                             //登陆成功
-                            axios.get(this.base_url + "/user/id/" + username)
-                                .then(result => {
-                                    if (result.data.status === 1) {
-                                        name = result.data.data.name;
-                                        alert(name)
-                                        this.$emit('close', name);
-
-                                    }
-                                })
+                            this.$emit('close', name);
                             this.$router.go(0);
                         } else {
                             alert(res.data.message);
@@ -80,7 +76,23 @@
                         this.$message.error(err);;
                     });
             },
+            getName(){
+                let name = '';
+                let username = this.user_message.username;
+                axios.get(this.base_url + "/user/id/" + username)
+                    .then(res => {
+                        if (res.data.status === 1) {
+                            name = res.data.data.name;
+                            this.$store.commit('setName', name);
+                            return false;
+                        } else {
+                            alert(res.data.message);
+                        }
+                    }).catch(err => {
+                    this.$message.error(err);
+                })
 
+            }
         }
     }
 </script>

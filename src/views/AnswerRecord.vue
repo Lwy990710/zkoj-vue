@@ -50,7 +50,7 @@
             prop="user.username"
             width="120">
           <template slot-scope="scope">
-            <router-link :to='"/userhome"'>
+            <router-link :to='"/usercenter/" + scope.row.user.username'>
               {{ scope.row.user.username }}
             </router-link>
           </template>
