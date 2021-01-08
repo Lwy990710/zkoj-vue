@@ -12,27 +12,37 @@
             <el-tab-pane label="设置" name="option"></el-tab-pane>
           </el-tabs>-->
             <div id="option_menu">
-                <el-button type="text" style="margin: 0 20px" @click="is_msg=true,is_record=false">主页</el-button>
-                <el-button type="text" style="margin: 0 20px" @click="is_msg=false,is_record=true">统计</el-button>
-                <el-button @click="option" v-if="this.$route.params.username === this.$store.state.username" style="margin: 0 20px" type="text">设置</el-button>
-
+                <el-tabs v-model="activeName" @tab-click="click">
+                    <el-tab-pane label="主页" name="message"></el-tab-pane>
+                    <el-tab-pane label="统计" name="record"></el-tab-pane>
+                    <el-tab-pane v-if="this.$store.state.username===this.$route.params.username" label="设置" name="option"></el-tab-pane>
+                </el-tabs>
+<!--                <el-button type="text" style="margin: 0 20px" @click="is_msg=true,is_record=false">主页</el-button>-->
+<!--                <el-button type="text" style="margin: 0 20px" @click="is_msg=false,is_record=true">统计</el-button>-->
+<!--                <el-button-->
+<!--                        @click="option"-->
+<!--                        v-if="this.$route.params.username === this.$store.state.username"-->
+<!--                        style="margin: 0 20px"-->
+<!--                        type="text">-->
+<!--                    设置-->
+<!--                </el-button>-->
             </div>
-            <span id="name" style="color:#606266;font-size:18px;display:inline-block;width: 16%;height: 70px;line-height: 70px">
+            <span id="name" style="color:#606266;font-size:18px;display:inline-block;width: 65%;height: 52px;line-height: 52px;">
                 {{user_message_list.name}}
             </span>
             <div id="user_problem_msg">
                 <span>提交</span><span>通过</span><span>排名</span>
-                <span>{{user_message_list.submit_count}}</span>
-                <span>{{user_message_list.accepted_count}}</span>
-                <span v-if="user_message_list.rank === -1">无</span>
-                <span v-else>{{user_message_list.rank}}</span>
+                <span style="height: 20px">{{user_message_list.submit_count}}</span>
+                <span style="height: 20px">{{user_message_list.accepted_count}}</span>
+                <span v-if="user_message_list.rank === -1" style="margin-bottom: 0">无</span>
+                <span v-else style="height: 20px">{{user_message_list.rank}}</span>
             </div>
         </div>
         <!-- 基本信息 -->
-        <div v-if="is_msg" id="user_msg">
+        <div v-if="showing_page.message" id="user_msg">
             <div class="msg">用户名 : {{user_message_list.username}}</div>
             <div class="msg">邮箱 : {{user_message_list.email}}</div>
-            <div class="msg" >简介 : </div>
+            <div class="msg">简介 : </div>
             <div class="msg description" v-if="typeof user_message_list.description == null">
                 <div @click="check"  v-if="!change_description">这个人很懒，什么都没写</div>
                 <el-input
@@ -59,7 +69,7 @@
             </div>
         </div>
         <!-- 统计 -->
-        <div v-if="is_record" id="user_record">
+        <div v-if="showing_page.record" id="user_record">
             <div class="msg">做过的题 : </div>
             <div class="msg">
                 <router-link :to='"/problem/" + item.problem_id' v-for="item in submit_problem_list" :key="item.problem_id">
@@ -71,6 +81,34 @@
                 <router-link :to='"/problem/" + item.problem_id' v-for="item in accepted_problem_list" :key="item.problem_id">
                     [{{item.problem_id}}]
                 </router-link>
+            </div>
+        </div>
+        <!-- 用户设置 -->
+        <div id="user_option" v-if="showing_page.option">
+            <div class="option">
+                <span>邮箱 : </span>
+                <el-input v-model="new_email" size="small" placeholder="新邮箱" style="width: 200px"></el-input>
+            </div>
+            <div class="option">
+                <span>昵称 : </span>
+                <el-input v-model="new_name" size="small" placeholder="新昵称" style="width: 200px">
+                    <template slot="append"><el-button>修改</el-button></template>
+                </el-input>
+            </div>
+            <div class="option">
+                <span>原密码 : </span>
+                <el-input v-model="old_password" size="small" show-password placeholder="原密码" style="width: 200px"></el-input>
+            </div>
+            <div class="option">
+                <span>新密码 : </span>
+                <el-input v-model="new_password" size="small" show-password placeholder="新密码" style="width: 200px"></el-input>
+            </div>
+            <div class="option">
+                <span>再次输入 : </span>
+                <el-input v-model="pardon_new_password" size="small" show-password placeholder="再次输入新密码" style="width: 200px"></el-input>
+            </div>
+            <div id="submit" style="margin-left: 100px">
+                <el-button type="danger">修改密码</el-button>
             </div>
         </div>
         <!-- 侧边栏 -->
@@ -89,18 +127,29 @@
                 /** 修改简介 */
                 change_description: false,
                 new_description: '',
-                /** 开关信息页面 */
-                is_msg: true,
-                /** 开关统计页面 */
-                is_record: false,
-                /** 当前标签页 */
-                current_tab: 'base',
+                /** 顶部高亮 */
+                activeName: 'message',
+                /** 页面显示 */
+                showing_page: {
+                    /** 开关信息页面 */
+                    message: true,
+                    /** 开关统计页面 */
+                    record: false,
+                    /** 开关设置页面 */
+                    option: false,
+                },
                 /** 用户信息列表 */
                 user_message_list: null,
                 /** 提交问题列表 */
                 submit_problem_list: null,
                 /** 通过问题列表 */
                 accepted_problem_list: null,
+                /** 用户设置 */
+                new_name: '',
+                old_password: '',
+                new_password: '',
+                pardon_new_password: '',
+                new_email: '',
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -164,7 +213,22 @@
             /** 跳转设置页面 */
             option(){
                 this.$router.push("/option/" + this.$store.state.username);
-            }
+            },
+            click(tab){
+              if(tab.name === 'message'){
+                  this.showing_page.message = true;
+                  this.showing_page.record = false;
+                  this.showing_page.option =false;
+              } else if(tab.name === 'record'){
+                  this.showing_page.message = false;
+                  this.showing_page.record = true;
+                  this.showing_page.option =false;
+              } else {
+                  this.showing_page.message = false;
+                  this.showing_page.record = false;
+                  this.showing_page.option =true;
+              }
+            },
         }
 
     }
@@ -230,22 +294,22 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
         padding-left: 20px;
         background-color: white;
-        height: 70px;
+        height: 52px;
     }
 
     #option_menu{
         margin-top: 12px;
         float: left;
-        width:40%;
+        width:16%;
     }
     #user_problem_msg{
-        width: 20%;
+        width: 16%;
         margin-right: 10px;
         margin-top: 5px;
         float: right;
-        height: 70px;
+        height: 46px;
     }
-    #user_msg,#user_record{
+    #user_msg,#user_record,#user_option{
         float: left;
         margin-top: 10px;
         width: 60%;
@@ -254,7 +318,7 @@
         background-color: white;
     }
     #user_msg_aside{
-        margin-top: 5px;
+        margin-top: 10px;
         float: right;
         width: 32%;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
@@ -271,6 +335,25 @@
 
     .description{
         text-indent: 2em;
+    }
+
+    .el-tabs{
+        height: 40px !important;
+    }
+
+    #user_option{
+        padding: 20px;
+    }
+
+    #user_option span{
+        width: 70px;
+        display: inline-block;
+        font-size: 14px;
+        margin: 10px;
+    }
+
+    .option{
+        margin: 20px 0;
     }
 </style>
 <style>
