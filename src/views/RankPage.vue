@@ -19,7 +19,7 @@
                         prop="username"
                         align="center"
                         label="用户名"
-                        width="500">
+                        width="440">
                     <template slot-scope="scope">
                         {{scope.row.username}}
                     </template>
@@ -36,9 +36,18 @@
                 <el-table-column
                         prop="accepted"
                         align="center"
-                        label="通过数">
+                        label="通过数"
+                        width="120">
                     <template slot-scope="scope">
                         {{scope.row.accepted}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        label="通过率">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.count === 0">-</div>
+                        <div v-if="scope.row.count !== 0">{{ (scope.row.accepted / scope.row.count * 100).toFixed(1) }}%</div>
                     </template>
                 </el-table-column>
             </el-table>

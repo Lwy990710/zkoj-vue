@@ -1,24 +1,30 @@
 <template>
     <div class="main">
         <div id="user_screen">
+            <!-- 搜索用户区域 -->
             <div id="search_screen">
                 <span>搜索用户 : </span>
-                <el-input size="small" placeholder="输入用户名" style="width: 400px"></el-input>
-                <el-button type="primary">搜索</el-button>
+                <el-input v-model="search_user" @change="searchUser" size="small" placeholder="输入用户名" style="width: 400px"></el-input>
+                <el-button type="primary" size="small" style="display: inline-block;margin: 0 20px">搜索</el-button>
                 <el-divider></el-divider>
             </div>
+            <!-- 权限与账号状态区域 -->
             <div id="role_status">
                 <span>身份</span>
-                <el-select size="small" v-model="value_role">
+                <el-select size="small" v-model="value_role" @change="chooseRole">
                     <el-option
                             v-for="item in role_list"
                             :key="item.id"
                             :label="item.name"
                             :value="item.id">
                     </el-option>
+                    <el-option
+                            label="全部权限"
+                            :value=value_role>
+                    </el-option>
                 </el-select>
                 <span>状态</span>
-                <el-select size="small" v-model="value_status">
+                <el-select size="small" v-model="value_status" @change="chooseUserStatus">
                     <el-option
                             v-for="item in status_list"
                             :key="item.value_status"
@@ -26,10 +32,13 @@
                             :value="item.value_status">
                     </el-option>
                 </el-select>
+                <el-button type="text" style="display: inline-block;margin: 0 20px;float: right"><strong>清除所有筛选项</strong></el-button>
             </div>
         </div>
+        <!-- 用户列表区域 -->
         <div id="user_table">
             <el-table
+                    v-loading="is_loading_table"
                     :data="user_list"
                     stripe
                     style="width: 100%">
@@ -41,13 +50,13 @@
                         max-width="360">
                     <template slot-scope="scope">
                        <div v-if="scope.row.role_id === 1">
-                           学生
+                           NORMAL
                        </div>
                         <div v-if="scope.row.role_id === 0">
-                            超级管理员
+                            SUPER_ADMIN
                         </div>
                         <div v-if="scope.row.role_id === 2">
-                            管理员
+                            ADMIN
                         </div>
                     </template>
                 </el-table-column>
@@ -91,6 +100,18 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <!-- 分页区域 -->
+            <div style="text-align: center;background-color: white;margin: 20px 0;height: 50px;line-height: 50px">
+                <el-pagination
+                        :page-sizes="[10,20,30,40]"
+                        :page-size="this.request_query.limit"
+                        @current-change="handleCurrentChange"
+                        @size-change="handleSizeChange"
+                        background
+                        layout="prev, pager, next, sizes, jumper"
+                        :total="total">
+                </el-pagination>
+            </div>
         </div>
     </div>
 </template>
@@ -100,14 +121,18 @@
         name: "UserManage",
         data(){
             return {
+                /** 列表加载 */
+                is_loading_table: false,
                 /** 用户列表 */
                 user_list: null,
                 /** 数据条数 */
                 total: null,
                 /** 权限列表 */
                 role_list: null,
+                /** 输入框内容 */
+                search_user: '',
                 /** 身份筛选 */
-                value_role: '全部身份',
+                value_role: null,
                 /** 账号状态 */
                 status_list: [{
                     value_status: "1",
@@ -120,6 +145,14 @@
                     label: "全部状态"
                 }],
                 value_status: "全部状态",
+                /** 请求参数列表 */
+                request_query:{
+                    page: 1,
+                    limit: 50,
+                    search: null,
+                    role_id: null,
+                    status: null
+                }
             }
         },
         created() {
@@ -131,16 +164,26 @@
         methods: {
             /** 获取用户列表 */
             requestUserList(){
-                axios.get(this.base_url + "/manage/user")
+                this.is_loading_table = true;
+                let query = {};
+                Object.keys(this.request_query).forEach(key => {
+                    if (this.request_query[key] !== null) {
+                        query[key] = this.request_query[key];
+                    }
+                })
+                axios.get(this.base_url + "/manage/user", {params: query})
                 .then(res => {
                     if(res.data.status === 1){
                         this.user_list = res.data.data.user_list;
-                        this.total = this.data.data.count;
+                        this.total = res.data.data.count;
+                        this.is_loading_table = false;
                     } else {
                         alert(res.data.message);
+                        this.is_loading_table = false;
                     }
                 }).catch(err => {
                     this.$message.error(err);
+                    this.is_loading_table = false;
                 })
             },
             /** 获取权限列表 */
@@ -155,6 +198,21 @@
                 }).catch(err => {
                     this.$message.error(err);
                 })
+            },
+            /** 权限筛选 */
+            chooseRole(value){
+                this.request_query.role_id = value;
+                this.requestUserList();
+            },
+            /** 账号状态筛选 */
+            chooseUserStatus(value){
+                this.request_query.status_id = value;
+                this.requestUserList();
+            },
+            /** 搜索用户 */
+            searchUser(){
+                this.request_query.search = this.search_user;
+                this.requestUserList();
             }
         },
     }
@@ -167,9 +225,10 @@
         min-width: 800px;
         width: 1200px;
         max-width: 1200px;
+        padding: 20px;
     }
     #user_table{
-        margin: 20px auto;
+        margin-top: 20px;
         background-color: white;
         width: 100%;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
