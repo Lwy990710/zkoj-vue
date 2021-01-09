@@ -108,7 +108,6 @@ export default {
           }
         }).catch(err => {
       this.$message.error(err);
-      ;
       this.is_loading_table = false;
     })
   },
