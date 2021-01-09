@@ -54,8 +54,7 @@
                 let username = this.user_message.username;
                 let password = this.user_message.password;
                 this.$store.commit('setUsername', username);
-                password = md5('zkoj' + md5(username + password));
-
+                password = md5('zkoj' + md5(username + password))
                 let request_body = {
                     username: username,
                     password: password

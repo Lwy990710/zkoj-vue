@@ -33,7 +33,7 @@
                 rules: {
                     username: [
                         { required: true,  message: '账号不能为空', trigger: 'blur' },
-                        {min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur'},
+                        { min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur'},
                         { type : "string", pattern:/^[A-Za-z0-9]+$/ ,message: '用户名只能由数字和字符组成',trigger: 'blur'},
 
                     ],
