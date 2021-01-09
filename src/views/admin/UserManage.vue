@@ -5,7 +5,7 @@
             <div id="search_screen">
                 <span>搜索用户 : </span>
                 <el-input v-model="search_user" @change="searchUser" size="small" placeholder="输入用户名" style="width: 400px"></el-input>
-                <el-button type="primary" size="small" style="display: inline-block;margin: 0 20px">搜索</el-button>
+                <el-button type="primary" size="small" style="display: inline-block;margin: 0 20px" @click="searchUser">搜索</el-button>
                 <el-divider></el-divider>
             </div>
             <!-- 权限与账号状态区域 -->
@@ -13,14 +13,15 @@
                 <span>身份</span>
                 <el-select size="small" v-model="value_role" @change="chooseRole">
                     <el-option
+                            style="color: black;font-weight: 400"
+                            label="全部权限"
+                            :value=value_role>
+                    </el-option>
+                    <el-option
                             v-for="item in role_list"
                             :key="item.id"
                             :label="item.name"
                             :value="item.id">
-                    </el-option>
-                    <el-option
-                            label="全部权限"
-                            :value=value_role>
                     </el-option>
                 </el-select>
                 <span>状态</span>
@@ -32,7 +33,7 @@
                             :value="item.value_status">
                     </el-option>
                 </el-select>
-                <el-button type="text" style="display: inline-block;margin: 0 20px;float: right"><strong>清除所有筛选项</strong></el-button>
+                <el-button @click="clearScreen" type="text" style="display: inline-block;margin: 0 20px;float: right"><strong>清除所有筛选项</strong></el-button>
             </div>
         </div>
         <!-- 用户列表区域 -->
@@ -135,14 +136,14 @@
                 value_role: null,
                 /** 账号状态 */
                 status_list: [{
+                    value_status: null,
+                    label: "全部状态"
+                },{
                     value_status: "1",
                     label: "正常"
                 },{
                     value_status: "0",
                     label: "禁用"
-                },{
-                    value_status: null,
-                    label: "全部状态"
                 }],
                 value_status: "全部状态",
                 /** 请求参数列表 */
@@ -212,6 +213,13 @@
             /** 搜索用户 */
             searchUser(){
                 this.request_query.search = this.search_user;
+                this.requestUserList();
+            },
+            /** 清空筛选 */
+            clearScreen(){
+                this.request_query.search = null;
+                this.request_query.role_id = null;
+                this.request_query.status = null;
                 this.requestUserList();
             }
         },
