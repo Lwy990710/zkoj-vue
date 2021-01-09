@@ -27,6 +27,10 @@ export default new Vuex.Store({
       localStorage.setItem("name", payload.name);
       localStorage.setItem("role", payload.role);
     },
+    setToken: (state, token) => {
+      state.token = token;
+      localStorage.setItem("token", token);
+    },
     setName: (state, name) => {
       state.name = name;
       localStorage.setItem("name", name);

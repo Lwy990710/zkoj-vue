@@ -103,26 +103,33 @@
           <div class="collapse-view" style="line-height: 32px">
             <div>
               <span style="margin-right: 20px">是否公开:</span>
-              <el-radio v-model="problem_data.is_private" label="false">是</el-radio>
-              <el-radio v-model="problem_data.is_private" label="true">否</el-radio>
+              <el-radio v-model="problem_data.is_private" :label="false">是</el-radio>
+              <el-radio v-model="problem_data.is_private" :label="true">否</el-radio>
             </div>
             <div>
               <span style="margin-right: 20px">难度:</span>
-              <el-radio v-model="problem_data.difficulty" label="1">简单</el-radio>
-              <el-radio v-model="problem_data.difficulty" label="2">中等</el-radio>
-              <el-radio v-model="problem_data.difficulty" label="3">困难</el-radio>
+              <el-radio v-model="problem_data.difficulty" :label=1>简单</el-radio>
+              <el-radio v-model="problem_data.difficulty" :label=2>中等</el-radio>
+              <el-radio v-model="problem_data.difficulty" :label=3>困难</el-radio>
             </div>
             <p>限制 :</p>
-            <div class="limit">
-              <el-button size="small" @click="addLimits" type="primary"><i class="el-icon-plus"></i></el-button>
-              <el-button size="small" @click="delLimits"><i class="el-icon-minus"></i></el-button>
-              <span class="normal">默认</span>
-              <span>内存(MB) : </span>
-              <el-input size="small" style="width: 200px" placeholder="最大运行时间"></el-input>
-              <span>时间(ms) : </span>
-              <el-input size="small" style="width: 200px" placeholder="最大内存"></el-input>
+            <div class="languages">
+<!--              <el-button size="small" @click="addLimits" type="primary"><i class="el-icon-plus"></i></el-button>-->
+<!--              <el-button size="small" @click="delLimits"><i class="el-icon-minus"></i></el-button>-->
+              <span  style="width: 100px">默认</span>
+              <span  style="width: 100px">内存(MB) : </span>
+              <el-input v-model="input_language[0].memory" size="small" style="width: 200px" placeholder="最大运行时间"></el-input>
+              <span  style="width: 100px">时间(ms) : </span>
+              <el-input v-model="input_language[0].time" size="small" style="width: 200px" placeholder="最大内存"></el-input>
             </div>
-            <div class="languages" v-for="(item,index) in languages" >
+            <div class="languages" v-for="(item,index) in language_list">
+              <span style="width: 100px">{{item.name}}</span>
+              <span style="width: 100px">内存(MB) : </span>
+              <el-input type="number" v-model="input_language[index + 1].memory" size="small" style="width: 200px" placeholder="留空则为默认"></el-input>
+              <span style="width: 100px">时间(ms) : </span>
+              <el-input type="number" v-model="input_language[index + 1].time" size="small" style="width: 200px" placeholder="留空则为默认"></el-input>
+            </div>
+            <!--<div class="languages" v-for="(item,index) in language_list" >
               <el-select  @change="chooseLanguage" v-model="languages[index].name" placeholder="请选择" style="width: 120px;margin: 10px 20px 10px 120px">
                 <el-option
                     v-for="item in language_list"
@@ -135,7 +142,7 @@
               <el-input size="small" style="width: 200px" placeholder="最大运行时间"></el-input>
               <span>时间(ms) : </span>
               <el-input size="small" style="width: 200px" placeholder="最大内存"></el-input>
-            </div>
+            </div>-->
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -143,6 +150,16 @@
 
     <div v-show="current_step === 1">
       <!-- TODO: 源代码 -->
+      <el-tabs v-model="current_source_tab" tab-position="left" style="margin-top: 20px;margin-right: 20px">
+        <el-tab-pane v-for="(item, index) in language_list" :label="item.name" :name="item.name">
+          <el-input
+              type="textarea"
+              :rows="20"
+              placeholder="不输入则无该语言的参考代码"
+              v-model="input_source_code[index].source_code">
+          </el-input>
+        </el-tab-pane>
+      </el-tabs>
     </div>
 
     <div v-show="current_step === 2" style="padding: 20px">
@@ -164,8 +181,33 @@
 
       <!-- 手动添加 -->
       <div v-show="check_point_upload_type === 'input'">
+        <el-button size="small" @click="addCheckPoint" type="primary"><i class="el-icon-plus"></i></el-button>
+        <el-button size="small" @click="deleteCheckPoint"><i class="el-icon-minus"></i></el-button>
 
+        <div class="collapse-view" v-for="(item, index) in input_check_point">
+          <div>第{{index + 1}}组：</div>
+          <span style="width: 50%">输入数据 :</span><span style="width: 50%">输出数据 :</span>
+          <br><br>
+          <el-input
+              type="textarea"
+              style="font-size: 14px;width: 40%"
+              :autosize="{ minRows: 8, maxRows: 8}"
+              resize="none" placeholder="输入样例"
+              v-model="input_check_point[index].input">
+          </el-input>
+          <el-divider direction="vertical"></el-divider>
+          <el-input
+              type="textarea"
+              style="font-size: 14px;width: 40%"
+              :autosize="{ minRows: 8, maxRows: 8}"
+              resize="none" placeholder="输出样例"
+              v-model="input_check_point[index].output">
+          </el-input>
+          <el-divider></el-divider>
+        </div>
       </div>
+
+      <el-button @click="uploadProblem" type="primary">提交</el-button>
     </div>
 
     <div style="text-align: center; padding: 20px">
@@ -200,11 +242,55 @@ export default {
         hint: "",
         problem_class: 0,
         tag: [],
-        is_private: null,
+        is_private: true,
         source_code: [],
-        difficulty: null,
+        difficulty: 1,
         limit: []
       },
+      /** 输入限制数据 */
+      input_language: [
+        {
+          language_id: 0,
+          time: 1000,
+          memory: 250
+        },{
+          language_id: 1,
+          time: undefined,
+          memory: undefined
+        },{
+          language_id: 2,
+          time: undefined,
+          memory: undefined
+        },{
+          language_id: 3,
+          time: undefined,
+          memory: undefined
+        },{
+          language_id: 4,
+          time: undefined,
+          memory: undefined
+        },
+      ],
+      /** 输入源代码数据 */
+      input_source_code: [
+        {
+          language_id: 1,
+          source_code: undefined
+        },{
+          language_id: 2,
+          source_code: undefined
+        },{
+          language_id: 3,
+          source_code: undefined
+        },{
+          language_id: 4,
+          source_code: undefined
+        },
+      ],
+      /** 输入测试点数据 */
+      input_check_point: [],
+      /** 当前源代码页 */
+      current_source_tab: 'C',
       /** 循环用数组 */
       languages: [],
       /** 默认展开折叠列表 */
@@ -218,7 +304,10 @@ export default {
       /** 后端返回的tag列表 */
       tag_list: null,
       /** 后端返回的language列表*/
-      language_list: [],
+      language_list: [{
+        id: -1,
+        name: ''
+      }],
       /** 恢复语言数组数据 */
       recovery_list: [],
       /** 被选中语言数组数据 */
@@ -303,6 +392,17 @@ export default {
     handleChange() {
 
     },
+    /** 增加测试点组 */
+    addCheckPoint() {
+      this.input_check_point.push({
+        input: '',
+        output: ''
+      });
+    },
+    /** 删除测试点组 */
+    deleteCheckPoint() {
+    this.input_check_point.pop();
+    },
     addLimits() {
       this.languages.push({id: null, name: ''});
     },
@@ -321,6 +421,85 @@ export default {
 
         }
       }
+    },
+    /** 上传问题数据 */
+    uploadProblem() {
+      let request_body = this.problem_data;
+
+      if(this.isEmpty(request_body.title)) {
+        this.$message.error("标题不能为空！");
+        return;
+      }
+      if(this.isEmpty(request_body.description)) {
+        this.$message.error("问题描述不能为空！");
+        return;
+      }
+      if(this.isEmpty(request_body.sample_output)) {
+        this.$message.error("样例输出不能为空！");
+        return;
+      }
+      // 增加源代码
+      this.input_source_code.forEach((item, index, arr) => {
+        if(item.source_code !== undefined) {
+          request_body.source_code.push(item);
+        }
+      });
+      // 增加限制
+      // TODO: 判断是否为空
+      this.input_language.forEach((item, index, arr) => {
+        if(item.time !== undefined && item.memory !== undefined) {
+          let temp = {
+            language_id: item.language_id,
+            time: Number(item.time),
+            memory: Number(item.memory)
+          }
+          request_body.limit.push(temp);
+        }
+      });
+      //分类
+      if(request_body.problem_class === 0) {
+        request_body.problem_class = null;
+      }
+
+      let problem_data = JSON.stringify(request_body);
+      let form_data = new FormData();
+      form_data.append('problem_data', problem_data);
+      if(this.check_point_upload_type === 'zip') {
+        //压缩包上传测试数据
+        let check_point_file = this.$refs.input_upload.files[0];
+        form_data.append('check_point_file', check_point_file);
+      } else {
+        //手动上传测试数据
+        let check_point_data = JSON.stringify(this.input_check_point);
+        form_data.append('check_point_json', check_point_data);
+      }
+
+      //请求
+      let request_option = {
+        url: this.base_url + '/iacs/problem',
+        data: form_data,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+      axios.request(request_option).then(res => {
+        if(res.data.status === 1) {
+          this.$message.success("增加成功！");
+        } else {
+          this.$message.error(res.data.message);
+        }
+      }).catch(err => {
+        this.$message.error(err);
+      })
+
+
+    },
+    /** 检测字符串是否为空 */
+    isEmpty(p) {
+      if(p === null || p === '')
+        return true;
+      return false;
     }
   }
 }

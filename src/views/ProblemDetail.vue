@@ -158,6 +158,9 @@ export default {
       }, {
         value: 'c++',
         label: 'c++'
+      }, {
+        value: 'c',
+        label: 'c'
       }],
       value: '',
       language_id: 1,
@@ -241,6 +244,9 @@ export default {
       } else if (this.value === 'c++') {
         mime = 'text/x-c++src'
         this.language_id = 2;
+      } else if (this.value === 'c') {
+        mime = 'text/x-c++src'
+        this.language_id = 1;
       }
 
       this.options.mode = mime;

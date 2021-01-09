@@ -72,6 +72,9 @@ export default {
       }, {
         value: 'c++',
         label: 'c++'
+      }, {
+        value: 'c',
+        label: 'c'
       }],
       value: '',
       language_id: 1,
@@ -116,13 +119,16 @@ export default {
       let mime = 'text/x-java'
       if (this.value === 'Java') {
         mime = 'text/x-java'
-        this.language_id = 1;
+        this.language_id = 3;
       } else if (this.value === 'Python') {
         mime = 'text/x-python'
-        this.language_id = 2;
+        this.language_id = 4;
       } else if (this.value === 'c++') {
         mime = 'text/x-c++src'
-        this.language_id = 3;
+        this.language_id = 2;
+      } else if (this.value === 'c') {
+        mime = 'text/x-c++src'
+        this.language_id = 1;
       }
 
       this.editor.setOption("mode", mime);

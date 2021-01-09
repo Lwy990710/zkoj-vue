@@ -8,7 +8,7 @@ import 'codemirror/lib/codemirror.css'
 import "codemirror/addon/hint/show-hint.css";
 import hljs from 'highlight.js';
 import 'highlight.js/styles/a11y-light.css';
-//import './assets/theme/index.css';
+import './assets/theme/index.css';
 import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
 
@@ -17,6 +17,7 @@ Vue.use(hljs.vuePlugin);
 Vue.config.productionTip = false
 //Vue.prototype.base_url = "http://yapi.yukineko.top/mock/16/zkoj/"
 Vue.prototype.base_url = "http://localhost:8080"
+//Vue.prototype.base_url = "http://192.168.31.214:8080"
 axios.interceptors.request.use(config => {
   // 为请求头对象，添加 Token 验证的 Authorization 字段
   if (store.state.is_login)
@@ -27,6 +28,10 @@ axios.interceptors.request.use(config => {
 
 // 添加响应拦截器
 axios.interceptors.response.use(response =>{
+
+  if(response.headers.authorization !== undefined) {
+    store.commit('setToken', response.headers.authorization);
+  }
   return response;
 }, err => {
 
