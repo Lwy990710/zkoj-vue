@@ -13,6 +13,9 @@ import Main from "@/views/Main";
 import AdminContainer from "@/views/admin/AdminContainer";
 import ProblemManage from "@/views/admin/ProblemManage";
 import UserCenter from "../views/UserCenter";
+import UserManage from "../views/admin/UserManage";
+import BatchAddUser from "../views/admin/BatchAddUser";
+import ModifyQuestion from "../views/admin/ModifyQuestion";
 
 Vue.use(VueRouter)
 
@@ -83,6 +86,21 @@ const routes = [
             path: "add",
             name: "增加问题",
             component: AddProblem,
+        },
+        {
+            path: "modify",
+            name: "修改问题",
+            component: ModifyQuestion
+         },
+        {
+            path: "user",
+            name: "用户管理",
+            component: UserManage
+        },
+        {
+            path: "adduser",
+            name: "批量增加",
+            component: BatchAddUser,
         }]
     },
 ]

@@ -17,7 +17,7 @@
         <i class="el-icon-tickets"></i>
         <span slot="title">网站信息</span>
       </el-menu-item>
-      <el-submenu >
+      <el-submenu index="/iacs/problem">
         <template slot="title">
           <i class="el-icon-setting"></i>
           <span>题目管理</span>
@@ -25,6 +25,17 @@
         <el-menu-item-group>
           <el-menu-item index="/iacs/problem">题目信息</el-menu-item>
           <el-menu-item index="/iacs/add">增加问题</el-menu-item>
+          <el-menu-item index="/iacs/modify">修改问题</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+      <el-submenu index="/iacs/user">
+        <template slot="title">
+          <i class="el-icon-setting"></i>
+          <span>用户管理</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="/iacs/user">用户信息</el-menu-item>
+          <el-menu-item index="/iacs/adduser">批量增加</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 <!--      <el-menu-item index="/iacs/problem">-->
