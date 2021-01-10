@@ -7,7 +7,7 @@
     </div>
 
     <el-menu
-      default-active="/iacs"
+      :default-active="current_index"
       @select="changeMenu"
       background-color="rgba(0,0,0,0)"
       style="width: 100%;height: 100%"
@@ -53,12 +53,22 @@
 <script>
 export default {
   name: "AdminAside",
+  data() {
+    return {
+      current_index: '/iacs/problem'
+    }
+
+  },
   methods: {
     /* 切换菜单 */
     changeMenu(index) {
       this.$router.push(index);
     }
+  },
+  created() {
+    this.current_index = this.$route.path;
   }
+
 }
 </script>
 

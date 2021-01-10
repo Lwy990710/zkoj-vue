@@ -65,8 +65,14 @@
               .then(res => {
                   if (res.data.status === 1) {
                       //登陆成功
-                      this.$store.commit('login', res.headers.authorization);
-                      this.$emit('close');
+                    let payload = {
+                      token: res.headers.authorization,
+                      username: username,
+                      name: name,
+                      role: 'NORMAL'
+                    }
+                    this.$store.commit('login', payload);
+                    this.$router.go(0);
                   } else {
                       alert(res.data.message);
                   }

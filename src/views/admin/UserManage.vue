@@ -129,14 +129,14 @@
                         align="center"
                         width="100">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.role_id !== 0" size="small" type="primary" @click="open_role_dialog = true,scope.row.username = modify_role_username">修改权限</el-button>
+                        <el-button v-if="scope.row.role_id !== 0" size="small" type="primary" @click="open_role_dialog = true;modify_role_username = scope.row.username">修改权限</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
                         align="center"
                         width="100">
                     <template slot-scope="scope">
-                        <el-button size="small" type="danger" @click="open_password_dialog = true,scope.row.id = modify_password_id">修改密码</el-button>
+                        <el-button size="small" type="danger" @click="open_password_dialog = true;modify_password_id = scope.row.username">修改密码</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -155,9 +155,9 @@
             <!-- 修改权限对话框 -->
             <el-dialog title="修改权限" :visible.sync="open_role_dialog" style="width: 1000px;margin: 0 auto">
                 <div style="text-align: center">
-                    <el-radio-group v-model="Role">
-                        <el-radio  label="1" @change="setRole">NORMAL</el-radio>
-                        <el-radio  label="2" @change="setRole">ADMIN</el-radio>
+                    <el-radio-group v-model="role">
+                        <el-radio  label="1">NORMAL</el-radio>
+                        <el-radio  label="2">ADMIN</el-radio>
                     </el-radio-group>
                 </div>
                 <div slot="footer" class="dialog-footer">
@@ -182,6 +182,7 @@
 </template>
 
 <script>
+import md5 from 'js-md5';
     export default {
         name: "UserManage",
         data(){
@@ -325,17 +326,12 @@
                     this.$message.error(err);
               })
             },
-            /** 修改权限 */
-            setRole(value){
-                alert(value);
-                this.role = value;
-            },
             modifyRole(){
                 let query = {
                     username: this.modify_role_username,
                     role_id: this.role,
                 }
-                axios.put(this.base_url + "/user/role" + query)
+                axios.put(this.base_url + "/user/role",query)
                     .then(res => {
                         if(res.data.status === 1){
                             this.$router.go(0);
@@ -349,7 +345,21 @@
             },
             /** 修改密码 */
             modifyPassword(){
-
+              let body = {
+                username: this.modify_password_id,
+                password: md5('zkoj' + md5(this.modify_password_id + this.password_form.new_password))
+              }
+              axios.put(this.base_url + '/manage/user/password', body)
+              .then(res => {
+                if(res.data.status === 1) {
+                  this.$message.success("修改成功");
+                  this.$router.go(0);
+                } else {
+                  this.$message.error(res.data.message)
+                }
+              }).catch(err => {
+                this.$message.error(err);
+              });
             },
             /** 清空筛选 */
             clearScreen(){

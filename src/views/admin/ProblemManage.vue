@@ -1,6 +1,6 @@
 <template>
   <div class="main clear">
-    <!-- TODO: 筛选条件区域 -->
+    <!-- 筛选条件区域 -->
     <div class="problem_screen clear">
       <!-- 搜索问题区域 -->
       <div class="search_area">
@@ -72,14 +72,16 @@
 
     <!-- 分组和算法标签管理区 -->
     <div class="manage_area clear">
-      <el-tabs id="manege" v-model="active_name" type="border-card">
+      <el-tabs id="manege" v-model="active_name">
         <!-- 算法管理页面 -->
         <el-tab-pane label="算法标签管理" name="algorithm">
           <div style="overflow: auto;height: 200px">
             <div v-for="item in algorithm_list" style="margin: 20px">
               <span style="width: 100px">{{item.name}}</span>
-              <el-button @click="modify_algorithm_dialog=true,modify_algorithm_id = item.id" style="width: 60px;display: inline-block" size="mini">修改</el-button>
-              <el-button @click="delAlgorithm(item)" style="width: 60px;display: inline-block" size="mini" type="danger">删除</el-button>
+              <span style="float: right">
+                <el-button @click="modify_algorithm_dialog=true,modify_algorithm_id = item.id" style="width: 60px;display: inline-block" size="mini">修改</el-button>
+                <el-button @click="delAlgorithm(item)" style="width: 60px;display: inline-block" size="mini" type="danger">删除</el-button>
+              </span>
             </div>
             <!-- 修改算法对话框 -->
             <el-dialog title="修改算法" :visible.sync="modify_algorithm_dialog" style="width: 1000px;margin: 0 auto">
@@ -110,8 +112,10 @@
           <div style="height: 200px;overflow: auto">
             <div v-for="item in class_list" style="margin: 20px">
               <span style="width: 100px">{{item.name}}</span>
-              <el-button @click="modify_class_dialog=true,modify_class_id = item.id" style="width: 60px;display: inline-block" size="mini">修改</el-button>
-              <el-button @click="delClass(item)" style="width: 60px;display: inline-block" size="mini" type="danger">删除</el-button>
+              <span style="float:right;">
+                <el-button @click="modify_class_dialog=true,modify_class_id = item.id" style="width: 60px;display: inline-block" size="mini">修改</el-button>
+                <el-button @click="delClass(item)" style="width: 60px;display: inline-block" size="mini" type="danger">删除</el-button>
+              </span>
             </div>
           </div>
           <!-- 修改分组对话框 -->

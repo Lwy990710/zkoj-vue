@@ -16,6 +16,7 @@ import UserCenter from "../views/UserCenter";
 import UserManage from "../views/admin/UserManage";
 import BatchAddUser from "../views/admin/BatchAddUser";
 import ModifyQuestion from "../views/admin/ModifyQuestion";
+import Home from '../views/Home';
 
 Vue.use(VueRouter)
 
@@ -24,9 +25,13 @@ const routes = [
         path: "/",
         component: Main,
         children: [{
-            path: "/",
-            name: "主页面",
-            component: ProblemList
+                path: "/",
+                name: "Home",
+                component: Home
+            },{
+                path: "/problem",
+                name: "ProblemList",
+                component: ProblemList
             },
             {
                 path: "/problem/:id",
