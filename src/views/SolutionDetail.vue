@@ -99,6 +99,7 @@ export default {
     next();
   },
   created() {
+    document.title = '评测详细|ZKOJ';
     this.is_loading_table = true
     axios.get(this.base_url + "/solution/" + this.$route.params.id)
         .then(res => {

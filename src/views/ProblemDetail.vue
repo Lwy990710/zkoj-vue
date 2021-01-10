@@ -20,31 +20,49 @@
           <div class="problem_main">
             <!-- 问题描述 -->
             <div class="problem_description">
-              <h2>问题描述</h2>
+              <h3>问题描述</h3>
               <div class="problem_content" id="problem_description_content">
-                {{ problem_detail.description }}
+                <mavon-editor
+                    :boxShadow="false"
+                    style="max-width: 1000px; margin: 0 auto"
+                    previewBackground="#fff"
+                    v-model="problem_detail.description"
+                    :subfield="false"
+                    defaultOpen="preview"
+                    :editable="false"
+                    :toolbarsFlag="false"
+                ></mavon-editor>
               </div>
             </div>
 
             <!-- 样例输入 -->
             <div class="problem_input">
-              <h2>样例输入</h2>
+              <h3>样例输入</h3>
               <div class="problem_input_content" id="problem_input_content">
                 {{ this.problem_detail.sample_input }}
               </div>
             </div>
             <!-- 样例输出 -->
             <div class="problem_output">
-              <h2>样例输出</h2>
+              <h3>样例输出</h3>
               <div class="problem_output_content" id="problem_output_content">
                 {{ this.problem_detail.sample_output }}
               </div>
             </div>
             <!-- 提示 -->
             <div class="problem_hint" style="margin-bottom: 40px">
-              <h2>提示</h2>
+              <h3>提示</h3>
               <div class="problem_hint_content" id="problem_hint_content">
-                {{ this.problem_detail.hint }}
+                <mavon-editor
+                  :boxShadow="false"
+                  style="max-width: 1000px; margin: 0 auto"
+                  previewBackground="#fff"
+                  v-model="problem_detail.hint"
+                  :subfield="false"
+                  defaultOpen="preview"
+                  :editable="false"
+                  :toolbarsFlag="false">
+                </mavon-editor>
               </div>
             </div>
           </div>
@@ -100,14 +118,14 @@
         <span>最长用时</span>
         <span>最大内存</span>
       </div>
-      <div v-for="item in problem_detail.limit">
+      <div style="line-height: 32px" v-for="item in problem_detail.limit">
         <span v-if="item.language_id===0">默认</span>
         <span v-if="item.language_id===1">C语言</span>
         <span v-if="item.language_id===2">CPP</span>
         <span v-if="item.language_id===3">JAVA</span>
         <span v-if="item.language_id===4">PYTHON</span>
-        <span>{{ item.time }}ms</span>
-        <span>{{ item.memory }}MB</span>
+        <span><b>{{ (item.time / 1000).toFixed(2) }} S</b></span>
+        <span><b>{{ item.memory }} MB</b></span>
       </div>
     </div>
 
@@ -148,7 +166,21 @@ export default {
   data() {
     return {
       is_loading_table: true,
-      problem_detail: null,
+      problem_detail: {
+        id: null,
+        title: null,
+        description: null,
+        sample_input: null,
+        sample_output: null,
+        hint: null,
+        create_date: null,
+        diffculty: null,
+        accepted: null,
+        count: null,
+        tag: [],
+        problem_class: null,
+        limit: []
+      },
       language_options: [{
         value: 'Java',
         label: 'Java',
@@ -194,8 +226,7 @@ export default {
           if (res.data.status === 1) {
             this.problem_detail = res.data.data;
             this.is_loading_table = false;
-            if (res.data)
-              console.log(this.problem_detail)
+            document.title = this.problem_detail.id + "." + this.problem_detail.title + "|ZKOJ";
           }
         }).catch(err => {
       //请求失败时进入catch
@@ -253,7 +284,6 @@ export default {
 
     },
     submit() {
-      // TODO : 提交答案
       let source_code = this.code
       let language_id = this.language_id;
       let request_body = {
@@ -263,7 +293,8 @@ export default {
       axios.post(this.base_url + "/solution/problem/" + this.$route.params.id, request_body)
           .then(res => {
             if (res.data.status === 1) {
-              alert("提交成功");
+              this.$message.success("提交成功！");
+              this.$router.push("/record?solution_id=" + res.data.data.solution_id);
             } else {
               alert(res.data.message);
             }
@@ -328,10 +359,8 @@ a {
 
 .problem_main {
   line-height: 26px;
-  padding-left: 20px;
-  text-align: left;
-  margin: 0 auto;
-  width: 600px;
+  margin-left: 20px;
+  width: 730px;
 }
 
 .problem_content {

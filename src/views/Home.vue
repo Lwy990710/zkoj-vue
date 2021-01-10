@@ -44,6 +44,9 @@ export default {
           '\n' +
           '编译选项：`python Main.py`\n'
     }
+  },
+  created() {
+    document.title = '主页|ZKOJ';
   }
 }
 </script>

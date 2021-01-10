@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="body-main">
 
     <div class="line"></div>
     <!-- 搜索条件区域 -->
@@ -125,7 +125,7 @@
             min-width="200">
           <template slot-scope="scope">
             <router-link :to='"/problem/" + scope.row.id' target="_blank">
-              {{ scope.row.title }}
+              <b  style="color: #409EFF;font-size: 14px">{{ scope.row.title }}</b>
             </router-link>
           </template>
         </el-table-column>
@@ -142,12 +142,22 @@
             </el-tooltip>
           </template>
           <template slot-scope="scope">
-            <el-tag v-if="isShowTag" v-for="(item, index) in scope.row.tag"  :key="index" disable-transitions
-                    type="danger" effect="dark" style="font-size: 12px;margin: 0 5px" size="mini">
-              {{ item.name }}
-            </el-tag>
-            <div v-if="!isShowTag && scope.row.problem_class">
-              {{ scope.row.problem_class.name }}
+            <div style="cursor:pointer" v-if="isShowTag">
+              <el-tag v-for="(item, index) in scope.row.tag"
+                      :key="index" disable-transitions
+                      type="danger" effect="dark"
+                      style="font-size: 14px;margin: 0 5px" size="mini"
+                      @click="chooseAlgorithm(item.id)">
+                {{ item.name }}
+              </el-tag>
+            </div>
+            <div style="cursor:pointer" v-if="!isShowTag && scope.row.problem_class">
+              <el-tag
+                  @click="chooseClass(scope.row.problem_class.id)"
+                  disable-transitions
+                  type="warning" effect="dark" style="font-size: 14px;margin: 0 5px" size="mini">
+                {{ scope.row.problem_class.name }}
+              </el-tag>
             </div>
           </template>
         </el-table-column>
@@ -205,7 +215,7 @@
 
 <script>
 export default {
-  name: "main",
+  name: "ProblemList",
   data() {
     return {
       /* 输入显示框 */
@@ -249,6 +259,7 @@ export default {
     }
   },
   created() {
+    document.title = '题目列表|ZKOJ';
     window.document.body.style.backgroundColor='#ffffff';
     window.document.body.style.backgroundImage='none';
     this.mark = -1;
@@ -271,7 +282,6 @@ export default {
       .then(res => {
         if(res.data.status === 1) {
           this.class_list = res.data.data;
-          console.log(this.class_list);
         }
         else {
           alert(this.data.message);
@@ -388,7 +398,7 @@ export default {
       this.is_show_tag.tag = false;
       this.request_query[temp[id]] = null;
       this.request_problem_list();
-    }
+    },
   }
 
 }
@@ -408,7 +418,7 @@ a {
   clear: both;
 }
 
-.main {
+.body-main {
   font-size: 20px;
   min-width: 800px;
   max-width: 1200px;

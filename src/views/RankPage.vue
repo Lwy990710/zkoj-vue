@@ -75,6 +75,7 @@
             }
         },
         created() {
+          document.title = '排行|ZKOJ';
             /** 请求排行数据 */
             this.requestRankList()
         },

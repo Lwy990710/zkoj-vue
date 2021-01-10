@@ -175,6 +175,7 @@
     <!-- 表格区域 -->
     <div class="table_area clear">
       <el-table
+        @sort-change="changeSort"
         v-loading="is_loading_table"
         :data="problem_list"
         style="width: 100%">
@@ -194,7 +195,7 @@
           prop="title"
           label="题名"
           min-width="150"
-          show-overflow-tooltip="true">
+          :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <router-link :to='"/problem/" + scope.row.id' target="_blank">
               {{ scope.row.title }}
@@ -205,7 +206,7 @@
           prop="tag"
           label="算法标签"
           min-width="200"
-          show-overflow-tooltip="true">
+          :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <el-tag type="danger" effect="dark" size="mini" v-for="(item, index) in scope.row.tag" :key="index" style="margin: 0 5px">
               {{item.name}}
@@ -217,7 +218,7 @@
           min-width="100"
           align="center"
           label="分组"
-          show-overflow-tooltip="true">
+          :show-overflow-tooltip="true">
         </el-table-column>
         <el-table-column
           prop="difficulty"
@@ -233,19 +234,20 @@
         <el-table-column
           prop="count"
           width="100"
-          sortable
+          sortable="custom"
           align="center"
           label="提交数">
         </el-table-column>
         <el-table-column
           prop="accepted"
           width="100"
-          sortable
+          sortable="custom"
           align="center"
           label="AC数">
         </el-table-column>
         <el-table-column
-          sortable
+          prop="accuracy"
+          sortable="custom"
           width="100"
           align="center"
           label="通过率">
@@ -355,7 +357,7 @@ export default {
   },
 
   created() {
-
+    document.title = '问题管理|后台|ZKOJ';
     /* 获取问题列表 */
     this.request_problem_list();
     /* 获取标签列表 */
@@ -367,14 +369,14 @@ export default {
   methods:{
     /* 请求问题列表 */
     request_problem_list(){
-      let query = {};
+      let params = {};
       this.is_loading_table = true;
       Object.keys(this.request_query).forEach(key => {
-        if(this.request_query[key] !== null){
-          query[key] = this.request_query[key];
+        if(this.request_query[key] !== null && this.request_query[key] !== ''){
+          params[key] = this.request_query[key];
         }
-      })
-      axios.get(this.base_url + "/iacs/problem", {params: query})
+      });
+      axios.get(this.base_url + "/iacs/problem", {params: params})
       .then(res => {
         this.problem_list = res.data.data.problem_list;
         this.total = res.data.data.count;
@@ -390,8 +392,6 @@ export default {
       axios.post(this.base_url + "/tag", add_quest)
               .then(res => {
                 if(res.data.status === 1){
-                  this.getAllClass();
-                  alert("增加成功，新算法标签id为:" + res.data.data.id)
                   this.$router.go(0);
                 } else if(res.data.status === 0) {
                   alert(res.data.message);
@@ -433,7 +433,6 @@ export default {
         id: this.modify_algorithm_id + "",
         name: this.modify_algorithm_name
       }
-      alert(modify_quest.id);
       axios.put(this.base_url + "/tag", modify_quest)
               .then(res => {
                 if(res.data.status === 1){
@@ -455,16 +454,15 @@ export default {
       .then(res => {
         if(res.data.status === 1){
           this.getAllClass();
-          alert("增加成功，新分组id为:" + res.data.data.id);
+          alert("增加成功");
           this.$router.go(0);
         } else if(res.data.status === 0) {
             alert("res.data.message")
         }
       }).catch(err => {
-        this.$message.error(err);;
+        this.$message.error(err);
       })
     },
-
     /* 删除分组 */
     delClass(item){
       this.$confirm('是否确定删除分组 : ' + item.name, '提示', {
@@ -492,7 +490,6 @@ export default {
         });
       });
     },
-
     /* 修改分组 */
     modifyClass(){
       let modify_quest = {
@@ -514,7 +511,6 @@ export default {
         this.$message.error(err);;
       })
     },
-
     /* 难度筛选 */
     changeDifficulty(val){
       this.request_query.difficulty = val;
@@ -528,12 +524,10 @@ export default {
     },
     /* 算法筛选 */
     changeAlgorithm(val){
-      alert(val);
       this.value_algorithm = val;
       this.request_query.tag_id = val;
       this.request_problem_list();
     },
-
     /* 题号或题目筛选 */
     searchProblemIdOrTitle(){
       this.request_query.search = this.input_search_problem;
@@ -542,7 +536,6 @@ export default {
     /* 上传者筛选 */
     searchUsername(){
       this.request_query.upload_username = this.input_up_username;
-      this.request_query.upload_user_id = this.input_up_username;
       this.request_problem_list();
     },
     /* 获取所有分组 */
@@ -551,7 +544,6 @@ export default {
               .then(res => {
                 if(res.data.status === 1) {
                   this.class_list = res.data.data;
-                  console.log(this.class_list);
                 }
                 else {
                   alert(this.data.message);
@@ -584,6 +576,40 @@ export default {
       this.request_query.page = val;
       this.request_problem_list();
     },
+    /** 改变排序方式 */
+    changeSort(type) {
+      let prop = type.prop;
+      let order = type.order;
+      let sort_type;
+      if(order === null) {
+        sort_type = null;
+      } else if (prop === 'count') {
+        if (order === 'ascending') {
+          sort_type = 'count';
+        } else {
+          sort_type = 'count_r';
+        }
+      } else if (prop === 'accepted') {
+        if (order === 'ascending') {
+          sort_type = 'accepted';
+        } else {
+          sort_type = 'accepted_r';
+        }
+      } else if (prop === 'accuracy') {
+        if (order === 'ascending') {
+          sort_type = 'acceptability';
+        } else {
+          sort_type = 'acceptability_r';
+        }
+      } else {
+        this.$message.error("sort error!");
+        return;
+      }
+
+      this.request_query.sort_type = sort_type;
+      this.request_problem_list();
+
+    }
   }
 }
 </script>

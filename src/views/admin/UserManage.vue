@@ -244,6 +244,7 @@ import md5 from 'js-md5';
             }
         },
         created() {
+          document.title = '用户管理|后台|ZKOJ';
             /** 获取用户列表 */
             this.requestUserList();
             /** 获取权限列表 */
@@ -294,7 +295,7 @@ import md5 from 'js-md5';
             },
             /** 账号状态筛选 */
             chooseUserStatus(value){
-                this.request_query.status_id = value;
+                this.request_query.status = value;
                 this.requestUserList();
             },
             /** 搜索用户 */
@@ -345,6 +346,8 @@ import md5 from 'js-md5';
             },
             /** 修改密码 */
             modifyPassword(){
+              /*console.log("username:" + this.modify_password_id);
+              console.log("password:" + this.password_form.new_password);*/
               let body = {
                 username: this.modify_password_id,
                 password: md5('zkoj' + md5(this.modify_password_id + this.password_form.new_password))

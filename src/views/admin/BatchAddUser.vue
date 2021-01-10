@@ -115,6 +115,9 @@ export default {
       user_name: 'Student',
     }
   },
+  created() {
+    document.title = '批量增加用户|后台|ZKOJ'
+  },
   methods: {
     /** 改变账号数量 */
     change() {

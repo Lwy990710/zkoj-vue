@@ -157,6 +157,7 @@
             next();
         },
         created() {
+          document.title = '个人中心|ZKOJ';
             /** 获取用户信息 */
             this.requestUserMessage();
             /** 获取用户做题信息 */

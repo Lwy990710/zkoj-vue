@@ -73,7 +73,7 @@
                             //登陆成功
                             this.$router.go(0);
                         } else {
-                            alert(res.data.message);
+                            this.$message.error("登陆失败！请检查用户名或密码！");
                         }
                     })
                     .catch(err => {

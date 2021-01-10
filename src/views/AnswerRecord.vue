@@ -22,6 +22,13 @@
               v-model="inputUsername"
               @change="changeUsername">
           </el-input>
+          <el-input
+              size="small"
+              style="display: inline"
+              placeholder="评测ID"
+              v-model="input_solution_id"
+              @change="changeSolutionId">
+          </el-input>
         </div>
         <div class="state_choose">
           <span style="margin: 0 20px ;font-size: 18px;display: inline-block">状态筛选</span>
@@ -51,7 +58,7 @@
             width="120">
           <template slot-scope="scope">
             <router-link :to='"/usercenter/" + scope.row.user.username'>
-              {{ scope.row.user.username }}
+              <span style="color: #3a8ee6">{{ scope.row.user.username }}</span>
             </router-link>
           </template>
         </el-table-column>
@@ -59,7 +66,8 @@
             width="360">
           <template slot-scope="scope">
             <router-link :to='"/problem/" + scope.row.problem.id'>
-              {{ scope.row.problem.id }}. {{ scope.row.problem.title }}
+              <span style="color: #3a8ee6">{{ scope.row.problem.id }}. {{ scope.row.problem.title }}</span>
+
             </router-link>
 
           </template>
@@ -101,14 +109,24 @@
           </template>
         </el-table-column>
         <el-table-column
-            width="220">
+            min-width="220">
           <template slot-scope="scope">
-            <i class="el-icon-stopwatch" style="font-size: 18px"></i>{{ scope.row.time }}ms
-            <i class="el-icon-coin" style="font-size: 18px"></i>{{ (scope.row.memory / 1024).toFixed(0)}}MB
-            <i class="el-icon-document" style="font-size: 18px"></i>{{ scope.row.language.name }}
+            <span style="width: 80px;display: inline-block">
+              <i class="el-icon-stopwatch" style="font-size: 18px"></i>
+              {{ scope.row.time }}ms
+            </span>
+            <span style="width: 80px;display: inline-block">
+              <i class="el-icon-coin" style="font-size: 18px"></i>
+              {{ (scope.row.memory / 1024).toFixed(0)}}MB
+            </span>
+            <span style="width: 80px;display: inline-block">
+              <i class="el-icon-document" style="font-size: 18px"></i>
+              {{ scope.row.language.name }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column
+            width="160px"
             prop="submit_date">
         </el-table-column>
       </el-table>
@@ -139,6 +157,7 @@ export default {
       inputProblemId: null,
       inputUsername: null,
       is_loading_table: true,
+      input_solution_id: null,
       options: [
         {
           value: 'all',
@@ -160,12 +179,15 @@ export default {
         page: 1,
         status_id: null,
         problem_id: null,
-        username: null
+        username: null,
+        solution_id: null
       },
-
+      /** 定时任务对象 */
+      interval: null,
     }
   },
-  created() {
+  mounted() {
+    document.title = '评测记录|ZKOJ';
     if(Boolean((new RegExp("problem_id").exec(location.href)))){
       /* 从题目详情页面进入默认显示该题的记录 */
       this.request_query.problem_id = this.$route.query.problem_id;
@@ -176,6 +198,10 @@ export default {
       this.request_query.username = this.$route.query.username;
       this.inputUsername = this.$route.query.username;
       this.request_record_list();
+    } else if(Boolean((new RegExp("solution_id").exec(location.href)))) {
+      this.request_query.solution_id = this.$route.query.solution_id;
+      this.input_solution_id = this.$route.query.solution_id;
+      this.interval = setInterval(this.timingRequest, 3000);
     } else {
       /* 显示所有记录 */
       this.request_record_list();
@@ -188,7 +214,7 @@ export default {
       let query = {};
       this.is_loading_table = true;
       Object.keys(this.request_query).forEach(key => {
-        if (this.request_query[key] !== null){
+        if (this.request_query[key] !== null && this.request_query[key] !== ''){
           query[key] = this.request_query[key];
         }
       })
@@ -220,13 +246,15 @@ export default {
       this.request_query.username = value;
       this.request_record_list();
     },
-
+    /** 评测ID筛选 */
+    changeSolutionId(value) {
+      this.request_query.solution_id = value;
+      this.request_record_list();
+    },
     handleCurrentChange(val){
       this.request_query.page = val;
       this.request_record_list();
     },
-
-
     /* 清空筛选条件 */
     clearCondition(){
       this.is_loading_table = true;
@@ -242,11 +270,21 @@ export default {
         this.is_loading_table = false;
       })
     },
-
     showSolutionDetail(id){
       let routerJump = this.$router.resolve('/solution/' + id);
       window.open(routerJump.href, '_blank');
     },
+    /** 定时获取结果 */
+    timingRequest() {
+      let continue_id = [3,4,5]
+      if(this.record_list !== null) {
+        if(continue_id.indexOf(this.record_list[0].status.id) < 0) {
+          clearInterval(this.interval);
+          return;
+        }
+      }
+      this.request_record_list();
+    }
   }
 }
 </script>

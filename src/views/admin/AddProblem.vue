@@ -360,6 +360,7 @@ export default {
   },
 
   created() {
+    document.title = '增加问题|后台|ZKOJ'
     /* 获取所有语言种类 */
     axios.get(this.base_url + "/language")
     .then(res => {
@@ -486,6 +487,7 @@ export default {
       axios.request(request_option).then(res => {
         if(res.data.status === 1) {
           this.$message.success("增加成功！");
+          this.$router.push("/iacs/problem")
         } else {
           this.$message.error(res.data.message);
         }
