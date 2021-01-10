@@ -2,7 +2,7 @@
     <div class="main">
         <!-- 背景图与头像区域 -->
         <div class="background">
-            <img src="https://portrait.gitee.com/uploads/avatars/user/2721/8165732_lastbzzb_1609261536.png!avatar100">
+            <img src="http://task.yukineko.top/static/task5/upload/111.jpg" style="width: 100px;height: 100px">
         </div>
         <!-- 菜单区域 -->
         <div id="user_menu" class="clear">
@@ -87,12 +87,14 @@
         <div id="user_option" v-if="showing_page.option">
             <div class="option">
                 <span>邮箱 : </span>
-                <el-input v-model="new_email" size="small" placeholder="新邮箱" style="width: 200px"></el-input>
+                <el-input v-model="new_email" size="small" placeholder="新邮箱" style="width: 230px">
+                    <template slot="append"><el-button @click="modifyEmail">修改</el-button></template>
+                </el-input>
             </div>
             <div class="option">
                 <span>昵称 : </span>
-                <el-input v-model="new_name" size="small" placeholder="新昵称" style="width: 200px">
-                    <template slot="append"><el-button>修改</el-button></template>
+                <el-input v-model="new_name" size="small" placeholder="新昵称" style="width: 230px">
+                    <template slot="append"><el-button @click="modifyName">修改</el-button></template>
                 </el-input>
             </div>
             <div class="option">
@@ -108,7 +110,7 @@
                 <el-input v-model="pardon_new_password" size="small" show-password placeholder="再次输入新密码" style="width: 200px"></el-input>
             </div>
             <div id="submit" style="margin-left: 100px">
-                <el-button type="danger">修改密码</el-button>
+                <el-button type="danger" @click="modifyPassword(user_message_list.username)">修改密码</el-button>
             </div>
         </div>
         <!-- 侧边栏 -->
@@ -120,9 +122,11 @@
 </template>
 
 <script>
+    import md5 from "js-md5";
+
     export default {
         name: "UserCenter",
-        data(){
+        data() {
             return {
                 /** 修改简介 */
                 change_description: false,
@@ -157,7 +161,7 @@
             next();
         },
         created() {
-          document.title = '个人中心|ZKOJ';
+            document.title = '个人中心|ZKOJ';
             /** 获取用户信息 */
             this.requestUserMessage();
             /** 获取用户做题信息 */
@@ -166,72 +170,134 @@
 
         methods: {
             /** 请求用户信息 */
-            requestUserMessage(){
-                    axios.get(this.base_url + "/user/id/" + this.$route.params.username)
+            requestUserMessage() {
+                axios.get(this.base_url + "/user/id/" + this.$route.params.username)
                     .then(res => {
-                        if(res.data.status === 1){
+                        if (res.data.status === 1) {
                             this.user_message_list = res.data.data;
                         }
                     }).catch(err => {
-                        this.$message.error(err);
-                    })
+                    this.$message.error(err);
+                })
             },
 
-            getUserProblemCount(){
-              let query = {username: this.$route.params.username};
-              axios.get(this.base_url + "/user/count/problem",{params: query})
-                .then(res => {
-                    if(res.data.status === 1){
-                        this.submit_problem_list = res.data.data.submit_problem_list;
-                        this.accepted_problem_list = res.data.data.accepted_problem_list;
-                    } else {
-                        alert(res.data.message)
-                    }
-                }).catch(err => {
+            getUserProblemCount() {
+                let query = {username: this.$route.params.username};
+                axios.get(this.base_url + "/user/count/problem", {params: query})
+                    .then(res => {
+                        if (res.data.status === 1) {
+                            this.submit_problem_list = res.data.data.submit_problem_list;
+                            this.accepted_problem_list = res.data.data.accepted_problem_list;
+                        } else {
+                            alert(res.data.message)
+                        }
+                    }).catch(err => {
                     this.$message.error(err);
-              })
+                })
             },
 
             /** 在用户自己的个人页面可编辑简介 */
-            check(){
+            check() {
                 this.change_description = !this.change_description;
                 let query = {description: this.new_description}
-                if(this.new_description !== ''){
+                if (this.new_description !== '') {
                     axios.put(this.base_url + "/user", query)
-                    .then(res => {
-                        if(res.data.status === 1){
-                            alert("修改成功");
-                            this.$router.go(0);
-                        } else {
-                            alert(res.data.message);
-                        }
-                    }).catch(err => {
+                        .then(res => {
+                            if (res.data.status === 1) {
+                                alert("修改成功");
+                                this.$router.go(0);
+                            } else {
+                                alert(res.data.message);
+                            }
+                        }).catch(err => {
                         this.$message.error(err);
                     })
                     this.requestUserMessage();
                 }
             },
             /** 跳转设置页面 */
-            option(){
+            option() {
                 this.$router.push("/option/" + this.$store.state.username);
             },
-            click(tab){
-              if(tab.name === 'message'){
-                  this.showing_page.message = true;
-                  this.showing_page.record = false;
-                  this.showing_page.option =false;
-              } else if(tab.name === 'record'){
-                  this.showing_page.message = false;
-                  this.showing_page.record = true;
-                  this.showing_page.option =false;
-              } else {
-                  this.showing_page.message = false;
-                  this.showing_page.record = false;
-                  this.showing_page.option =true;
-              }
+            click(tab) {
+                if (tab.name === 'message') {
+                    this.showing_page.message = true;
+                    this.showing_page.record = false;
+                    this.showing_page.option = false;
+                } else if (tab.name === 'record') {
+                    this.showing_page.message = false;
+                    this.showing_page.record = true;
+                    this.showing_page.option = false;
+                } else {
+                    this.showing_page.message = false;
+                    this.showing_page.record = false;
+                    this.showing_page.option = true;
+                }
             },
+            /** 修改邮箱 */
+            modifyEmail() {
+                if (this.new_email !== '') {
+                    let query = {email: this.new_email};
+                    axios.put(this.base_url + "/user", query)
+                        .then(res => {
+                            if (res.data.status === 1) {
+                                alert("修改成功");
+                                this.$router.go(0);
+                            } else {
+                                alert(res.data.message);
+                            }
+                        }).catch(err => {
+                        this.$message.error(err);
+                    })
+                    this.requestUserMessage();
+                }
+            },
+            /** 修改昵称 */
+            modifyName(){
+                if (this.new_name !== '') {
+                    let query = {name: this.new_name};
+                    axios.put(this.base_url + "/user", query)
+                        .then(res => {
+                            if (res.data.status === 1) {
+                                alert("修改成功");
+                                this.$router.go(0);
+                            } else {
+                                alert(res.data.message);
+                            }
+                        }).catch(err => {
+                        this.$message.error(err);
+                    })
+                }
+            },
+            /** 修改密码 */
+            modifyPassword(username){
+                if(this.new_password === this.pardon_new_password){
+                    let old_password = this.old_password;
+                    let new_password = this.new_password;
+                    old_password = md5( 'zkoj' + md5(username + old_password));
+                    new_password = md5( 'zkoj' + md5(username + new_password));
+                    let request_body = {
+                        username: username,
+                        password: old_password,
+                        new_password: new_password
+                    };
+                    axios.put(this.base_url + "/user/password", request_body)
+                    .then(res => {
+                        if(res.data.status === 1){
+                            this.$message.success("修改成功");
+                            this.$store.commit('logout');
+                            this.$router.go(0);
+                        } else {
+                            this.$message.error(res.data.message);
+                        }
+                    }).catch(err => {
+                        this.$message.error(err);
+                    })
+                } else {
+                    this.$message.error("两次输入的密码不一样")
+                }
+            }
         }
-
     }
 </script>
 

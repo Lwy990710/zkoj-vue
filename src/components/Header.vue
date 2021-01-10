@@ -62,7 +62,7 @@
     <div v-if="$store.state.is_login">
       <el-dropdown>
         <div class="avatar">
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+          <el-avatar src="http://task.yukineko.top/static/task5/upload/111.jpg"
                      style="margin: 0 10px"></el-avatar>
           <span style="display: inline-block;color: #FFFFFF;float: right;margin-top: 12px">
             {{ this.$store.state.name }}
