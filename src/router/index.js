@@ -94,7 +94,7 @@ const routes = [
             component: AddProblem,
         },
         {
-            path: "modify",
+            path: "modify/:id",
             name: "修改问题",
             component: ModifyQuestion
          },

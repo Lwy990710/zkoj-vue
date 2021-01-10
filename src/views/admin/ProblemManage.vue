@@ -66,6 +66,7 @@
             @click="searchUsername">
             搜索
           </el-button>
+          <span style="display: inline-block;margin: 20px ;font-weight: 700">单击列表行可修改问题信息</span>
         </div>
       </div>
     </div>
@@ -175,6 +176,8 @@
     <!-- 表格区域 -->
     <div class="table_area clear">
       <el-table
+        highlight-current-row
+        @current-change="modifyProblem"
         @sort-change="changeSort"
         v-loading="is_loading_table"
         :data="problem_list"
@@ -605,10 +608,12 @@ export default {
         this.$message.error("sort error!");
         return;
       }
-
       this.request_query.sort_type = sort_type;
       this.request_problem_list();
-
+    },
+    /** 修改问题 */
+    modifyProblem(row){
+      this.$router.push({path:"/iacs/modify/" + row.id ,params: {id: row.id}});
     }
   }
 }

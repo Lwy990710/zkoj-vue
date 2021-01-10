@@ -114,8 +114,8 @@
             </div>
             <p>限制 :</p>
             <div class="languages">
-<!--              <el-button size="small" @click="addLimits" type="primary"><i class="el-icon-plus"></i></el-button>-->
-<!--              <el-button size="small" @click="delLimits"><i class="el-icon-minus"></i></el-button>-->
+              <el-button size="small" @click="addLimits" type="primary"><i class="el-icon-plus"></i></el-button>
+              <el-button size="small" @click="delLimits"><i class="el-icon-minus"></i></el-button>
               <span  style="width: 100px">默认</span>
               <span  style="width: 100px">内存(MB) : </span>
               <el-input v-model="input_language[0].memory" size="small" style="width: 200px" placeholder="最大运行时间"></el-input>
@@ -151,7 +151,7 @@
     <div v-show="current_step === 1">
       <!-- TODO: 源代码 -->
       <el-tabs v-model="current_source_tab" tab-position="left" style="margin-top: 20px;margin-right: 20px">
-        <el-tab-pane v-for="(item, index) in language_list" :label="item.name" :name="item.name">
+        <el-tab-pane v-for="(item, index) in language_list" :label="item.name" :name="item.name" :key="index">
           <el-input
               type="textarea"
               :rows="20"
