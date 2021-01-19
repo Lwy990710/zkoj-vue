@@ -200,6 +200,18 @@
       <div class="page" style="text-align: center">
         <div class="page-line"></div>
         <el-pagination
+                @current-change="handleCurrentChange"
+                @size-change="handleSizeChange"
+                background
+                :page-size="request_query.limit"
+                layout="prev, pager, next, jumper"
+                :total="problem_total">
+        </el-pagination>
+      </div>
+      <!--
+      <div class="page" style="text-align: center">
+        <div class="page-line"></div>
+        <el-pagination
             :page-sizes="[10,20,30,40]"
             :page-size="this.request_query.limit"
             @current-change="handleCurrentChange"
@@ -209,6 +221,7 @@
             :total="problem_total">
         </el-pagination>
       </div>
+      -->
     </div>
   </div>
 </template>
@@ -235,7 +248,7 @@ export default {
       /* 请求url参数 */
       request_query: {
         page: 1,
-        limit: 20,
+        limit: 10,
         difficulty: null,
         status: null,
         tag_id: null,

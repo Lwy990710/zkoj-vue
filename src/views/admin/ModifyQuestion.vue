@@ -147,6 +147,21 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="评测数据">
+        <el-table
+                :data="check_point_list"
+                style="width: 100%">
+          <el-table-column
+                  prop="input"
+                  label="输入"
+                  align="center">
+          </el-table-column>
+          <el-table-column
+                  prop="output"
+                  label="输出"
+                  align="center">
+          </el-table-column>
+        </el-table>
+        <el-divider></el-divider>
         <div style="padding: 20px">
           <h3>选择测试数据的添加方式：</h3>
           <div>
@@ -289,6 +304,9 @@
           id: -1,
           name: ''
         }],
+        problem_id: this.$route.params.id,
+        /** 测试集列表 */
+        check_point_list: null,
         /** 恢复语言数组数据 */
         recovery_list: [],
         /** 被选中语言数组数据 */
@@ -342,6 +360,7 @@
 
     created() {
       document.title = '增加问题|后台|ZKOJ'
+      this.getCheckPoint();
       this.requestMessage();
       /* 获取所有语言种类 */
       axios.get(this.base_url + "/language")
@@ -388,6 +407,21 @@
           this.$message.error(err);
         })
       },
+      /** 获取测试数据 */
+      getCheckPoint(){
+
+        axios.get(this.base_url + "/problem/check-point/" + this.$route.params.id)
+        .then(res => {
+          if(res.data.status === 1){
+            this.check_point_list = res.data.data.check_point_list;
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch(err => {
+          this.$message.error(err);
+        })
+      },
+
       /** 增加测试点组 */
       addCheckPoint() {
         this.input_check_point.push({

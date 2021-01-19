@@ -221,7 +221,7 @@ export default {
       axios.get(this.base_url + "/solution", {params: query})
       .then(res => {
         if (res.data.status === 1){
-          this.record_list = res.data.data;
+          this.record_list = res.data.data.solution_list;
           this.is_loading_table = false;
         }
       })
