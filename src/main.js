@@ -16,8 +16,8 @@ Vue.use(mavonEditor);
 Vue.use(hljs.vuePlugin);
 Vue.config.productionTip = false
 //Vue.prototype.base_url = "http://yapi.yukineko.top/mock/16/zkoj/"
-Vue.prototype.base_url = "http://localhost:8080"
-//Vue.prototype.base_url = "http://192.168.31.214:8080"
+//Vue.prototype.base_url = "http://localhost:8084"
+Vue.prototype.base_url = "http://47.100.60.193/api/"
 axios.interceptors.request.use(config => {
   // 为请求头对象，添加 Token 验证的 Authorization 字段
   if (store.state.is_login)

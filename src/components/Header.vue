@@ -25,12 +25,12 @@
         <el-menu-item index="/rank">
           排行
         </el-menu-item>
-        <el-menu-item index="/discuss">
+<!--        <el-menu-item index="/discuss">
           讨论
         </el-menu-item>
         <el-menu-item index="/no">
           竞赛
-        </el-menu-item>
+        </el-menu-item>-->
         <!--<el-menu-item index="5">个人中心</el-menu-item>-->
       </el-menu>
     </div>

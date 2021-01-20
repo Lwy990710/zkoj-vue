@@ -74,7 +74,7 @@
         </el-table-column>
         <el-table-column
             prop="status.id"
-            width="200">
+            min-width="150">
           <template slot-scope="scope">
             <div v-if="scope.row.status.id === 1">
               <el-tag @click="showSolutionDetail(scope.row.id)" effect="dark" color="#67C23A">Accepted</el-tag>
@@ -109,7 +109,7 @@
           </template>
         </el-table-column>
         <el-table-column
-            min-width="220">
+            min-width="260">
           <template slot-scope="scope">
             <span style="width: 80px;display: inline-block">
               <i class="el-icon-stopwatch" style="font-size: 18px"></i>
@@ -119,7 +119,7 @@
               <i class="el-icon-coin" style="font-size: 18px"></i>
               {{ (scope.row.memory / 1024).toFixed(0)}}MB
             </span>
-            <span style="width: 80px;display: inline-block">
+            <span style="width: 100px;display: inline-block">
               <i class="el-icon-document" style="font-size: 18px"></i>
               {{ scope.row.language.name }}
             </span>
@@ -137,7 +137,7 @@
             layout="prev, pager, next"
             :page-size="20"
             @current-change="handleCurrentChange"
-            :total="100">
+            :total="count">
         </el-pagination>
       </div>
     </div>
@@ -154,6 +154,7 @@ export default {
   },
   data() {
     return {
+      count: 0,
       inputProblemId: null,
       inputUsername: null,
       is_loading_table: true,
@@ -222,6 +223,7 @@ export default {
       .then(res => {
         if (res.data.status === 1){
           this.record_list = res.data.data.solution_list;
+          this.count = res.data.data.count;
           this.is_loading_table = false;
         }
       })
@@ -258,15 +260,21 @@ export default {
     /* 清空筛选条件 */
     clearCondition(){
       this.is_loading_table = true;
-      this.inputProblemId = "";
-      this.inputUsername = "";
+      this.inputProblemId = null;
+      this.inputUsername = null;
+      this.input_solution_id = null;
+      this.request_query.status_id = null;
+      this.request_query.problem_id = null;
+      this.request_query.username = null;
+      this.request_query.solution_id = null;
       this.value = "全部状态";
       axios.get(this.base_url + "/solution")
       .then(res => {
-        this.record_list = res.data.data;
+        this.record_list = res.data.data.solution_list;
+        this.count = res.data.data.count;
         this.is_loading_table = false;
       }).catch(err => {
-        this.$message.error(err);;
+        this.$message.error(err);
         this.is_loading_table = false;
       })
     },

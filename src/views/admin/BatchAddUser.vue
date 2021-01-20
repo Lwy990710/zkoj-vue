@@ -2,6 +2,20 @@
   <div>
     <el-card class="card-header">
       <div slot="header" class="clearfix">
+        <span>从Excel导入</span>
+        <el-button style="float: right; padding: 4px 10px" type="primary" @click="submitExcelData">导入</el-button>
+      </div>
+      <input type="file" ref="input_upload"/>
+      <div>
+        内容格式(第一，二，三列)需要为 用户名 密码 姓名(昵称)
+      </div>
+      <div>
+        如下图所示：
+      </div>
+      <img src="http://task.yukineko.top/static/task5/upload/231.png"/>
+    </el-card>
+    <el-card class="card-header">
+      <div slot="header" class="clearfix">
         <span>格式设置</span>
         <el-button style="float: right; padding: 4px 10px" type="primary" @click="submitData">确认添加</el-button>
       </div>
@@ -181,6 +195,30 @@ export default {
       });
 
 
+    },
+    /** 从Excel提交更改 */
+    submitExcelData() {
+      let form_data = new FormData();
+      let check_point_file = this.$refs.input_upload.files[0];
+      form_data.append('file',check_point_file);
+
+      let request_option = {
+        url: this.base_url + '/user/excel',
+        data: form_data,
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+      axios.request(request_option).then(res => {
+        if(res.data.status === 1) {
+          this.$message.success("添加成功！");
+        } else {
+          this.$message.error(res.data.message);
+        }
+      }).catch(err => {
+        this.$message.error(err);
+      })
     }
   }
 }

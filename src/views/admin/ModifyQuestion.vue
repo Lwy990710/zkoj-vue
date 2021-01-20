@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-tabs type="border-card">
+      <!-- 问题信息标签页 -->
       <el-tab-pane label="问题信息">
         <div>
           <el-collapse id="add_problem" v-model="activeNames" @change="handleChange">
@@ -141,13 +142,14 @@
                   <el-input size="small" style="width: 200px" placeholder="最大内存"></el-input>
                 </div>-->
               </div>
-              <div style="text-align: center;margin: 20px 0"><el-button type="primary">确认修改</el-button></div>
+              <div style="text-align: center;margin: 20px 0"><el-button type="primary" @click="uploadMessage">确认修改</el-button></div>
             </el-collapse-item>
           </el-collapse>
         </div>
       </el-tab-pane>
+      <!-- 评测数据标签页 -->
       <el-tab-pane label="评测数据">
-        <el-table
+        <!--<el-table
                 :data="check_point_list"
                 style="width: 100%">
           <el-table-column
@@ -161,7 +163,7 @@
                   align="center">
           </el-table-column>
         </el-table>
-        <el-divider></el-divider>
+        <el-divider></el-divider>-->
         <div style="padding: 20px">
           <h3>选择测试数据的添加方式：</h3>
           <div>
@@ -221,6 +223,17 @@
       return {
         /** 问题基本信息 */
         problem_message: {
+          title: "",
+          description: "",
+          sample_input: "",
+          sample_output: "",
+          hint: "",
+          tag: [],
+          difficulty: 1,
+          problem_class: null
+        },
+        /** 旧的信息 */
+        old_message: {
           title: "",
           description: "",
           sample_input: "",
@@ -352,14 +365,14 @@
         /** 当前步骤 0 1 2 */
         current_step: 0,
         /** 测试数据上传方式 zip - 文件； input - 手动 */
-        check_point_upload_type: 'zip',
+        check_point_upload_type: 'input',
         /** 上传文件列表 */
         check_point_upload_file_list: [],
       }
     },
 
     created() {
-      document.title = '增加问题|后台|ZKOJ'
+      document.title = '修改问题|后台|ZKOJ'
       this.getCheckPoint();
       this.requestMessage();
       /* 获取所有语言种类 */
@@ -400,6 +413,13 @@
         .then(res => {
           if(res.data.status === 1){
             this.problem_message = res.data.data;
+            this.problem_message.problem_class = this.problem_message.problem_class.id;
+            this.problem_message.tag.forEach((value, index, arr) => {
+              this.problem_message.tag[index] =
+                  this.problem_message.tag[index].id;
+            })
+            // TODO 垃圾代码
+            this.old_message = JSON.parse(JSON.stringify(this.problem_message));
           } else {
             this.$message.error(res.data.message);
           }
@@ -413,7 +433,7 @@
         axios.get(this.base_url + "/problem/check-point/" + this.$route.params.id)
         .then(res => {
           if(res.data.status === 1){
-            this.check_point_list = res.data.data.check_point_list;
+            this.input_check_point = res.data.data.check_point_list;
           } else {
             this.$message.error(res.data.message);
           }
@@ -452,48 +472,31 @@
           }
         }
       },
-      /** 上传问题数据 */
-      uploadProblem() {
-        let request_body = this.problem_data;
-
-        if(this.isEmpty(request_body.title)) {
-          this.$message.error("标题不能为空！");
-          return;
-        }
-        if(this.isEmpty(request_body.description)) {
-          this.$message.error("问题描述不能为空！");
-          return;
-        }
-        if(this.isEmpty(request_body.sample_output)) {
-          this.$message.error("样例输出不能为空！");
-          return;
-        }
-        /*// 增加源代码
-        this.input_source_code.forEach((item, index, arr) => {
-          if(item.source_code !== undefined) {
-            request_body.source_code.push(item);
+      /**　修改问题基本数据 */
+      uploadMessage() {
+        let request_query = {};
+        request_query.id = this.$route.params.id;
+        Object.keys(this.problem_message).forEach(key => {
+          if(this.problem_message[key] !== this.old_message[key]) {
+            request_query[key] = this.problem_message[key];
           }
         });
-        // 增加限制
-        // TODO: 判断是否为空
-        this.input_language.forEach((item, index, arr) => {
-          if(item.time !== undefined && item.memory !== undefined) {
-            let temp = {
-              language_id: item.language_id,
-              time: Number(item.time),
-              memory: Number(item.memory)
-            }
-            request_body.limit.push(temp);
+        axios.put(this.base_url + '/problem', request_query).then(res => {
+          if(res.data.status === 1) {
+            this.$message.success("修改成功！");
+            this.$router.go(0);
+          } else {
+            this.$message.error(res.data.message);
           }
-        });*/
-        //分类
-        if(request_body.problem_class === 0) {
-          request_body.problem_class = null;
-        }
+        }).catch(err => {
+          this.$message.error(err);
+        });
+      },
+      /** 上传问题测试数据 */
+      uploadProblem() {
 
-        let problem_data = JSON.stringify(request_body);
         let form_data = new FormData();
-        form_data.append('problem_data', problem_data);
+        form_data.append('problem_id', this.$route.params.id);
         if(this.check_point_upload_type === 'zip') {
           //压缩包上传测试数据
           let check_point_file = this.$refs.input_upload.files[0];
@@ -506,24 +509,23 @@
 
         //请求
         let request_option = {
-          url: this.base_url + '/iacs/problem',
+          url: this.base_url + '/problem/check-point',
           data: form_data,
-          method: 'post',
+          method: 'put',
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         };
         axios.request(request_option).then(res => {
           if(res.data.status === 1) {
-            this.$message.success("增加成功！");
-            this.$router.push("/iacs/problem")
+            this.$message.success("修改成功！");
+            this.$router.go(0);
           } else {
             this.$message.error(res.data.message);
           }
         }).catch(err => {
           this.$message.error(err);
         })
-
 
       },
       /** 检测字符串是否为空 */
